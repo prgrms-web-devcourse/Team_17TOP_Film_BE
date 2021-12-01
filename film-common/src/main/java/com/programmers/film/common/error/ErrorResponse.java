@@ -10,22 +10,22 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ErrorResponse {
 
-  private String message;
-  private int status;
-  private String code;
+    private String message;
+    private int status;
+    private String code;
 
-  private ErrorResponse(ErrorCode code) {
-    this.message = code.getMessage();
-    this.status = code.getStatus();
-    this.code = code.getCode();
-  }
+    private ErrorResponse(ErrorCode code) {
+        this.message = code.getMessage();
+        this.status = code.getStatus();
+        this.code = code.getCode();
+    }
 
-  public static ErrorResponse of(final ErrorCode code) {
-    return new ErrorResponse(code);
-  }
+    public static ErrorResponse of(final ErrorCode code) {
+        return new ErrorResponse(code);
+    }
 
-  public static ErrorResponse of(MethodArgumentTypeMismatchException e) {
-    final String value = e.getValue() == null ? "" : e.getValue().toString();
-    return new ErrorResponse(ErrorCode.INVALID_TYPE_VALUE);
-  }
+    public static ErrorResponse of(MethodArgumentTypeMismatchException e) {
+        final String value = e.getValue() == null ? "" : e.getValue().toString();
+        return new ErrorResponse(ErrorCode.INVALID_TYPE_VALUE);
+    }
 }

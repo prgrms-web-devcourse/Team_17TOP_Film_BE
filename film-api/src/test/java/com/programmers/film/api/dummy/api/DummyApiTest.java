@@ -23,30 +23,30 @@ import org.springframework.test.web.servlet.ResultActions;
 @AutoConfigureRestDocs
 class DummyApiTest {
 
-  @Autowired
-  protected DummyRepository dummyRepository;
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    protected DummyRepository dummyRepository;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @BeforeEach
-  void setUp() {
-    DummyEntity dummyEntity = new DummyEntity(1L, "abc");
-    dummyRepository.save(dummyEntity);
-  }
+    @BeforeEach
+    void setUp() {
+        DummyEntity dummyEntity = new DummyEntity(1L, "abc");
+        dummyRepository.save(dummyEntity);
+    }
 
-  @Test
-  @DisplayName("dummy success test")
-  public void findByIdSuccess() throws Exception {
-    final ResultActions resultActions = mockMvc.perform(get("/api/v1/dummy/{dummyId}", 1L)
-            .contentType(MediaType.APPLICATION_JSON))
-        .andDo(print());
-  }
+    @Test
+    @DisplayName("dummy success test")
+    public void findByIdSuccess() throws Exception {
+        final ResultActions resultActions = mockMvc.perform(get("/api/v1/dummy/{dummyId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+    }
 
-  @Test
-  @DisplayName("dummy fail test")
-  public void findByIdFail() throws Exception {
-    final ResultActions resultActions = mockMvc.perform(get("/api/v1/dummy/{dummyId}", 2L)
-            .contentType(MediaType.APPLICATION_JSON))
-        .andDo(print());
-  }
+    @Test
+    @DisplayName("dummy fail test")
+    public void findByIdFail() throws Exception {
+        final ResultActions resultActions = mockMvc.perform(get("/api/v1/dummy/{dummyId}", 2L)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+    }
 }

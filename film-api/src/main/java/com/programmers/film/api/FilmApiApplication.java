@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = "com.programmers.film")
 public class FilmApiApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(FilmApiApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(FilmApiApplication.class, args);
+    }
 }

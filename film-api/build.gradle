@@ -21,3 +21,4 @@ asciidoctor {
     inputs.dir snippetsDir
     dependsOn test
 }
+targetCompatibility = JavaVersion.VERSION_16
