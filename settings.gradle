@@ -1,0 +1,5 @@
+rootProject.name = 'Team_17TOP_Film_BE'
+include 'film-common'
+include 'film-external'
+include 'film-domain'
+include 'film-api'

@@ -1,0 +1,9 @@
+dependencies {
+    api project(":film-common")
+
+    // jwt
+}
+
+bootJar { enabled = false }
+
+jar { enabled = true }
