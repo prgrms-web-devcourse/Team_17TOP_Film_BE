@@ -21,12 +21,13 @@ public enum ErrorCode {
     KAKAO_ERROR(400, "L003", "Kakao Server Error"),
     SERVER_ERROR(400, "L004", "DB Server Error"),
 
-    // Join
-    NICKNAME_ERROR(400, "J001", "Nickname Is Duplicated"),
-    ALREADY_CREATED(400, "J002", "User Already Created"),
-
     // Map
     LOCATION_ERROR(400, "M001", "Location Input Error"),
+
+    // User
+    NICKNAME_DUPLICATED(400, "U001", "Nickname Is Duplicated"),
+    ALREADY_CREATED(400, "U002", "User Already Created"),
+    NICKNAME_ERROR(400,"U003", "Nickname Is Out Of The Regex"),
 
     // Post
     POST_ID_ERROR(400, "P001", "Post Id Not Exist"),
