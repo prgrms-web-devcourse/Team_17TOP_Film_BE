@@ -6,6 +6,8 @@ dependencies {
     implementation project(':film-domain')
     implementation project(':film-external')
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    api 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 }
 
 ext {
