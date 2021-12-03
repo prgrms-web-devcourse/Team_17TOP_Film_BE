@@ -38,7 +38,7 @@ public class PostDetail {
     private List<PostImage> postImages = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "opner_id")
+    @JoinColumn(name = "opener_id")
     private User opener;
 
     @Column(name = "opened_at")
