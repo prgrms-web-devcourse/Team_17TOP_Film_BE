@@ -1,7 +1,9 @@
 package com.programmers.film.domain.post.domain;
 
 import com.programmers.film.domain.member.domain.User;
+import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,13 +21,27 @@ public class Authority {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // TODO : mapping with users
-    @ManyToOne //two-way
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private User user;
 
-    // TODO : mapping with posts
-    @ManyToOne //two-way
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    public void setUser(User user) {
+        if (Objects.nonNull(this.user)) {
+            this.user.getAuthorities().remove(this);
+        }
+
+        this.user = user;
+    }
+
+    public void setPost(Post post) {
+        if (Objects.nonNull(this.post)) {
+            this.post.getAuthorities().remove(this);
+        }
+
+        this.post = post;
+    }
 }

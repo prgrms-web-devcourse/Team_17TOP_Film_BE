@@ -2,6 +2,8 @@ package com.programmers.film.domain.member.domain;
 
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Authority;
+import com.programmers.film.domain.post.domain.Post;
+import com.programmers.film.domain.post.domain.PostImage;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +42,11 @@ public class User {
     @Column(name = "provider")
     private String provider;
 
-    // TODO : mapping with authorities
-    // two-way
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Authority> authorities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author", orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
 
     // TODO : mapping with kakao
 
@@ -55,4 +58,14 @@ public class User {
     private ImageUrl profileImageUrl;
 
     private LocalDateTime lastLoginAt;
+
+    public void addAuthority(Authority authority) {
+        authorities.add(authority);
+        authority.setUser(this);
+    }
+
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setAuthor(this);
+    }
 }
