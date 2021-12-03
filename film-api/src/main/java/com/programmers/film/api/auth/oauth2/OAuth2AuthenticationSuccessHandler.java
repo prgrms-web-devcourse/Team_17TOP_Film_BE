@@ -2,7 +2,7 @@ package com.programmers.film.api.auth.oauth2;
 
 import com.programmers.film.api.auth.jwt.Jwt;
 import com.programmers.film.api.auth.service.AuthService;
-import com.programmers.film.domain.user.entity.User;
+import com.programmers.film.domain.auth.entity.Auth;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
@@ -33,8 +33,8 @@ public class OAuth2AuthenticationSuccessHandler extends
 			OAuth2User principal = oauth2Token.getPrincipal();
 			String registrationId = oauth2Token.getAuthorizedClientRegistrationId();
 
-			User user = processUserOAuth2UserJoin(principal, registrationId);
-			String loginSuccessJson = generateLoginSuccessJson(user);
+			Auth auth = processUserOAuth2UserJoin(principal, registrationId);
+			String loginSuccessJson = generateLoginSuccessJson(auth);
 			response.setContentType("application/json;charset=UTF-8");
 			response.setContentLength(loginSuccessJson.getBytes(StandardCharsets.UTF_8).length);
 			response.getWriter().write(loginSuccessJson);
@@ -43,18 +43,18 @@ public class OAuth2AuthenticationSuccessHandler extends
 		}
 	}
 
-	private User processUserOAuth2UserJoin(OAuth2User oAuth2User, String registrationId) {
+	private Auth processUserOAuth2UserJoin(OAuth2User oAuth2User, String registrationId) {
 		return authService.join(oAuth2User, registrationId);
 	}
 
-	private String generateLoginSuccessJson(User user) {
-		String token = generateToken(user);
-		log.debug("Jwt({}) created for oauth2 login user {}", token, user.getUsername());
-		return "{\"token\":\"" + token + "\", \"username\":\"" + user.getUsername()
-			+ "\", \"group\":\"" + user.getGroup().getName() + "\"}";
+	private String generateLoginSuccessJson(Auth auth) {
+		String token = generateToken(auth);
+		log.debug("Jwt({}) created for oauth2 login user {}", token, auth.getUsername());
+		return "{\"token\":\"" + token + "\", \"username\":\"" + auth.getUsername()
+			+ "\", \"group\":\"" + auth.getGroup().getName() + "\"}";
 	}
 
-	private String generateToken(User user) {
-		return jwt.sign(Jwt.Claims.from(user.getUsername(), new String[]{"ROLE_USER"}));
+	private String generateToken(Auth auth) {
+		return jwt.sign(Jwt.Claims.from(auth.getUsername(), new String[]{"ROLE_USER"}));
 	}
 }

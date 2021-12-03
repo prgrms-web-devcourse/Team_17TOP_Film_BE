@@ -1,4 +1,4 @@
-package com.programmers.film.domain.user.entity;
+package com.programmers.film.domain.auth.entity;
 
 import static java.util.stream.Collectors.toList;
 

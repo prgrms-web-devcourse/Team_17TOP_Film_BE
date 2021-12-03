@@ -1,4 +1,4 @@
-package com.programmers.film.domain.user.entity;
+package com.programmers.film.domain.auth.entity;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.assertj.core.util.Preconditions.checkArgument;
@@ -17,8 +17,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Entity
 @Getter
-@Table(name = "users")
-public class User {
+@Table(name = "auths")
+public class Auth {
 
 	@Id
 	@Column(name = "id")
@@ -41,9 +41,9 @@ public class User {
 	@JoinColumn(name = "group_id")
 	private Group group;
 
-	protected User() {/*no-op*/}
+	protected Auth() {/*no-op*/}
 
-	public User(String username, String provider, String providerId, String profileImage,
+	public Auth(String username, String provider, String providerId, String profileImage,
 		Group group) {
 		checkArgument(isNotEmpty(username), "username must be provided.");
 		checkArgument(isNotEmpty(provider), "provider must be provided.");

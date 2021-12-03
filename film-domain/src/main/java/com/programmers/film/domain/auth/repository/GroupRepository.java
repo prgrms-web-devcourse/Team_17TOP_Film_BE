@@ -1,6 +1,6 @@
-package com.programmers.film.domain.user.repository;
+package com.programmers.film.domain.auth.repository;
 
-import com.programmers.film.domain.user.entity.Group;
+import com.programmers.film.domain.auth.entity.Group;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
