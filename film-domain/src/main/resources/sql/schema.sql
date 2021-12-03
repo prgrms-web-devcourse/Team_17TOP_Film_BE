@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS auths CASCADE;
 DROP TABLE IF EXISTS group_permission CASCADE;
 DROP TABLE IF EXISTS groups CASCADE;
 DROP TABLE IF EXISTS permissions CASCADE;
@@ -28,7 +28,7 @@ CREATE TABLE group_permission
     CONSTRAINT fk_permission_id_for_group_permission FOREIGN KEY (permission_id) REFERENCES permissions (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-CREATE TABLE users
+CREATE TABLE auths
 (
     id            bigint      NOT NULL AUTO_INCREMENT,
     username      varchar(20) NOT NULL,
