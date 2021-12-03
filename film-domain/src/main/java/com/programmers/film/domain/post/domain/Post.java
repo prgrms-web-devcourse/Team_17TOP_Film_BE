@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,18 +36,14 @@ public class Post extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // TODO : mapping with authority
-    // two-way
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Authority>  authorities = new ArrayList<>();
 
-    // TODO
-    // two-way
-    @ManyToOne
-    @JoinColumn(name = "author")
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private User author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id")
     private PostState state;
 
@@ -66,4 +64,19 @@ public class Post extends BaseEntity {
     public String getStrAvailableAt() {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(this.availableAt);
     }
+
+    public void addAuthority(Authority authority) {
+        authorities.add(authority);
+        authority.setPost(this);
+    }
+
+    public void setAuthor(User author) {
+        if (Objects.nonNull(this.author)) {
+            this.author.getPosts().remove(this);
+        }
+
+        this.author = author;
+    }
+
+
 }
