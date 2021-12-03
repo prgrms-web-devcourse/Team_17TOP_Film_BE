@@ -37,7 +37,7 @@ public class Post extends BaseEntity {
     private Long id;
 
     @OneToMany(mappedBy = "post", orphanRemoval = true)
-    private List<Authority>  authorities = new ArrayList<>();
+    private List<Authority> authorities = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
