@@ -8,5 +8,9 @@ server:
 
 spring:
   profiles:
+    active: dev
+    default: dev
     include:
+      - security
+      - domain
       - aws
