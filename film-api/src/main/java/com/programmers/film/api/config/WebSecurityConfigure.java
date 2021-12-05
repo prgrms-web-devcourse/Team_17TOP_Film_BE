@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,23 +19,27 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.security.oauth2.client.JdbcOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.AuthenticatedPrincipalOAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	private final CorsConfigure corsConfigure;
 	private final JwtConfigure jwtConfigure;
+	private final AppConfigure appConfigure;
+
+	private final AuthService authService;
 
 	@Override
 	public void configure(WebSecurity web) {
@@ -70,7 +74,10 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 			.redirectionEndpoint()
 				.baseUri("/*/oauth2/code/*")
 				.and()
-			.successHandler(getOAuth2AuthenticationSuccessHandler())
+			.successHandler(oauth2AuthenticationSuccessHandler())
+				.authorizedClientRepository(
+					getApplicationContext().getBean(AuthenticatedPrincipalOAuth2AuthorizedClientRepository.class)
+				)
 				.and()
 			.exceptionHandling()
 				.accessDeniedHandler(accessDeniedHandler())
@@ -89,18 +96,31 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
+	public HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository() {
 		return new HttpCookieOAuth2AuthorizationRequestRepository();
 	}
 
 	@Bean
-	public OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler(Jwt jwt,
-		AuthService authService) {
-		return new OAuth2AuthenticationSuccessHandler(jwt, authService);
+	public OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler() {
+		return new OAuth2AuthenticationSuccessHandler(
+			getApplicationContext().getBean(JdbcOAuth2AuthorizedClientService.class),
+			authorizationRequestRepository(),
+			appConfigure,
+			authService);
 	}
 
-	public OAuth2AuthenticationSuccessHandler getOAuth2AuthenticationSuccessHandler() {
-		return getApplicationContext().getBean(OAuth2AuthenticationSuccessHandler.class);
+	@Bean
+	public OAuth2AuthorizedClientService authorizedClientService(
+		JdbcOperations jdbcOperations,
+		ClientRegistrationRepository clientRegistrationRepository
+	) {
+		return new JdbcOAuth2AuthorizedClientService(jdbcOperations, clientRegistrationRepository);
+	}
+
+	@Bean
+	public OAuth2AuthorizedClientRepository authorizedClientRepository(
+		OAuth2AuthorizedClientService authorizedClientService) {
+		return new AuthenticatedPrincipalOAuth2AuthorizedClientRepository(authorizedClientService);
 	}
 
 	@Bean
@@ -123,7 +143,7 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+	public UrlBasedCorsConfigurationSource corsConfigurationSource(CorsConfigure corsConfigure) {
 		UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
 
 		CorsConfiguration corsConfig = new CorsConfiguration();
