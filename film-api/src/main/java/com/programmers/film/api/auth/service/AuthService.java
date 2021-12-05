@@ -3,8 +3,8 @@ package com.programmers.film.api.auth.service;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.assertj.core.util.Preconditions.checkArgument;
 
-import com.programmers.film.domain.auth.entity.Auth;
-import com.programmers.film.domain.auth.entity.Group;
+import com.programmers.film.domain.auth.domain.Auth;
+import com.programmers.film.domain.auth.domain.Group;
 import com.programmers.film.domain.auth.repository.AuthRepository;
 import com.programmers.film.domain.auth.repository.GroupRepository;
 import java.util.Map;
@@ -41,31 +41,30 @@ public class AuthService {
 	}
 
 	@Transactional
-	public Auth join(OAuth2User oauth2User, String authorizedClientRegistrationId) {
-		checkArgument(oauth2User != null, "oauth2User must be provided.");
+	public Auth join(OAuth2User oAuth2User, String authorizedClientRegistrationId) {
+
+		checkArgument(oAuth2User != null, "oauth2User must be provided.");
 		checkArgument(isNotEmpty(authorizedClientRegistrationId),
 			"authorizedClientRegistrationId must be provided.");
 
-		String providerId = oauth2User.getName();
+		String providerId = oAuth2User.getName();
 		return findByProviderAndProviderId(authorizedClientRegistrationId, providerId)
-			.map(auth -> {
-				log.warn("Already exists: {} for (provider: {}, providerId: {})",
-					auth, authorizedClientRegistrationId, providerId);
-				return auth;
+			.map(user -> {
+				log.warn("Already exists: {} for (provider: {}, providerId: {})", user,
+					authorizedClientRegistrationId, providerId);
+				return user;
 			})
 			.orElseGet(() -> {
-				Group group = groupRepository.findByName("USER_GROUP")
-					.orElseThrow(
-						() -> new IllegalStateException("Could not found group for USER_GROUP"));
-
-				Map<String, Object> attributes = oauth2User.getAttributes();
+				Map<String, Object> attributes = oAuth2User.getAttributes();
 				@SuppressWarnings("unchecked")
 				Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
 				checkArgument(properties != null, "OAuth2User properties is empty");
 
 				String nickname = (String) properties.get("nickname");
 				String profileImage = (String) properties.get("profile_image");
-
+				Group group = groupRepository.findByName("USER_GROUP")
+					.orElseThrow(
+						() -> new IllegalStateException("Could not found group for USER_GROUP"));
 				return authRepository.save(
 					new Auth(nickname, authorizedClientRegistrationId, providerId, profileImage,
 						group)
