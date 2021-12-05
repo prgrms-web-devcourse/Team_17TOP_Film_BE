@@ -14,7 +14,7 @@ public class CookieUtil {
 
 	public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
 	public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
-	public static final String REFRESH_TOKEN = "refresh_token";
+	public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
 
 	public static Optional<Cookie> getCookie(HttpServletRequest request, String cookieName) {
 		return ofNullable(WebUtils.getCookie(request, cookieName));

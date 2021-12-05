@@ -2,7 +2,7 @@ package com.programmers.film.api.auth.oauth2;
 
 import static com.programmers.film.api.auth.util.CookieUtil.OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME;
 import static com.programmers.film.api.auth.util.CookieUtil.REDIRECT_URI_PARAM_COOKIE_NAME;
-import static com.programmers.film.api.auth.util.CookieUtil.REFRESH_TOKEN;
+import static com.programmers.film.api.auth.util.CookieUtil.REFRESH_TOKEN_COOKIE_NAME;
 
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.programmers.film.api.auth.util.CookieUtil;
@@ -43,7 +43,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
 		if (authorizationRequest == null) {
 			CookieUtil.clearCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
 			CookieUtil.clearCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
-			CookieUtil.clearCookie(request, response, REFRESH_TOKEN);
+			CookieUtil.clearCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
 			return;
 		}
 
@@ -76,7 +76,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
 		HttpServletResponse response) {
 		CookieUtil.clearCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
 		CookieUtil.clearCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
-		CookieUtil.clearCookie(request, response, REFRESH_TOKEN);
+		CookieUtil.clearCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
 	}
 
 	private OAuth2AuthorizationRequest getOAuth2AuthorizationRequest(Cookie cookie) {
