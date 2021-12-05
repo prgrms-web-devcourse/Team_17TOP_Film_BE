@@ -3,6 +3,7 @@ package com.programmers.film.api.config;
 import com.programmers.film.api.auth.jwt.Jwt;
 import com.programmers.film.api.auth.jwt.JwtAuthenticationFilter;
 import com.programmers.film.api.auth.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.programmers.film.api.auth.oauth2.OAuth2AuthenticationFailureHandler;
 import com.programmers.film.api.auth.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.programmers.film.api.auth.service.AuthService;
 import java.util.Arrays;
@@ -74,11 +75,15 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 			.redirectionEndpoint()
 				.baseUri("/*/oauth2/code/*")
 				.and()
+			.userInfoEndpoint()
+				.userService(authService)
+				.and()
 			.successHandler(oauth2AuthenticationSuccessHandler())
 				.authorizedClientRepository(
 					getApplicationContext().getBean(AuthenticatedPrincipalOAuth2AuthorizedClientRepository.class)
 				)
-				.and()
+			.failureHandler(oAuth2AuthenticationFailureHandler())
+			.and()
 			.exceptionHandling()
 				.accessDeniedHandler(accessDeniedHandler())
 				.and()
@@ -121,6 +126,11 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	public OAuth2AuthorizedClientRepository authorizedClientRepository(
 		OAuth2AuthorizedClientService authorizedClientService) {
 		return new AuthenticatedPrincipalOAuth2AuthorizedClientRepository(authorizedClientService);
+	}
+
+	@Bean
+	public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
+		return new OAuth2AuthenticationFailureHandler(authorizationRequestRepository());
 	}
 
 	@Bean

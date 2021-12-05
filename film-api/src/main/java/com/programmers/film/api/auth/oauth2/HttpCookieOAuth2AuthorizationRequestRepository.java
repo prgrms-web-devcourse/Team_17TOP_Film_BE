@@ -1,13 +1,14 @@
 package com.programmers.film.api.auth.oauth2;
 
 import static com.programmers.film.api.auth.util.CookieUtil.OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME;
+import static com.programmers.film.api.auth.util.CookieUtil.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static com.programmers.film.api.auth.util.CookieUtil.REFRESH_TOKEN;
 
+import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.programmers.film.api.auth.util.CookieUtil;
-import java.util.Base64;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
@@ -38,17 +39,25 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
 	@Override
 	public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest,
 		HttpServletRequest request, HttpServletResponse response) {
+
 		if (authorizationRequest == null) {
-			CookieUtil.getCookie(request, cookieName)
-				.ifPresent(cookie -> CookieUtil.clearCookie(cookie, response));
-		} else {
-			String value = Base64.getUrlEncoder()
-				.encodeToString(SerializationUtils.serialize(authorizationRequest));
-			Cookie cookie = new Cookie(cookieName, value);
-			cookie.setPath("/");
-			cookie.setHttpOnly(true);
-			cookie.setMaxAge(cookieExpireSeconds);
-			response.addCookie(cookie);
+			CookieUtil.clearCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+			CookieUtil.clearCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
+			CookieUtil.clearCookie(request, response, REFRESH_TOKEN);
+			return;
+		}
+
+		String value = CookieUtil.serialize(authorizationRequest);
+		Cookie cookie = new Cookie(OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, value);
+		cookie.setPath("/");
+		cookie.setHttpOnly(true);
+		cookie.setMaxAge(cookieExpireSeconds);
+		response.addCookie(cookie);
+
+		String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
+		if (StringUtils.isNotBlank(redirectUriAfterLogin)) {
+			CookieUtil.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin,
+				cookieExpireSeconds);
 		}
 	}
 
@@ -60,18 +69,17 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
 	@Override
 	public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request,
 		HttpServletResponse response) {
-		return CookieUtil.getCookie(request, cookieName)
-			.map(cookie -> {
-				OAuth2AuthorizationRequest oauth2Request = getOAuth2AuthorizationRequest(cookie);
-				CookieUtil.clearCookie(cookie, response);
-				return oauth2Request;
-			})
-			.orElse(null);
+		return this.loadAuthorizationRequest(request);
+	}
+
+	public void removeAuthorizationRequestCookies(HttpServletRequest request,
+		HttpServletResponse response) {
+		CookieUtil.clearCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+		CookieUtil.clearCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
+		CookieUtil.clearCookie(request, response, REFRESH_TOKEN);
 	}
 
 	private OAuth2AuthorizationRequest getOAuth2AuthorizationRequest(Cookie cookie) {
-		return SerializationUtils.deserialize(
-			Base64.getUrlDecoder().decode(cookie.getValue())
-		);
+		return CookieUtil.deserialize(cookie, OAuth2AuthorizationRequest.class);
 	}
 }

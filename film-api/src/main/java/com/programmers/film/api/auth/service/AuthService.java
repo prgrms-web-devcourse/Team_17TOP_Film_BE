@@ -12,18 +12,26 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService extends DefaultOAuth2UserService {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	private final AuthRepository authRepository;
 	private final GroupRepository groupRepository;
+
+	@Override
+	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+		return super.loadUser(userRequest);
+	}
 
 	@Transactional(readOnly = true)
 	public Optional<Auth> findByUsername(String username) {
