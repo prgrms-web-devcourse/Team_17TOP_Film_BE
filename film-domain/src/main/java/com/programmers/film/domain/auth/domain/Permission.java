@@ -1,4 +1,4 @@
-package com.programmers.film.domain.auth.entity;
+package com.programmers.film.domain.auth.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
