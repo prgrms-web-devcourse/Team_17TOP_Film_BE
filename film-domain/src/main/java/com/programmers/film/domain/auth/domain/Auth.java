@@ -1,4 +1,4 @@
-package com.programmers.film.domain.auth.entity;
+package com.programmers.film.domain.auth.domain;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.assertj.core.util.Preconditions.checkArgument;

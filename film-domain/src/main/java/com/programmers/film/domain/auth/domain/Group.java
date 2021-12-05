@@ -1,4 +1,4 @@
-package com.programmers.film.domain.auth.entity;
+package com.programmers.film.domain.auth.domain;
 
 import static java.util.stream.Collectors.toList;
 
@@ -22,6 +22,7 @@ public class Group {
 
 	@OneToMany(mappedBy = "group")
 	private final List<GroupPermission> permissions = new ArrayList<>();
+
 	@Id
 	@Column(name = "id")
 	private Long id;
