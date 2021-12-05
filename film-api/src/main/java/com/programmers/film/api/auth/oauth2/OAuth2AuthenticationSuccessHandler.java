@@ -1,7 +1,7 @@
 package com.programmers.film.api.auth.oauth2;
 
 import static com.programmers.film.api.auth.util.CookieUtil.REDIRECT_URI_PARAM_COOKIE_NAME;
-import static com.programmers.film.api.auth.util.CookieUtil.REFRESH_TOKEN;
+import static com.programmers.film.api.auth.util.CookieUtil.REFRESH_TOKEN_COOKIE_NAME;
 
 import com.programmers.film.api.auth.service.AuthService;
 import com.programmers.film.api.auth.util.CookieUtil;
@@ -84,12 +84,13 @@ public class OAuth2AuthenticationSuccessHandler extends
 		OAuth2AuthorizedClient oAuth2AuthorizedClient = oAuth2AuthorizedClientService.loadAuthorizedClient(
 			auth.getProvider(), auth.getProviderId());
 
-		CookieUtil.clearCookie(request, response, REFRESH_TOKEN);
+		CookieUtil.clearCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
 
 		OAuth2RefreshToken refreshToken = oAuth2AuthorizedClient.getRefreshToken();
 		if (refreshToken != null && refreshToken.getExpiresAt() != null) {
 			int maxAge = (int) refreshToken.getExpiresAt().getEpochSecond();
-			CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getTokenValue(), maxAge);
+			CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken.getTokenValue(),
+				maxAge);
 		}
 
 		return UriComponentsBuilder.fromUriString(targetUrl)
