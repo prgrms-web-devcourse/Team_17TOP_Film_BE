@@ -24,8 +24,10 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends
 	SavedRequestAwareAuthenticationSuccessHandler {
@@ -82,8 +84,7 @@ public class OAuth2AuthenticationSuccessHandler extends
 		OAuth2AuthorizedClient oAuth2AuthorizedClient = oAuth2AuthorizedClientService.loadAuthorizedClient(
 			auth.getProvider(), auth.getProviderId());
 
-		CookieUtil.getCookie(request, REFRESH_TOKEN)
-			.ifPresent(remainCookie -> CookieUtil.clearCookie(remainCookie, response));
+		CookieUtil.clearCookie(request, response, REFRESH_TOKEN);
 
 		OAuth2RefreshToken refreshToken = oAuth2AuthorizedClient.getRefreshToken();
 		if (refreshToken != null && refreshToken.getExpiresAt() != null) {
@@ -111,7 +112,7 @@ public class OAuth2AuthenticationSuccessHandler extends
 	protected void clearAuthenticationAttributes(HttpServletRequest request,
 		HttpServletResponse response) {
 		super.clearAuthenticationAttributes(request);
-		httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequest(request,
+		httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request,
 			response);
 	}
 
