@@ -78,5 +78,8 @@ public class Post extends BaseEntity {
         this.author = author;
     }
 
+    public Post(String title,String preview_text,String){ //create constructor
+        this.title=
+    }
 
 }
