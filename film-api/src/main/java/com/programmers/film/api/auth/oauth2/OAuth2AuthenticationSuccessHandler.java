@@ -86,13 +86,15 @@ public class OAuth2AuthenticationSuccessHandler extends
 
 		CookieUtil.clearCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
 
+		// Create refresh cookie
 		OAuth2RefreshToken refreshToken = oAuth2AuthorizedClient.getRefreshToken();
-		if (refreshToken != null && refreshToken.getExpiresAt() != null) {
-			int maxAge = (int) refreshToken.getExpiresAt().getEpochSecond();
+		if (refreshToken != null) {
+			int cookieMaxAge = (int) appConfigure.getAuth().getRefreshTokenExpiry() / 60;
 			CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken.getTokenValue(),
-				maxAge);
+				cookieMaxAge);
 		}
 
+		// Put access token to query parameter
 		return UriComponentsBuilder.fromUriString(targetUrl)
 			.queryParam("token", oAuth2AuthorizedClient.getAccessToken().getTokenValue())
 			.build().toUriString();
