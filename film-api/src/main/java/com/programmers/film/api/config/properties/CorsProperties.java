@@ -1,4 +1,4 @@
-package com.programmers.film.api.config;
+package com.programmers.film.api.config.properties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 @ConfigurationProperties(prefix = "cors")
-public class CorsConfigure {
+public class CorsProperties {
 
 	private String allowedOrigins;
 	private String allowedMethods;

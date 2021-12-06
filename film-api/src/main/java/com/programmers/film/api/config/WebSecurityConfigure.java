@@ -6,6 +6,9 @@ import com.programmers.film.api.auth.oauth2.HttpCookieOAuth2AuthorizationRequest
 import com.programmers.film.api.auth.oauth2.OAuth2AuthenticationFailureHandler;
 import com.programmers.film.api.auth.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.programmers.film.api.auth.service.AuthService;
+import com.programmers.film.api.config.properties.AppProperties;
+import com.programmers.film.api.config.properties.CorsProperties;
+import com.programmers.film.api.config.properties.JwtProperties;
 import java.util.Arrays;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +40,8 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	private final JwtConfigure jwtConfigure;
-	private final AppConfigure appConfigure;
+	private final JwtProperties jwtProperties;
+	private final AppProperties appProperties;
 
 	private final AuthService authService;
 
@@ -94,9 +97,9 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	@Bean
 	public Jwt jwt() {
 		return new Jwt(
-			jwtConfigure.getIssuer(),
-			jwtConfigure.getClientSecret(),
-			jwtConfigure.getExpirySeconds()
+			jwtProperties.getIssuer(),
+			jwtProperties.getClientSecret(),
+			jwtProperties.getExpirySeconds()
 		);
 	}
 
@@ -110,7 +113,7 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 		return new OAuth2AuthenticationSuccessHandler(
 			getApplicationContext().getBean(JdbcOAuth2AuthorizedClientService.class),
 			authorizationRequestRepository(),
-			appConfigure,
+			appProperties,
 			authService);
 	}
 
@@ -149,17 +152,17 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {
 		Jwt jwt = getApplicationContext().getBean(Jwt.class);
-		return new JwtAuthenticationFilter(jwtConfigure.getHeader(), jwt);
+		return new JwtAuthenticationFilter(jwtProperties.getHeader(), jwt);
 	}
 
 	@Bean
-	public UrlBasedCorsConfigurationSource corsConfigurationSource(CorsConfigure corsConfigure) {
+	public UrlBasedCorsConfigurationSource corsConfigurationSource(CorsProperties corsProperties) {
 		UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
 
 		CorsConfiguration corsConfig = new CorsConfiguration();
-		corsConfig.setAllowedHeaders(Arrays.asList(corsConfigure.getAllowedHeaders().split(",")));
-		corsConfig.setAllowedMethods(Arrays.asList(corsConfigure.getAllowedMethods().split(",")));
-		corsConfig.setAllowedOrigins(Arrays.asList(corsConfigure.getAllowedOrigins().split(",")));
+		corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
+		corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
+		corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
 		corsConfig.setAllowCredentials(true);
 		corsConfig.setMaxAge(corsConfig.getMaxAge());
 

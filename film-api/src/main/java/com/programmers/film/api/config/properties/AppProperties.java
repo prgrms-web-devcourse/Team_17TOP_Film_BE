@@ -1,4 +1,4 @@
-package com.programmers.film.api.config;
+package com.programmers.film.api.config.properties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 @ConfigurationProperties(prefix = "app")
-public class AppConfigure {
+public class AppProperties {
 
 	private final Auth auth = new Auth();
 	private final OAuth2 oauth2 = new OAuth2();
