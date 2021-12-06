@@ -4,7 +4,7 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-import com.programmers.film.api.auth.dto.LoginRequest;
+import com.programmers.film.api.auth.dto.request.LoginRequest;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
