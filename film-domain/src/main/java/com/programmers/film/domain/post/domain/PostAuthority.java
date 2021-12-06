@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "authorities")
-public class Authority {
+@Table(name = "post_authorities")
+public class PostAuthority {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +31,7 @@ public class Authority {
 
     public void setUser(User user) {
         if (Objects.nonNull(this.user)) {
-            this.user.getAuthorities().remove(this);
+            this.user.getPostAuthorities().remove(this);
         }
 
         this.user = user;
@@ -39,7 +39,7 @@ public class Authority {
 
     public void setPost(Post post) {
         if (Objects.nonNull(this.post)) {
-            this.post.getAuthorities().remove(this);
+            this.post.getPostAuthorities().remove(this);
         }
 
         this.post = post;

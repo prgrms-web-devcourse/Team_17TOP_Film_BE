@@ -1,7 +1,7 @@
 package com.programmers.film.domain.member.domain;
 
 import com.programmers.film.domain.common.domain.ImageUrl;
-import com.programmers.film.domain.post.domain.Authority;
+import com.programmers.film.domain.post.domain.PostAuthority;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostImage;
 import java.time.LocalDateTime;
@@ -43,7 +43,7 @@ public class User {
     private String provider;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<Authority> authorities = new ArrayList<>();
+    private List<PostAuthority> postAuthorities = new ArrayList<>();
 
     @OneToMany(mappedBy = "author", orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
@@ -59,8 +59,8 @@ public class User {
 
     private LocalDateTime lastLoginAt;
 
-    public void addAuthority(Authority authority) {
-        authorities.add(authority);
+    public void addPostAuthority(PostAuthority authority) {
+        postAuthorities.add(authority);
         authority.setUser(this);
     }
 
