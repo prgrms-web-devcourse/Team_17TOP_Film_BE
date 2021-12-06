@@ -24,11 +24,10 @@ public class PostService {
     @Transactional
     public CreatePostResponse createPost(CreatePostRequest request){
     // authority , post , post_detail , postImg 생성
-        authorNickname->user
-        post.setter(user);
+    //    authorNickname->user
+    //    post.setter(user);
 
-
-        postRepository.save()
+    //    postRepository.save()
 
     }
 
