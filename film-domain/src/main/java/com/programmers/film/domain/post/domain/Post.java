@@ -50,7 +50,7 @@ public class Post extends BaseEntity {
     private String title;
 
     @Column(name = "preview_text")
-    private String preview_text;
+    private String previewText;
 
     @Column(name = "available_at")
     private LocalDate availableAt;
