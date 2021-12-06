@@ -4,8 +4,8 @@ import com.programmers.film.domain.common.domain.BaseEntity;
 import com.programmers.film.domain.common.domain.Point;
 import com.programmers.film.domain.member.domain.User;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -20,8 +20,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,7 +35,7 @@ public class Post extends BaseEntity {
     private Long id;
 
     @OneToMany(mappedBy = "post", orphanRemoval = true)
-    private List<Authority> authorities = new ArrayList<>();
+    private List<PostAuthority> postAuthorities = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
@@ -55,8 +53,7 @@ public class Post extends BaseEntity {
     private String preview_text;
 
     @Column(name = "available_at")
-    @Temporal(TemporalType.DATE)
-    private Date availableAt;
+    private LocalDate availableAt;
 
     @Embedded
     private Point location;
@@ -65,8 +62,8 @@ public class Post extends BaseEntity {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(this.availableAt);
     }
 
-    public void addAuthority(Authority authority) {
-        authorities.add(authority);
+    public void addPostAuthority(PostAuthority authority) {
+        postAuthorities.add(authority);
         authority.setPost(this);
     }
 
@@ -78,8 +75,5 @@ public class Post extends BaseEntity {
         this.author = author;
     }
 
-    public Post(String title,String preview_text,String){ //create constructor
-        this.title=
-    }
 
 }
