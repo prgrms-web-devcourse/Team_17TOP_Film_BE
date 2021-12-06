@@ -13,3 +13,4 @@ spring:
     include:
       - security
       - domain
+      - aws
