@@ -1,4 +1,4 @@
-package com.programmers.film.api.auth.dto;
+package com.programmers.film.api.auth.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;

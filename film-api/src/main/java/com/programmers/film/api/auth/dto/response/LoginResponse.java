@@ -1,4 +1,4 @@
-package com.programmers.film.api.auth.dto;
+package com.programmers.film.api.auth.dto.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
