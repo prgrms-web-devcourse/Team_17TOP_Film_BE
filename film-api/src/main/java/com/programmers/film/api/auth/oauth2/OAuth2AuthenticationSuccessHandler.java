@@ -5,7 +5,7 @@ import static com.programmers.film.api.auth.util.CookieUtil.REFRESH_TOKEN_COOKIE
 
 import com.programmers.film.api.auth.service.AuthService;
 import com.programmers.film.api.auth.util.CookieUtil;
-import com.programmers.film.api.config.AppConfigure;
+import com.programmers.film.api.config.properties.AppProperties;
 import com.programmers.film.domain.auth.domain.Auth;
 import java.io.IOException;
 import java.net.URI;
@@ -38,7 +38,7 @@ public class OAuth2AuthenticationSuccessHandler extends
 
 	private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
-	private final AppConfigure appConfigure;
+	private final AppProperties appProperties;
 	private final AuthService authService;
 
 	@Override
@@ -89,7 +89,7 @@ public class OAuth2AuthenticationSuccessHandler extends
 		// Create refresh cookie
 		OAuth2RefreshToken refreshToken = oAuth2AuthorizedClient.getRefreshToken();
 		if (refreshToken != null) {
-			int cookieMaxAge = (int) appConfigure.getAuth().getRefreshTokenExpiry() / 60;
+			int cookieMaxAge = (int) appProperties.getAuth().getRefreshTokenExpiry() / 60;
 			CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken.getTokenValue(),
 				cookieMaxAge);
 		}
@@ -103,7 +103,7 @@ public class OAuth2AuthenticationSuccessHandler extends
 	private boolean isAuthorizedRedirectUri(String uri) {
 		URI clientRedirectUri = URI.create(uri);
 
-		return appConfigure.getOauth2().getAuthorizedRedirectUris()
+		return appProperties.getOauth2().getAuthorizedRedirectUris()
 			.stream()
 			.anyMatch(authorizedRedirectUri -> {
 				URI authorizedURI = URI.create(authorizedRedirectUri);
