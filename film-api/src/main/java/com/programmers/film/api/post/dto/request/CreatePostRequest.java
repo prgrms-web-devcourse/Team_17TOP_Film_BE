@@ -20,8 +20,4 @@ public class CreatePostRequest {
     private String content;
     private String authorNickname;
 
-    public Post toPost(){
-        Post post = Post.bulider
-    }
-    시 분 초 지역 .... yyyy-MM-dd->시
 }
