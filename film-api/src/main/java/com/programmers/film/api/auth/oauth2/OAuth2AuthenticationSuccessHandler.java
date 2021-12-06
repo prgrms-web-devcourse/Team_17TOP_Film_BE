@@ -3,6 +3,7 @@ package com.programmers.film.api.auth.oauth2;
 import static com.programmers.film.api.auth.util.CookieUtil.REDIRECT_URI_PARAM_COOKIE_NAME;
 import static com.programmers.film.api.auth.util.CookieUtil.REFRESH_TOKEN_COOKIE_NAME;
 
+import com.programmers.film.api.auth.jwt.Jwt;
 import com.programmers.film.api.auth.service.AuthService;
 import com.programmers.film.api.auth.util.CookieUtil;
 import com.programmers.film.api.config.properties.AppProperties;
@@ -21,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -40,6 +42,8 @@ public class OAuth2AuthenticationSuccessHandler extends
 
 	private final AppProperties appProperties;
 	private final AuthService authService;
+
+	private final Jwt jwt;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -96,7 +100,7 @@ public class OAuth2AuthenticationSuccessHandler extends
 
 		// Put access token to query parameter
 		return UriComponentsBuilder.fromUriString(targetUrl)
-			.queryParam("token", oAuth2AuthorizedClient.getAccessToken().getTokenValue())
+			.queryParam("token", generateToken(auth))
 			.build().toUriString();
 	}
 
@@ -119,14 +123,7 @@ public class OAuth2AuthenticationSuccessHandler extends
 			response);
 	}
 
-//	private String generateLoginSuccessJson(Auth auth) {
-//		String token = generateToken(auth);
-//		log.debug("Jwt({}) created for oauth2 login user {}", token, auth.getUsername());
-//		return "{\"token\":\"" + token + "\", \"username\":\"" + auth.getUsername()
-//			+ "\", \"group\":\"" + auth.getGroup().getName() + "\"}";
-//	}
-//
-//	private String generateToken(Auth auth) {
-//		return jwt.sign(Jwt.Claims.from(auth.getUsername(), new String[]{"ROLE_USER"}));
-//	}
+	private String generateToken(Auth auth) {
+		return jwt.sign(Jwt.Claims.from(auth.getUsername(), new String[]{"ROLE_USER"}));
+	}
 }

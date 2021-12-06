@@ -43,7 +43,7 @@ public final class Jwt {
 		builder.withIssuer(issuer);
 		builder.withIssuedAt(now);
 		if (expirySeconds > 0) {
-			builder.withExpiresAt(new Date(now.getTime() + expirySeconds * 1_000L));
+			builder.withExpiresAt(new Date(now.getTime() + expirySeconds * 1000L));
 		}
 		builder.withClaim("username", claims.username);
 		builder.withArrayClaim("roles", claims.roles);
@@ -98,14 +98,6 @@ public final class Jwt {
 
 		long exp() {
 			return exp != null ? exp.getTime() : -1;
-		}
-
-		void eraseIat() {
-			iat = null;
-		}
-
-		void eraseExp() {
-			exp = null;
 		}
 
 		@Override
