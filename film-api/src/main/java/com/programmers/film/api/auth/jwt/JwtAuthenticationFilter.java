@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import com.programmers.film.api.auth.dto.request.LoginRequest;
+import com.programmers.film.api.auth.util.HeaderUtil;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -19,27 +20,25 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
-
-	private final String headerKey;
 
 	private final Jwt jwt;
 
 	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 		throws IOException, ServletException {
-		HttpServletRequest request = (HttpServletRequest) req;
-		HttpServletResponse response = (HttpServletResponse) res;
 
+		// If not authenticated user
 		if (SecurityContextHolder.getContext().getAuthentication() == null) {
 			String token = getToken(request);
 			if (token != null) {
@@ -72,7 +71,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 	}
 
 	private String getToken(HttpServletRequest request) {
-		String token = request.getHeader(headerKey);
+		String token = HeaderUtil.getAccessToken(request);
 		if (isNotEmpty(token)) {
 			log.debug("Jwt authorization api detected: {}", token);
 			return URLDecoder.decode(token, StandardCharsets.UTF_8);
