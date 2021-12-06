@@ -1,4 +1,4 @@
-package com.programmers.film.api.config;
+package com.programmers.film.api.config.properties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 @ConfigurationProperties(prefix = "jwt")
-public class JwtConfigure {
+public class JwtProperties {
 
 	private String header;
 
