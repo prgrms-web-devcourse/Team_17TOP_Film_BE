@@ -2,10 +2,15 @@ package com.programmers.film.domain.common.domain;
 
 import java.util.Objects;
 import javax.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Getter @Builder
+@NoArgsConstructor
 @Embeddable
+@AllArgsConstructor
 public class ImageUrl {
     private String originalSizeUrl;
     private String smallSizeUrl;

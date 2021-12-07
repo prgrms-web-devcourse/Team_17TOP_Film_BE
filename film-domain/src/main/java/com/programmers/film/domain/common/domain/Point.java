@@ -10,6 +10,15 @@ public class Point {
     private Double latitude;
     private Double longitude;
 
+    public Point(Double latitude, Double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public Point() {
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

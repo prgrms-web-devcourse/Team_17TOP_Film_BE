@@ -28,5 +28,5 @@ public class CreatePostRequest {
 
     private String content;
 
-    private String authorNickname;
+    private Long authorUserId;
 }
