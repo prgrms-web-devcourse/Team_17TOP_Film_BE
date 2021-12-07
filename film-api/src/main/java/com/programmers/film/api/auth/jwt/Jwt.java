@@ -91,6 +91,14 @@ public final class Jwt {
 			return claims;
 		}
 
+		public boolean checkExpired() {
+			return !exp.before(new Date());
+		}
+
+//		long exp() {
+//			return exp != null ? exp.getTime() : -1;
+//		}
+
 		@Override
 		public String toString() {
 			return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
