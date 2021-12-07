@@ -16,18 +16,16 @@ public class LoginCheckHandler {
 
     private final AuthRepository authRepository;
 
-    public Long getUserId() {
+    public Auth getAuth() {
         JwtAuthenticationToken authToken = (JwtAuthenticationToken) SecurityContextHolder.getContext()
             .getAuthentication();
         JwtRequest jwtRequest = (JwtRequest) authToken.getPrincipal();
 
-        Auth auth = authRepository.findByProviderAndProviderId(jwtRequest.provider,
+        return authRepository.findByProviderAndProviderId(jwtRequest.provider,
                 jwtRequest.providerId)
             .orElseThrow(() -> new AuthNotFoundException(
                 MessageFormat.format("provider: {0}, providerId: {1}", jwtRequest.provider,
                     jwtRequest.providerId))
             );
-
-        return auth.getUser().getId();
     }
 }

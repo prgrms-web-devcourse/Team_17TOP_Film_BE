@@ -1,5 +1,8 @@
 package com.programmers.film.api.config.interceptor;
 
+import com.programmers.film.api.auth.dto.ProviderAttribute;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +28,20 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        Long userId = loginCheckHandler.getUserId();
-        request.setAttribute("user_id", userId);
+        com.programmers.film.domain.auth.domain.Auth authEntity = loginCheckHandler.getAuth();
+
+        // after signup
+        if (authEntity.getUser() != null) {
+            Long userId = authEntity.getUser().getId();
+            request.setAttribute("user_id", userId);
+        }
+
+        ProviderAttribute provider = new ProviderAttribute(
+            authEntity.getProvider(),
+            authEntity.getProviderId()
+        );
+
+        request.setAttribute("provider", provider);
 
         return true;
     }
