@@ -38,6 +38,8 @@ public class PostImage {
     })
     private ImageUrl imageUrl;
 
+    private int order;
+
     public void setPostDetail(PostDetail postDetail) {
         if (Objects.nonNull(this.postDetail)) {
             this.postDetail.getPostImages().remove(this);

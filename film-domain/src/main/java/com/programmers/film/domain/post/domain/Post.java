@@ -4,8 +4,8 @@ import com.programmers.film.domain.common.domain.BaseEntity;
 import com.programmers.film.domain.common.domain.Point;
 import com.programmers.film.domain.member.domain.User;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -24,6 +24,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,6 +32,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "posts")
+@Builder
 public class Post extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,11 +54,11 @@ public class Post extends BaseEntity {
     private String title;
 
     @Column(name = "preview_text")
-    private String preview_text;
+    private String previewText;
 
     @Column(name = "available_at")
     @Temporal(TemporalType.DATE)
-    private Date availableAt;
+    private LocalDate availableAt;
 
     @Embedded
     private Point location;
@@ -76,10 +78,6 @@ public class Post extends BaseEntity {
         }
 
         this.author = author;
-    }
-
-    public Post(String title,String preview_text,String){ //create constructor
-        this.title=
     }
 
 }
