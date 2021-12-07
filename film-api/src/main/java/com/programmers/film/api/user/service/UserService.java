@@ -25,9 +25,7 @@ public class UserService {
 
 		checkArgument(signUpRequest != null, "signUpRequest must be provided.");
 
-		String nickname = signUpRequest.getNickname();
-		String providerId = signUpRequest.getProviderId();
-		User user = User.of(nickname, providerId);
+		User user = userMapper.requestToEntity(signUpRequest);
 		User savedUser = userRepository.save(user);
 
 		return userMapper.entityToResponse(savedUser);

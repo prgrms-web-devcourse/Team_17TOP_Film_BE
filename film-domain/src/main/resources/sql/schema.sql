@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users
 (
-    `id`                      bigint       NOT NULL,
+    `id`                      bigint       NOT NULL AUTO_INCREMENT,
     `nickname`                varchar(20)  NOT NULL,
     `provider`                varchar(20)  NOT NULL,
     `provider_id`             varchar(80)  NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE auths
 -- post_states Table Create SQL
 CREATE TABLE post_states
 (
-    `id`    bigint      NOT NULL,
+    `id`    bigint      NOT NULL    AUTO_INCREMENT,
     `state` varchar(20) NOT NULL,
     CONSTRAINT PK_POST_STATES PRIMARY KEY (id)
 );
@@ -74,7 +74,7 @@ CREATE TABLE post_states
 -- posts Table Create SQL
 CREATE TABLE posts
 (
-    `id`           bigint       NOT NULL,
+    `id`           bigint       NOT NULL    AUTO_INCREMENT,
     `author_id`    bigint       NOT NULL,
     `state_id`     bigint       NOT NULL,
     `title`        varchar(255) NOT NULL,
@@ -101,7 +101,7 @@ ALTER TABLE posts
 -- post_details Table Create SQL
 CREATE TABLE post_details
 (
-    `id`        bigint NOT NULL,
+    `id`        bigint NOT NULL AUTO_INCREMENT,
     `post_id`   bigint NOT NULL,
     `opener_id` bigint NOT NULL,
     `opened_at` DATE   NULL,
@@ -121,7 +121,7 @@ ALTER TABLE post_details
 -- post_images Table Create SQL
 CREATE TABLE post_images
 (
-    `id`             bigint       NOT NULL,
+    `id`             bigint       NOT NULL  AUTO_INCREMENT,
     `post_detail_id` bigint       NOT NULL,
     `original_url`   varchar(255) NOT NULL,
     `small_size_url` varchar(255) NULL,
@@ -136,7 +136,7 @@ ALTER TABLE post_images
 -- post_authorities Table Create SQL
 CREATE TABLE post_authorities
 (
-    `id`        bigint NOT NULL,
+    `id`        bigint NOT NULL AUTO_INCREMENT,
     `member_id` bigint NOT NULL,
     `post_id`   bigint NOT NULL,
     CONSTRAINT PK_AUTHORITIES PRIMARY KEY (id, member_id, post_id)
