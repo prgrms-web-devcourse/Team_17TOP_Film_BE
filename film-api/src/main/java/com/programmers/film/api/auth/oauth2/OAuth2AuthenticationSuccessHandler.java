@@ -22,7 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -124,6 +123,7 @@ public class OAuth2AuthenticationSuccessHandler extends
 	}
 
 	private String generateToken(Auth auth) {
-		return jwt.sign(Jwt.Claims.from(auth.getUsername(), new String[]{"ROLE_USER"}));
+		return jwt.sign(
+			Jwt.Claims.from(new String[]{"ROLE_USER"}, auth.getProvider(), auth.getProviderId()));
 	}
 }

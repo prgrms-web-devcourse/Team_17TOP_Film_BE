@@ -8,8 +8,6 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.Getter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -45,8 +43,9 @@ public final class Jwt {
 		if (expirySeconds > 0) {
 			builder.withExpiresAt(new Date(now.getTime() + expirySeconds * 1000L));
 		}
-		builder.withClaim("username", claims.username);
 		builder.withArrayClaim("roles", claims.roles);
+		builder.withClaim("provider", claims.provider);
+		builder.withClaim("provider_id", claims.providerId);
 		return builder.sign(algorithm);
 	}
 
@@ -56,55 +55,48 @@ public final class Jwt {
 
 	static public class Claims {
 
-		String username;
-		String[] roles;
 		Date iat;
 		Date exp;
+		String[] roles;
+		String provider;        // ex) kakao
+		String providerId;        // ex) 2023353092
 
 		private Claims() {/*no-op*/}
 
 		Claims(DecodedJWT decodedJWT) {
-			Claim username = decodedJWT.getClaim("username");
-			if (!username.isNull()) {
-				this.username = username.asString();
-			}
+			this.iat = decodedJWT.getIssuedAt();
+			this.exp = decodedJWT.getExpiresAt();
+
 			Claim roles = decodedJWT.getClaim("roles");
 			if (!roles.isNull()) {
 				this.roles = roles.asArray(String.class);
 			}
-			this.iat = decodedJWT.getIssuedAt();
-			this.exp = decodedJWT.getExpiresAt();
+
+			Claim provider = decodedJWT.getClaim("provider");
+			if (!provider.isNull()) {
+				this.provider = provider.asString();
+			}
+
+			Claim providerId = decodedJWT.getClaim("provider_id");
+			if (!providerId.isNull()) {
+				this.providerId = providerId.asString();
+			}
 		}
 
-		public static Claims from(String username, String[] roles) {
+		public static Claims from(String[] roles, String provider, String providerId) {
 			Claims claims = new Claims();
-			claims.username = username;
 			claims.roles = roles;
+			claims.provider = provider;
+			claims.providerId = providerId;
 			return claims;
-		}
-
-		public Map<String, Object> asMap() {
-			Map<String, Object> map = new HashMap<>();
-			map.put("username", username);
-			map.put("roles", roles);
-			map.put("iat", iat());
-			map.put("exp", exp());
-			return map;
-		}
-
-		long iat() {
-			return iat != null ? iat.getTime() : -1;
-		}
-
-		long exp() {
-			return exp != null ? exp.getTime() : -1;
 		}
 
 		@Override
 		public String toString() {
 			return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-				.append("username", username)
 				.append("roles", Arrays.toString(roles))
+				.append("provider", provider)
+				.append("providerId", providerId)
 				.append("iat", iat)
 				.append("exp", exp)
 				.toString();

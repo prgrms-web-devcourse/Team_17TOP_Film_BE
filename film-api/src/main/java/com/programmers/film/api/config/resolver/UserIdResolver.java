@@ -1,8 +1,6 @@
 package com.programmers.film.api.config.resolver;
 
 import com.programmers.film.common.error.exception.InternalServerErrorException;
-import com.programmers.film.domain.member.domain.User;
-import org.apache.http.HttpHeaders;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
