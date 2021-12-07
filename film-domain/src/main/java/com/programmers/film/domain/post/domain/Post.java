@@ -2,7 +2,7 @@ package com.programmers.film.domain.post.domain;
 
 import com.programmers.film.domain.common.domain.BaseEntity;
 import com.programmers.film.domain.common.domain.Point;
-import com.programmers.film.domain.member.domain.User;
+import com.programmers.film.domain.user.domain.User;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
