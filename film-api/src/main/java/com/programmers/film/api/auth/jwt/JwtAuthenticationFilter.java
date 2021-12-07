@@ -4,7 +4,7 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-import com.programmers.film.api.auth.dto.request.LoginRequest;
+import com.programmers.film.api.auth.dto.request.JwtRequest;
 import com.programmers.film.api.auth.util.HeaderUtil;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -13,14 +13,11 @@ import java.util.Arrays;
 import java.util.List;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,7 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final Jwt jwt;
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+		FilterChain chain)
 		throws IOException, ServletException {
 
 		// If not authenticated user
@@ -46,13 +44,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 					Jwt.Claims claims = verify(token);
 					log.debug("Jwt parse result: {}", claims);
 
-					String username = claims.username;
 					List<GrantedAuthority> authorities = getAuthorities(claims);
+					String provider = claims.provider;
+					String providerId = claims.providerId;
 
-					if (isNotEmpty(username) && authorities.size() > 0) {
+					if (isNotEmpty(provider) && isNotEmpty(providerId) && authorities.size() > 0) {
 						JwtAuthenticationToken authentication =
-							new JwtAuthenticationToken(new LoginRequest(token, username), null,
-								authorities);
+							new JwtAuthenticationToken(
+								new JwtRequest(token, provider, providerId),
+								null,
+								authorities
+							);
 						authentication.setDetails(
 							new WebAuthenticationDetailsSource().buildDetails(request));
 						SecurityContextHolder.getContext().setAuthentication(authentication);
