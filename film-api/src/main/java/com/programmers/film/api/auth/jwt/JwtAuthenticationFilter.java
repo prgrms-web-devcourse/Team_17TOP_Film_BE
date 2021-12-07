@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			String token = getToken(request);
 			if (token != null) {
 				try {
-					Jwt.Claims claims = verify(token);
+					Jwt.Claims claims = jwt.verify(token);
 					log.debug("Jwt parse result: {}", claims);
 
 					List<GrantedAuthority> authorities = getAuthorities(claims);
@@ -79,10 +79,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			return URLDecoder.decode(token, StandardCharsets.UTF_8);
 		}
 		return null;
-	}
-
-	private Jwt.Claims verify(String token) {
-		return jwt.verify(token);
 	}
 
 	private List<GrantedAuthority> getAuthorities(Jwt.Claims claims) {
