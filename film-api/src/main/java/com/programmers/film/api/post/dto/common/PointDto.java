@@ -18,9 +18,9 @@ public class PointDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Point point = (Point) o;
-        return Objects.equals(getLatitude(), point.getLatitude()) && Objects.equals(
-            getLongitude(), point.getLongitude());
+        PointDto pointDto = (PointDto) o;
+        return Objects.equals(getLatitude(), pointDto.getLatitude())
+            && Objects.equals(getLongitude(), pointDto.getLongitude());
     }
 
     @Override

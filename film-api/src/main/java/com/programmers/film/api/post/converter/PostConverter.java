@@ -7,11 +7,15 @@ import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@RequiredArgsConstructor
 public class PostConverter {
+    private final PointConverter pointConverter;
+
     @Transactional(readOnly = true)
     public List<AuthorityImage> getAuthorityImageList(Post post) {
         List<PostAuthority> postAuthorities = post.getPostAuthorities();
@@ -29,6 +33,7 @@ public class PostConverter {
         return authorityImageList;
     }
 
+    @Transactional(readOnly = true)
     public PreviewPostResponse PostToPreviewPostResponse(Post post) {
         List<PostAuthority> postAuthorities = post.getPostAuthorities();
         return PreviewPostResponse.builder()
@@ -36,7 +41,7 @@ public class PostConverter {
             .title(post.getTitle())
             .previewText(post.getPreviewText())
             .availableAt(post.getAvailableAt())
-            .location(post.getLocation())
+            .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .authorityCount(postAuthorities.size())
             .authorityImageList(getAuthorityImageList(post))
             .build();
