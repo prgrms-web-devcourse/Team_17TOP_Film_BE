@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users
 (
-    `id`                      bigint       NOT NULL,
+    `id`                      bigint       NOT NULL AUTO_INCREMENT,
     `nickname`                varchar(20)  NOT NULL,
     `provider`                varchar(20)  NOT NULL,
     `provider_id`             varchar(80)  NOT NULL,
@@ -90,8 +90,8 @@ CREATE TABLE users
 -- post_states Table Create SQL
 CREATE TABLE post_states
 (
-    `id`     bigint         NOT NULL,
-    `state`  varchar(20)    NOT NULL,
+    `id`    bigint      NOT NULL    AUTO_INCREMENT,
+    `state` varchar(20) NOT NULL,
     CONSTRAINT PK_POST_STATES PRIMARY KEY (id)
 );
 
@@ -99,18 +99,18 @@ CREATE TABLE post_states
 -- posts Table Create SQL
 CREATE TABLE posts
 (
-    `id`            bigint          NOT NULL,
-    `author_id`     bigint          NOT NULL,
-    `state_id`      bigint          NOT NULL,
-    `title`         varchar(255)    NOT NULL,
-    `preview_text`  varchar(255)    NULL,
-    `available_at`  DATE            NULL,
-    `created_at`    TIMESTAMP       NOT NULL,
-    `updated_at`    TIMESTAMP       NOT NULL,
-    `is_deleted`    tinyint(1)      NOT NULL,
-    `deleted_at`    TIMESTAMP       NULL,
-    `latitude`      DOUBLE          NOT NULL,
-    `longitude`     DOUBLE          NOT NULL,
+    `id`           bigint       NOT NULL    AUTO_INCREMENT,
+    `author_id`    bigint       NOT NULL,
+    `state_id`     bigint       NOT NULL,
+    `title`        varchar(255) NOT NULL,
+    `preview_text` varchar(255) NULL,
+    `available_at` DATE         NULL,
+    `created_at`   TIMESTAMP    NOT NULL,
+    `updated_at`   TIMESTAMP    NOT NULL,
+    `is_deleted`   tinyint(1)   NOT NULL,
+    `deleted_at`   TIMESTAMP    NULL,
+    `latitude`     DOUBLE       NOT NULL,
+    `longitude`    DOUBLE       NOT NULL,
     CONSTRAINT PK_POSTS PRIMARY KEY (id, author_id, state_id)
 );
 
@@ -126,11 +126,11 @@ ALTER TABLE posts
 -- post_details Table Create SQL
 CREATE TABLE post_details
 (
-    `id`         bigint    NOT NULL,
-    `post_id`    bigint    NOT NULL,
-    `opener_id`  bigint    NOT NULL,
-    `opened_at`  DATE      NULL,
-    `content`    TEXT      NULL,
+    `id`        bigint NOT NULL AUTO_INCREMENT,
+    `post_id`   bigint NOT NULL,
+    `opener_id` bigint NOT NULL,
+    `opened_at` DATE   NULL,
+    `content`   TEXT   NULL,
     CONSTRAINT PK_POST_DETAILS PRIMARY KEY (id, post_id, opener_id)
 );
 
@@ -146,10 +146,10 @@ ALTER TABLE post_details
 -- post_images Table Create SQL
 CREATE TABLE post_images
 (
-    `id`              bigint          NOT NULL,
-    `post_detail_id`  bigint          NOT NULL,
-    `original_url`    varchar(255)    NOT NULL,
-    `small_size_url`  varchar(255)    NULL,
+    `id`             bigint       NOT NULL  AUTO_INCREMENT,
+    `post_detail_id` bigint       NOT NULL,
+    `original_url`   varchar(255) NOT NULL,
+    `small_size_url` varchar(255) NULL,
     CONSTRAINT PK_POST_IMAGES PRIMARY KEY (id, post_detail_id)
 );
 
@@ -161,9 +161,9 @@ ALTER TABLE post_images
 -- post_authorities Table Create SQL
 CREATE TABLE post_authorities
 (
-    `id`         bigint    NOT NULL,
-    `member_id`  bigint    NOT NULL,
-    `post_id`    bigint    NOT NULL,
+    `id`        bigint NOT NULL AUTO_INCREMENT,
+    `member_id` bigint NOT NULL,
+    `post_id`   bigint NOT NULL,
     CONSTRAINT PK_AUTHORITIES PRIMARY KEY (id, member_id, post_id)
 );
 
