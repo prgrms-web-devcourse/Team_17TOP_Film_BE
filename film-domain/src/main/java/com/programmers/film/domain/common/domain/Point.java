@@ -2,9 +2,15 @@ package com.programmers.film.domain.common.domain;
 
 import java.util.Objects;
 import javax.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Getter @Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class Point {
     private Double latitude;

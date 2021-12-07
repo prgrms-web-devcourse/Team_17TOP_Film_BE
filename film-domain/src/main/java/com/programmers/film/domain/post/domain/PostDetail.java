@@ -16,10 +16,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Getter @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "post_details")
