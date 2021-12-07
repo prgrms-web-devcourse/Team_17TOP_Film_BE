@@ -45,7 +45,7 @@ public class Auth {
 	private Group group;
 
 	@OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = true)
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	protected Auth() {/*no-op*/}
