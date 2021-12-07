@@ -25,7 +25,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        Long userId = loginCheckHandler.getUserId(request);
+        Long userId = loginCheckHandler.getUserId();
         request.setAttribute("user_id", userId);
         return true;
     }
