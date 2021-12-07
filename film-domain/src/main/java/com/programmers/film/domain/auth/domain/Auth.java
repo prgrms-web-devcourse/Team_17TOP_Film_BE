@@ -3,13 +3,16 @@ package com.programmers.film.domain.auth.domain;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.assertj.core.util.Preconditions.checkArgument;
 
+import com.programmers.film.domain.member.domain.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -40,6 +43,10 @@ public class Auth {
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "group_id")
 	private Group group;
+
+	@OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = true)
+	private User user;
 
 	protected Auth() {/*no-op*/}
 
