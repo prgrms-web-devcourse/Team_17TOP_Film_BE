@@ -66,20 +66,17 @@ public class User extends BaseEntity {
 	private LocalDateTime lastLoginAt;
 
 	@Builder
-	public User(Long id, String nickname, String provider, String providerId) {
+	public User(Long id, String nickname) {
 
 		this.id = id;
 		this.nickname = nickname;
+	}
+
+	public void updateProvider(String provider, String providerId) {
 		this.provider = provider;
 		this.providerId = providerId;
 	}
 
-	public static User of(String nickname, String provider) {
-		return User.builder()
-			.nickname(nickname)
-			.provider(provider)
-			.build();
-	}
 
 	public void addAuthority(Authority authority) {
 		authorities.add(authority);

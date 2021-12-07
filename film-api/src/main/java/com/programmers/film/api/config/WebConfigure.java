@@ -1,6 +1,7 @@
 package com.programmers.film.api.config;
 
 import com.programmers.film.api.config.interceptor.AuthInterceptor;
+import com.programmers.film.api.config.resolver.ProviderResolver;
 import com.programmers.film.api.config.resolver.UserIdResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public class WebConfigure implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
     private final UserIdResolver userIdResolver;
+    private final ProviderResolver providerResolver;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -24,5 +26,6 @@ public class WebConfigure implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(userIdResolver);
+        argumentResolvers.add(providerResolver);
     }
 }
