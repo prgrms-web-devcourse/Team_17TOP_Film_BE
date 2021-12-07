@@ -1,6 +1,6 @@
 package com.programmers.film.domain.post.domain;
 
-import com.programmers.film.domain.member.domain.User;
+import com.programmers.film.domain.user.domain.User;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

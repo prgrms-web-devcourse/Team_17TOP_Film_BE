@@ -3,7 +3,7 @@ package com.programmers.film.domain.auth.domain;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.assertj.core.util.Preconditions.checkArgument;
 
-import com.programmers.film.domain.member.domain.User;
+import com.programmers.film.domain.user.domain.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

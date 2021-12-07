@@ -1,4 +1,4 @@
-package com.programmers.film.domain.member.domain;
+package com.programmers.film.domain.user.domain;
 
 public enum LoginProperties {
     FILM,

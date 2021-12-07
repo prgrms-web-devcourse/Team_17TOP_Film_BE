@@ -4,27 +4,32 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Setter @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 
-    @Column(name = "is_deleted", columnDefinition = "TINYINT", length = 1)
-    @ColumnDefault("0")
-    private int isDeleted;
+	public BaseEntity(LocalDateTime createdAt, LocalDateTime updatedAt) {
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+	}
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+	@Column(name = "is_deleted", columnDefinition = "TINYINT", length = 1)
+	@ColumnDefault("0")
+	private int isDeleted;
 
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+	@CreatedDate
+	private LocalDateTime createdAt;
 
-    private LocalDateTime deletedAt;
+	@LastModifiedDate
+	private LocalDateTime updatedAt;
+
+	private LocalDateTime deletedAt;
 }
