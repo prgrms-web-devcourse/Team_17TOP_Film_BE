@@ -1,31 +1,33 @@
 package com.programmers.film.api.config.interceptor;
 
-import javax.servlet.http.HttpServletRequest;
+import com.programmers.film.api.auth.dto.request.JwtRequest;
+import com.programmers.film.api.auth.exception.AuthNotFoundException;
+import com.programmers.film.api.auth.jwt.JwtAuthenticationToken;
+import com.programmers.film.domain.auth.domain.Auth;
+import com.programmers.film.domain.auth.repository.AuthRepository;
+import java.text.MessageFormat;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class LoginCheckHandler {
 
-    private final OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository;
+    private final AuthRepository authRepository;
 
-    public Long getUserId(HttpServletRequest request) {
+    public Long getUserId() {
+        JwtAuthenticationToken authToken = (JwtAuthenticationToken) SecurityContextHolder.getContext()
+            .getAuthentication();
+        JwtRequest jwtRequest = (JwtRequest) authToken.getPrincipal();
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Auth auth = authRepository.findByProviderAndProviderId(jwtRequest.provider,
+                jwtRequest.providerId)
+            .orElseThrow(() -> new AuthNotFoundException(
+                MessageFormat.format("provider: {0}, providerId: {1}", jwtRequest.provider,
+                    jwtRequest.providerId))
+            );
 
-        authentication.getDetails();
-
-//        if (isNotEmpty(accessToken)) {
-//            Session session = findSessionBySessionId(sessionId);
-//            Long userId = session.getAttribute(USER_ID);
-//            if (userId != null) {
-//                return userId;
-//            }
-//        }
-        return null;
+        return auth.getUser().getId();
     }
 }

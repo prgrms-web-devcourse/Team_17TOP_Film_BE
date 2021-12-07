@@ -12,8 +12,9 @@ public class AuthController {
 
 	private final AuthService authService;
 
-//	@PostMapping(value = "/join")
-//	public JoinResponse join(JoinRequest joinRequest) {
+//	@Auth
+//	@GetMapping(value = "/login")
+//	public JoinResponse join(JoinRequest joinRequest, @UserId Long userId) {
 //		return authService.join()
 //		return null;
 //	}
