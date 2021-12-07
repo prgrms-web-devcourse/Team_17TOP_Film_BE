@@ -45,6 +45,10 @@ public class User extends BaseEntity {
 	@Column(name = "provider")
 	private String provider;
 
+	@NotNull
+	@Column(name = "provider_id")
+	private String providerId;
+
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Authority> authorities = new ArrayList<>();
 
@@ -58,14 +62,16 @@ public class User extends BaseEntity {
 	})
 	private ImageUrl profileImageUrl;
 
+	@Column(name = "last_login_at")
 	private LocalDateTime lastLoginAt;
 
 	@Builder
-	public User(Long id, String nickname, String provider) {
+	public User(Long id, String nickname, String provider, String providerId) {
 
 		this.id = id;
 		this.nickname = nickname;
 		this.provider = provider;
+		this.providerId = providerId;
 	}
 
 	public static User of(String nickname, String provider) {

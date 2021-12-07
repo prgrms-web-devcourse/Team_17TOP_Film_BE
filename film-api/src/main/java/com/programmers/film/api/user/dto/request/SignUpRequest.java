@@ -12,5 +12,8 @@ public class SignUpRequest {
 	private String nickname;
 
 	@NotBlank
+	private String provider;
+
+	@NotBlank
 	private String providerId;
 }
