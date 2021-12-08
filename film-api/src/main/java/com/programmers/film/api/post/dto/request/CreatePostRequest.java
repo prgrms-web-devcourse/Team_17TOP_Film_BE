@@ -1,8 +1,7 @@
 package com.programmers.film.api.post.dto.request;
 
-import com.programmers.film.api.post.dto.common.OrderImage;
-import com.programmers.film.domain.common.domain.Point;
-import com.programmers.film.domain.post.domain.Post;
+import com.programmers.film.api.post.dto.common.OrderImageFile;
+import com.programmers.film.api.post.dto.common.PointDto;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,14 +16,14 @@ public class CreatePostRequest {
 
     private String previewText;
 
-    private Point location;
+    private PointDto location;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate availableAt;
 
     private List<Long> authorities;
 
-    private List<OrderImage> imageFiles;
+    private List<OrderImageFile> imageFiles;
 
     private String content;
 
