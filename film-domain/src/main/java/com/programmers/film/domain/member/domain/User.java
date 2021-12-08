@@ -20,16 +20,19 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Getter @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
     name = "users",
     uniqueConstraints = {@UniqueConstraint(columnNames = {"nickname"})}
 )
+@AllArgsConstructor
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -57,6 +60,7 @@ public class User {
     })
     private ImageUrl profileImageUrl;
 
+    @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
     public void addPostAuthority(PostAuthority authority) {

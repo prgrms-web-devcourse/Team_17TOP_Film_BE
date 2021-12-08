@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "post_images")
+@Builder
+@AllArgsConstructor
 public class PostImage {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +41,8 @@ public class PostImage {
         @AttributeOverride(name="smallSizeUrl", column = @Column(name = "small_size_url"))
     })
     private ImageUrl imageUrl;
+
+    private int order;
 
     public void setPostDetail(PostDetail postDetail) {
         if (Objects.nonNull(this.postDetail)) {
