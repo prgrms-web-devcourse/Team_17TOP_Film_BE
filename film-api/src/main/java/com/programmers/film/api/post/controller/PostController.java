@@ -22,12 +22,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class PostController {
     private final PostService postService;
 
-    @Auth
-    @PostMapping
-    public ResponseEntity<CreatePostResponse> createPost(@RequestBody CreatePostRequest request, @Userid userId){
-        CreatePostResponse response = postService.createPost(request,userId);
-        return ResponseEntity.ok(response);
-    }
+//    @Auth
+//    @PostMapping
+//    public ResponseEntity<CreatePostResponse> createPost(@RequestBody CreatePostRequest request, @UserId userId){
+//        CreatePostResponse response = postService.createPost(request,userId);
+//        return ResponseEntity.ok(response);
+//    }
 
     @GetMapping("/{postId}")
     public ResponseEntity<PreviewPostResponse> previewPost(@PathVariable("postId") Long postId) {

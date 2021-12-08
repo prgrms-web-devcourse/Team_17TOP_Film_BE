@@ -24,7 +24,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "post_details")
-@Builder
 @AllArgsConstructor
 public class PostDetail {
 
