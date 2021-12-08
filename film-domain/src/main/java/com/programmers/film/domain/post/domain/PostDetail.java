@@ -1,6 +1,6 @@
 package com.programmers.film.domain.post.domain;
 
-import com.programmers.film.domain.member.domain.User;
+import com.programmers.film.domain.user.domain.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
