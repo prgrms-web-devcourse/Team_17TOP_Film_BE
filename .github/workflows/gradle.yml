@@ -41,7 +41,7 @@ jobs:
       run: ./gradlew clean build -p ./film-api
       
     - name: Make zip file
-      run: zip -r -qq -j ./film-build.zip .
+      run: zip -r ./$GITHUB_SHA.zip .
       
     - name: Deliver to AWS S3
       env:
@@ -51,7 +51,7 @@ jobs:
         aws s3 cp \
         --region ap-northeast-2 \
         --acl private \
-        ./film-build.zip s3://$S3_BUCKET_NAME/
+        ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
       
     - name: Deploy
       env:
@@ -62,5 +62,5 @@ jobs:
         --application-name film \
         --deployment-group-name film-deploy-group \
         --file-exists-behavior OVERWRITE \
-        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=film-build.zip \
+        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip \
         --region ap-northeast-2
