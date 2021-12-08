@@ -58,8 +58,12 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 				.and()
 			.authorizeRequests()
 				.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+
+			// 	=========================test 주석 ======================
 				.antMatchers("/api/**").hasAnyRole("USER")
 				.anyRequest().authenticated()
+
+
 				.and()
 			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

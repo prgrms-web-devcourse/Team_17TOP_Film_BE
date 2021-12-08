@@ -2,8 +2,8 @@ package com.programmers.film.domain.user.domain;
 
 import com.programmers.film.domain.common.domain.BaseEntity;
 import com.programmers.film.domain.common.domain.ImageUrl;
-import com.programmers.film.domain.post.domain.Authority;
 import com.programmers.film.domain.post.domain.Post;
+import com.programmers.film.domain.post.domain.PostAuthority;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class User extends BaseEntity {
 	private String providerId;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<Authority> authorities = new ArrayList<>();
+    private List<PostAuthority> postAuthorities = new ArrayList<>();
 
     @OneToMany(mappedBy = "author", orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
@@ -78,8 +78,8 @@ public class User extends BaseEntity {
 	}
 
 
-	public void addAuthority(Authority authority) {
-		authorities.add(authority);
+	public void addAuthority(PostAuthority authority) {
+		postAuthorities.add(authority);
 		authority.setUser(this);
 	}
 
