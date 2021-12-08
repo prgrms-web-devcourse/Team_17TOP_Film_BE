@@ -35,6 +35,7 @@ public class PostController {
         return ResponseEntity.ok(preview);
     }
 
+    // TODO : Patch 아니고 DeleteMapping으로 바꾸기
     @PatchMapping("/{postId}")
     public ResponseEntity<DeletePostResponse> deletePost(@PathVariable("postId") Long postId) {
         DeletePostResponse deletePostResponse = postService.deletePost(postId);
