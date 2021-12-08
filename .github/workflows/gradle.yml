@@ -39,18 +39,9 @@ jobs:
         
     - name: Build with Gradle
       run: ./gradlew clean build -p ./film-api
-    
-    - name: Make Directory for deliver
-      run: mkdir deploy
-    
-    - name: Copy Jar
-      run: cp ./film-api/build/libs/*.jar ./deploy/
-    
-    - name: Copy appspec
-      run: cp appspec.yml ./deploy/
       
     - name: Make zip file
-      run: zip -r -qq -j ./film-build.zip ./deploy
+      run: zip -r -qq -j ./film-build.zip .
       
     - name: Deliver to AWS S3
       env:
