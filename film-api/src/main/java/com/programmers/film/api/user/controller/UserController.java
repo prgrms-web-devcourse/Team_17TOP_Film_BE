@@ -3,6 +3,7 @@ package com.programmers.film.api.user.controller;
 import com.programmers.film.api.auth.dto.ProviderAttribute;
 import com.programmers.film.api.config.interceptor.Auth;
 import com.programmers.film.api.config.resolver.Provider;
+import com.programmers.film.api.config.resolver.UserId;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.SignUpResponse;
 import com.programmers.film.api.user.service.UserService;
