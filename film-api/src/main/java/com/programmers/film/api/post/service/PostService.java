@@ -4,6 +4,7 @@ import com.programmers.film.api.post.converter.PostConverter;
 import com.programmers.film.api.post.dto.request.CreatePostRequest;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
+import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.exception.PostIdNotFoundException;
 import com.programmers.film.domain.common.domain.ImageUrl;
@@ -86,7 +87,17 @@ public class PostService {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 삭제를 할 수 없습니다."));
         post.deletePost();
+
         return postConverter.PostToDeletePostResponse(post);
     }
 
+    @Transactional(readOnly = true)
+    public GetPostDetailResponse getPostDetail(Long postId){
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
+        PostDetail postDetail = postDetailRepository.findById(postId)
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
+
+        return postConverter.postToGetPostDetailResponse(post,postDetail);
+    }
 }

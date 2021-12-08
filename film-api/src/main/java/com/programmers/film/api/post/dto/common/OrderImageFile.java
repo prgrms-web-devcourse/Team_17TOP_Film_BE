@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Builder
-public class OrderImage { // must have : only one img
+public class OrderImageFile { // must have : only one img
     private int imageOrder;
     private MultipartFile image;
 }
