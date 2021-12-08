@@ -1,10 +1,12 @@
 package com.programmers.film.domain.post.domain;
 
+import com.programmers.film.common.error.exception.InvalidInputValueException;
 import com.programmers.film.domain.common.domain.BaseEntity;
 import com.programmers.film.domain.common.domain.Point;
 import com.programmers.film.domain.member.domain.User;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -28,7 +30,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "posts")
 @Builder
@@ -79,5 +81,13 @@ public class Post extends BaseEntity {
         this.author = author;
     }
 
-
+    public Long deletePost() {
+        LocalDateTime now = LocalDateTime.now();
+        setDeletedAt(now);
+        setIsDeleted(1);
+        if(getDeletedAt() != now || getIsDeleted() != 1) {
+            throw new InvalidInputValueException("게시물 삭제 오류");
+        }
+        return id;
+    }
 }

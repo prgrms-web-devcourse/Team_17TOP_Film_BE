@@ -3,6 +3,9 @@ package com.programmers.film.api.post.service;
 import com.programmers.film.api.post.converter.PostConverter;
 import com.programmers.film.api.post.dto.request.CreatePostRequest;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
+import com.programmers.film.api.post.dto.response.DeletePostResponse;
+import com.programmers.film.api.post.dto.response.PreviewPostResponse;
+import com.programmers.film.api.post.exception.PostIdNotFoundException;
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.member.repository.UserRepository;
 import com.programmers.film.domain.post.domain.Post;
@@ -23,15 +26,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PostService {
-
-    private final PostAuthorityRepository authorityRepository; // 권한 서비스따로 빼는게 맞겠죠
+    private final PostAuthorityRepository authorityRepository;
     private final PostRepository postRepository;
     private final PostDetailRepository postDetailRepository;
     private final PostImageRepository postImageRepository;
+    private final PostConverter postConverter;
     private final UserRepository userRepository;
     private final S3Service s3Service;
-
-    private final PostConverter postConverter;
 
     @Transactional
     public CreatePostResponse createPost(CreatePostRequest request, Long userId) {
@@ -70,6 +71,22 @@ public class PostService {
         postImageRepository.save(postImage);
 
         return postConverter.postToCreatePostResponse(post);
+    }
+
+    @Transactional(readOnly = true)
+    public PreviewPostResponse getPreview(Long postId) {
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 엿보기를 할 수 없습니다."));
+
+        return postConverter.PostToPreviewPostResponse(post);
+    }
+
+    @Transactional
+    public DeletePostResponse deletePost(Long postId) {
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 삭제를 할 수 없습니다."));
+        post.deletePost();
+        return postConverter.PostToDeletePostResponse(post);
     }
 
 }
