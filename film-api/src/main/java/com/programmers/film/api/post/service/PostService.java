@@ -21,7 +21,6 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -77,16 +76,16 @@ public class PostService {
     public PreviewPostResponse getPreview(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 엿보기를 할 수 없습니다."));
-
-        return postConverter.PostToPreviewPostResponse(post);
+        // TODO : 삭제된 게시물 못보게하기.
+        return postConverter.postToPreviewPostResponse(post);
     }
 
+    // TODO : delete 아니고 remove로 변경
     @Transactional
     public DeletePostResponse deletePost(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 삭제를 할 수 없습니다."));
-        post.deletePost();
-        return postConverter.PostToDeletePostResponse(post);
+        return postConverter.postToDeletePostResponse(post.deletePost());
     }
 
 }
