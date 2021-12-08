@@ -10,6 +10,7 @@ import com.programmers.film.api.config.properties.AppProperties;
 import com.programmers.film.domain.auth.domain.Auth;
 import java.io.IOException;
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.Optional;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -97,9 +98,12 @@ public class OAuth2AuthenticationSuccessHandler extends
 				cookieMaxAge);
 		}
 
+		String accessToken = generateToken(auth);
+		log.info("accessToken: {}", accessToken);
+
 		// Put access token to query parameter
 		return UriComponentsBuilder.fromUriString(targetUrl)
-			.queryParam("token", generateToken(auth))
+			.queryParam("token", accessToken)
 			.build().toUriString();
 	}
 
