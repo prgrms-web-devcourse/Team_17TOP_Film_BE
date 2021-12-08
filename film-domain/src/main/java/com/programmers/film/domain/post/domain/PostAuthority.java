@@ -11,18 +11,24 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "authorities")
-public class Authority {
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Table(name = "post_authorities")
+@Builder
+@AllArgsConstructor
+public class PostAuthority {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,7 +37,7 @@ public class Authority {
 
     public void setUser(User user) {
         if (Objects.nonNull(this.user)) {
-            this.user.getAuthorities().remove(this);
+            this.user.getPostAuthorities().remove(this);
         }
 
         this.user = user;
@@ -39,7 +45,7 @@ public class Authority {
 
     public void setPost(Post post) {
         if (Objects.nonNull(this.post)) {
-            this.post.getAuthorities().remove(this);
+            this.post.getPostAuthorities().remove(this);
         }
 
         this.post = post;
