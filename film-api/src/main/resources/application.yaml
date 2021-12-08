@@ -12,5 +12,6 @@ spring:
     default: dev
     include:
       - security
+      - secret
       - domain
       - aws
