@@ -53,4 +53,16 @@ jobs:
         aws s3 cp \
         --region ap-northeast-2 \
         --acl private \
-        ./film-project-build.zip s3://film-project-build.zip/
+        ./17TOP-film-build.zip s3://$S3_BUCKET_NAME/
+      
+    - name: Deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        aws deploy create-deployment \
+        --application-name film \
+        --deployment-group-name film-deploy-group \
+        --file-exists-behavior OVERWRITE \
+        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=film-build.zip \
+        --region ap-northeast-2
