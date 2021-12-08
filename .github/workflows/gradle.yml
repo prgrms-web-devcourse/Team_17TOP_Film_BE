@@ -43,7 +43,7 @@ jobs:
       run: cp ./film-api/build/libs/*.jar ./deploy/
       
     - name: Make zip file
-      run: zip -r -qq -j ./film-project-build.zip ./deploy
+      run: zip -r -qq -j ./film-build.zip ./deploy
       
     - name: Deliver to AWS S3
       env:
@@ -53,7 +53,7 @@ jobs:
         aws s3 cp \
         --region ap-northeast-2 \
         --acl private \
-        ./17TOP-film-build.zip s3://$S3_BUCKET_NAME/
+        ./film-build.zip s3://$S3_BUCKET_NAME/
       
     - name: Deploy
       env:
