@@ -23,12 +23,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
 public class PostController {
+
     private final PostService postService;
 
     @Auth
     @PostMapping
-    public ResponseEntity<CreatePostResponse> createPost(@RequestBody CreatePostRequest request, @UserId Long userId){
-        CreatePostResponse response = postService.createPost(request,userId);
+    public ResponseEntity<CreatePostResponse> createPost(@RequestBody CreatePostRequest request,
+        @UserId Long userId) {
+        CreatePostResponse response = postService.createPost(request, userId);
         return ResponseEntity.ok(response);
     }
 
@@ -45,9 +47,11 @@ public class PostController {
         return ResponseEntity.ok(deletePostResponse);
     }
 
+    @Auth
     @GetMapping("/detail/{postId}")
-    public ResponseEntity<GetPostDetailResponse> getPostDetail(@PathVariable("postId") Long postId){
-        GetPostDetailResponse response = postService.getPostDetail(postId);
+    public ResponseEntity<GetPostDetailResponse> getPostDetail(@PathVariable("postId") Long postId,
+        @UserId Long userId) {
+        GetPostDetailResponse response = postService.getPostDetail(postId, userId);
         return ResponseEntity.ok(response);
     }
 }
