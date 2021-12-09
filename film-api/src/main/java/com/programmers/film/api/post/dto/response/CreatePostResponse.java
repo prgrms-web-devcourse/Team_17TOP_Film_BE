@@ -1,9 +1,8 @@
 package com.programmers.film.api.post.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.programmers.film.api.post.dto.common.AuthorityImage;
+import com.programmers.film.api.post.dto.common.AuthorityImageDto;
 import com.programmers.film.api.post.dto.common.PointDto;
-import com.programmers.film.domain.post.domain.PostState;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
@@ -27,5 +26,5 @@ public class CreatePostResponse {
 
     private int authorityCount;
 
-    private List<AuthorityImage> authorityImageList;
+    private List<AuthorityImageDto> authorityImageList;
 }
