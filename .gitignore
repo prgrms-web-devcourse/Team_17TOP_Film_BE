@@ -1,5 +1,7 @@
 # Custom
 .idea
+application-aws.yml
+application-secret.yml
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,intellij,java,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,intellij,java,gradle
@@ -231,3 +233,4 @@ gradle-app.setting
 .classpath
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,intellij,java,gradle
+

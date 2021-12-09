@@ -18,8 +18,8 @@ public enum ErrorCode {
     // Login
     NICKNAME_NULL(400, "L001", "Nickname Not Exist"),
     USER_NOT_EXIST(400, "L002", "User Not Exist"),
-    KAKAO_ERROR(400, "L003", "Kakao Server Error"),
-    SERVER_ERROR(400, "L004", "DB Server Error"),
+    KAKAO_ERROR(500, "L003", "Kakao Server Error"),
+    SERVER_ERROR(500, "L004", "DB Server Error"),
 
     // Map
     LOCATION_ERROR(400, "M001", "Location Input Error"),
@@ -27,7 +27,7 @@ public enum ErrorCode {
     // User
     NICKNAME_DUPLICATED(400, "U001", "Nickname Is Duplicated"),
     ALREADY_CREATED(400, "U002", "User Already Created"),
-    NICKNAME_ERROR(400,"U003", "Nickname Is Out Of The Regex"),
+    NICKNAME_ERROR(400, "U003", "Nickname Is Out Of The Regex"),
 
     // Post
     POST_ID_ERROR(400, "P001", "Post Id Not Exist"),

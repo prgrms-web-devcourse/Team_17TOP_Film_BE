@@ -1,9 +1,9 @@
 dependencies {
     api project(":film-common")
 
-    api "org.springframework.boot:spring-boot-starter-data-jpa"
-    implementation 'com.h2database:h2'
-    runtimeOnly 'mysql:mysql-connector-java'
+    api 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.1'
+    implementation 'com.h2database:h2:2.0.202'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.25'
 }
 
 bootJar { enabled = false }

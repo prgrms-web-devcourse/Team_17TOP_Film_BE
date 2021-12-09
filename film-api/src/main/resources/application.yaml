@@ -5,3 +5,13 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+
+spring:
+  profiles:
+    active: dev
+    default: dev
+    include:
+      - security
+      - secret
+      - domain
+      - aws
