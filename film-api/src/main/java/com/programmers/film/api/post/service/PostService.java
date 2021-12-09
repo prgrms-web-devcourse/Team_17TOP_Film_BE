@@ -4,6 +4,7 @@ import com.programmers.film.api.post.converter.PostConverter;
 import com.programmers.film.api.post.dto.request.CreatePostRequest;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
+import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.exception.PostIdNotFoundException;
 import com.programmers.film.domain.common.domain.ImageUrl;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -88,4 +90,13 @@ public class PostService {
         return postConverter.postToDeletePostResponse(post.deletePost());
     }
 
+    @Transactional(readOnly = true)
+    public GetPostDetailResponse getPostDetail(Long postId){
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
+        PostDetail postDetail = postDetailRepository.findById(postId)
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
+
+        return postConverter.postToGetPostDetailResponse(post,postDetail);
+    }
 }

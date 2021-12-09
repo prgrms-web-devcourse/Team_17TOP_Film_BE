@@ -5,8 +5,8 @@ spring:
         registration:
           kakao:
             client-name: kakao
-            client-id: 6fd4d2609eddaec107aa11ae202a2b24
-            client-secret: Z2gZZYG3tM2HjyjpZTqGYqYqsbi2VlqO
+            client-id: ${secret.kakao.client-id}
+            client-secret: ${secret.kakao.client-secret}
             scope: profile_nickname, profile_image
             redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
@@ -22,7 +22,7 @@ jwt:
   header: token
   issuer: film
   client-secret: dGhpc2lzdGhlc2VjcmV0Y2xpZW50a2V5b2Zwcm9qZWN0ZmlsbWludGVhbTE3VE9Q
-  expiry-seconds: 21600
+  expiry-seconds: 2160000
 
 cors:
   allowed-origins: 'http://localhost:3000'
@@ -32,7 +32,7 @@ cors:
 
 app:
   auth:
-    refreshTokenExpiry: 604800000
+    refresh-token-expiry: 604800000
   oauth2:
-    authorizedRedirectUris:
-      - http://localhost:3000/oauth/redirect
+    authorized-redirect-uris:
+      - http://localhost:3000/signup
