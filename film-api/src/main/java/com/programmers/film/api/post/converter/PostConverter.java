@@ -10,6 +10,10 @@ import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
 import com.programmers.film.domain.post.domain.PostDetail;
+import com.programmers.film.domain.post.domain.PostState;
+import com.programmers.film.domain.post.domain.PostStatus;
+import com.programmers.film.domain.post.repository.PostRepository;
+import com.programmers.film.domain.post.repository.PostStateRepository;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Component;
@@ -24,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class PostConverter {
     private final UserRepository userRepository;
     private final PointConverter pointConverter;
+    private final PostStateRepository postStateRepository;
 
     @Transactional(readOnly = true)
     public List<AuthorityImage> getAuthorityImageList(Post post) {
@@ -41,12 +46,14 @@ public class PostConverter {
 
     public Post createPostRequestToPost(CreatePostRequest request) {
         User authorUser = userRepository.findById(request.getAuthorUserId()).get(); // Exception
+        PostState postState = postStateRepository.findById(1L).get();
         return Post.builder()
             .title(request.getTitle())
             .previewText(request.getPreviewText())
             .location(pointConverter.stringPointToDoublePoint(request.getLocation()))
             .availableAt(request.getAvailableAt())
             .author(authorUser)
+            .state(postState)
             .build();
     }
 
@@ -56,7 +63,7 @@ public class PostConverter {
             .title(post.getTitle())
             .previewText(post.getPreviewText())
             .availableAt(post.getAvailableAt())
-            // TODO : state 설정
+            .state(post.getState().getState())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .authorityCount(1)
             .authorityImageList(getAuthorityImageList(post))
