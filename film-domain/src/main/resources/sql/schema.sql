@@ -1,8 +1,13 @@
-DROP TABLE IF EXISTS auths CASCADE;
 DROP TABLE IF EXISTS group_permission CASCADE;
 DROP TABLE IF EXISTS groups CASCADE;
 DROP TABLE IF EXISTS permissions CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS auths CASCADE;
+DROP TABLE IF EXISTS `posts`;
+DROP TABLE IF EXISTS `post_images`;
+DROP TABLE IF EXISTS `post_details`;
+DROP TABLE IF EXISTS `post_states`;
+DROP TABLE IF EXISTS `post_authorities`;
 
 CREATE TABLE users
 (
@@ -61,31 +66,6 @@ CREATE TABLE auths
     CONSTRAINT fk_group_id_for_auths FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT fk_user_id_for_auths FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
-
-DROP TABLE IF EXISTS `users`;
-DROP TABLE IF EXISTS `posts`;
-DROP TABLE IF EXISTS `post_images`;
-DROP TABLE IF EXISTS `post_details`;
-DROP TABLE IF EXISTS `post_states`;
-DROP TABLE IF EXISTS `post_authorities`;
-
--- users Table Create SQL
-CREATE TABLE users
-(
-    `id`                       bigint          NOT NULL,
-    `nickname`                 varchar(20)     NOT NULL,
-    `provider`                 varchar(20)     NOT NULL,
-    `provider_id`              varchar(80)     NOT NULL,
-    `profile_image`            varchar(255)    NULL,
-    `profile_thumbnail_image`  varchar(255)    NULL,
-    `created_at`               TIMESTAMP       NOT NULL,
-    `updated_at`               TIMESTAMP       NOT NULL,
-    `is_deleted`               tinyint(1)      NOT NULL,
-    `deleted_at`               TIMESTAMP       NULL,
-    `last_login_at`            TIMESTAMP       NULL,
-    CONSTRAINT PK_USERS PRIMARY KEY (id)
-);
-
 
 -- post_states Table Create SQL
 CREATE TABLE post_states
@@ -174,4 +154,3 @@ ALTER TABLE post_authorities
 ALTER TABLE post_authorities
     ADD CONSTRAINT FK_post_authorities_post_id_posts_id FOREIGN KEY (post_id)
         REFERENCES posts (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
