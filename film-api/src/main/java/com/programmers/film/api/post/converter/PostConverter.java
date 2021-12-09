@@ -12,7 +12,6 @@ import com.programmers.film.domain.post.domain.PostAuthority;
 import com.programmers.film.domain.post.domain.PostDetail;
 import com.programmers.film.domain.post.domain.PostState;
 import com.programmers.film.domain.post.domain.PostStatus;
-import com.programmers.film.domain.post.repository.PostRepository;
 import com.programmers.film.domain.post.repository.PostStateRepository;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
@@ -59,7 +58,7 @@ public class PostConverter {
     }
 
     public CreatePostResponse postToCreatePostResponse(Post post){
-        CreatePostResponse createPostResponse = CreatePostResponse.builder()
+        return CreatePostResponse.builder()
             .postId(post.getId())
             .title(post.getTitle())
             .previewText(post.getPreviewText())
@@ -69,7 +68,6 @@ public class PostConverter {
             .authorityCount(1)
             .authorityImageList(getAuthorityImageList(post))
             .build();
-        return createPostResponse;
     }
 
     @Transactional(readOnly = true)
@@ -94,10 +92,7 @@ public class PostConverter {
     }
 
     public GetPostDetailResponse postToGetPostDetailResponse(Post post, PostDetail postDetail) {
-        boolean isOpened = false;
-        if (postDetail.getOpener() != null) {
-            isOpened = true;
-        }
+        boolean isOpened = postDetail.getOpener() != null;
         return GetPostDetailResponse.builder()
             .authorityImageList(getAuthorityImageList(post))
             .postId(post.getId())

@@ -31,3 +31,4 @@ public class MapService {
         return new GetMapResponse(collect);
     }
 }
+
