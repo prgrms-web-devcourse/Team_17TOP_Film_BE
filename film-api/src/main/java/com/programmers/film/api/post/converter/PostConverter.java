@@ -1,7 +1,7 @@
 package com.programmers.film.api.post.converter;
 
-import com.programmers.film.api.post.dto.common.AuthorityImage;
-import com.programmers.film.api.post.dto.common.OrderImageUrl;
+import com.programmers.film.api.post.dto.common.AuthorityImageDto;
+import com.programmers.film.api.post.dto.common.OrderImageUrlDto;
 import com.programmers.film.api.post.dto.request.CreatePostRequest;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
@@ -30,12 +30,12 @@ public class PostConverter {
     private final PostStateRepository postStateRepository;
 
     @Transactional(readOnly = true)
-    public List<AuthorityImage> getAuthorityImageList(Post post) {
+    public List<AuthorityImageDto> getAuthorityImageList(Post post) {
         AtomicInteger index = new AtomicInteger();
 
         return post.getPostAuthorities().stream()
             .map(
-                postAuthority -> AuthorityImage.builder()
+                postAuthority -> AuthorityImageDto.builder()
                     .authorityId(postAuthority.getUser().getId())
                     .imageOrder(index.getAndIncrement())
                     .imageUrl(postAuthority.getUser().getProfileImageUrl().getOriginalSizeUrl())
@@ -113,10 +113,10 @@ public class PostConverter {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderImageUrl> getImageUrls(PostDetail postDetail) {
-        List<OrderImageUrl> imgUrls = new ArrayList<>();
+    public List<OrderImageUrlDto> getImageUrls(PostDetail postDetail) {
+        List<OrderImageUrlDto> imgUrls = new ArrayList<>();
         for (var postImage : postDetail.getPostImages()) {
-            OrderImageUrl orderImage = OrderImageUrl.builder()
+            OrderImageUrlDto orderImage = OrderImageUrlDto.builder()
                 .imageOrder(postImage.getOrder())
                 .imageUrl(postImage.getImageUrl().getOriginalSizeUrl())
                 .build();

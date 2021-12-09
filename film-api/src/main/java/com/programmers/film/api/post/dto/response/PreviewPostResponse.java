@@ -1,7 +1,7 @@
 package com.programmers.film.api.post.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.programmers.film.api.post.dto.common.AuthorityImage;
+import com.programmers.film.api.post.dto.common.AuthorityImageDto;
 import com.programmers.film.api.post.dto.common.PointDto;
 import java.time.LocalDate;
 import java.util.List;
@@ -22,5 +22,5 @@ public class PreviewPostResponse {
     private PointDto location;
 
     private int authorityCount;
-    private List<AuthorityImage> authorityImageList;
+    private List<AuthorityImageDto> authorityImageList;
 }

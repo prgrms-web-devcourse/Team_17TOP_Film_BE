@@ -2,11 +2,11 @@ package com.programmers.film.api.post.dto.common;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Builder
-public class OrderImage { // must have : only one img
+public class AuthorityImageDto {
     private int imageOrder;
-    private MultipartFile image;
+    private Long authorityId;
+    private String imageUrl;
 }
