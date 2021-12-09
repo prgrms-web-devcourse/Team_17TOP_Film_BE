@@ -63,7 +63,6 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/**").hasAnyRole("USER")
 				.anyRequest().authenticated()
 
-
 				.and()
 			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

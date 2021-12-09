@@ -16,3 +16,11 @@ VALUES (1, 1, 1),
        (3, 2, 2)
 ;
 
+-- post_state
+INSERT INTO post_state
+VALUES (0, 'CLOSED'),
+       (1, 'OPENALBE'),
+       (2, 'OPENED')
+;
+
+

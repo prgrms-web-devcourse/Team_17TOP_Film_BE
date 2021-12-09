@@ -1,9 +1,11 @@
 package com.programmers.film.api.user.service;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.assertj.core.util.Preconditions.checkArgument;
 
 import com.programmers.film.api.auth.dto.ProviderAttribute;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
+import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
 import com.programmers.film.api.user.dto.response.SignUpResponse;
 import com.programmers.film.api.user.mapper.UserMapper;
 import com.programmers.film.domain.user.domain.User;
@@ -34,5 +36,16 @@ public class UserService {
 		User savedUser = userRepository.save(user);
 
 		return userMapper.entityToResponse(savedUser);
+	}
+
+	@Transactional(readOnly = true)
+	public CheckNicknameResponse checkNickname(String nickname) {
+
+		checkArgument(isNotEmpty(nickname), "nickname must be provided.");
+
+		return CheckNicknameResponse.builder()
+			.nickname(nickname)
+			.isDuplicate(userRepository.findByNickname(nickname).isPresent())
+			.build();
 	}
 }

@@ -5,8 +5,8 @@ spring:
         registration:
           kakao:
             client-name: kakao
-            client-id: 6fd4d2609eddaec107aa11ae202a2b24
-            client-secret: Z2gZZYG3tM2HjyjpZTqGYqYqsbi2VlqO
+            client-id: ${secret.kakao.client-id}
+            client-secret: ${secret.kakao.client-secret}
             scope: profile_nickname, profile_image
             redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code

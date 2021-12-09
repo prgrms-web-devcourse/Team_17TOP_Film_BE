@@ -6,14 +6,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PointConverter {
-    PointDto doublePointToStringPoint(Point point) {
+    public PointDto doublePointToStringPoint(Point point) {
         return PointDto.builder()
             .latitude(point.getLatitude().toString())
             .longitude(point.getLongitude().toString())
             .build();
     }
 
-    Point stringPointToDoublePoint(PointDto pointDto) {
+    public Point stringPointToDoublePoint(PointDto pointDto) {
         return Point.builder()
             .longitude(Double.parseDouble(pointDto.getLongitude()))
             .latitude(Double.parseDouble(pointDto.getLatitude()))
