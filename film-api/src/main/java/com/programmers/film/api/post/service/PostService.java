@@ -91,12 +91,11 @@ public class PostService {
         return postConverter.postToPreviewPostResponse(post);
     }
 
-    // TODO : delete 아니고 remove로 변경
     @Transactional
-    public DeletePostResponse deletePost(Long postId) {
+    public DeletePostResponse removePost(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 삭제를 할 수 없습니다."));
-        return postConverter.postToDeletePostResponse(post.deletePost());
+        return postConverter.postToDeletePostResponse(post.removePost());
     }
 
     @Transactional
