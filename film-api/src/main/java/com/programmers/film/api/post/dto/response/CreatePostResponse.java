@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.programmers.film.api.post.dto.common.AuthorityImage;
 import com.programmers.film.api.post.dto.common.PointDto;
 import com.programmers.film.domain.post.domain.PostState;
-import com.programmers.film.domain.post.domain.PostStatus;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
+import lombok.Getter;
 
-@Builder
+@Builder @Getter
 public class CreatePostResponse {
 
     private Long postId;
