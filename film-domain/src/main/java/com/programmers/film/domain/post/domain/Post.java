@@ -81,7 +81,7 @@ public class Post extends BaseEntity {
         this.author = author;
     }
 
-    public Long deletePost() {
+    public Long removePost() {
         LocalDateTime now = LocalDateTime.now();
         setDeletedAt(now);
         setIsDeleted(1);
