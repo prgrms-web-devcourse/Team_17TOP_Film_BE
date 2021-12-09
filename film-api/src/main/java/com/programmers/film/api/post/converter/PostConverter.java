@@ -1,7 +1,6 @@
 package com.programmers.film.api.post.converter;
 
 import com.programmers.film.api.post.dto.common.AuthorityImage;
-import com.programmers.film.api.post.dto.common.OrderImageFile;
 import com.programmers.film.api.post.dto.common.OrderImageUrl;
 import com.programmers.film.api.post.dto.request.CreatePostRequest;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
@@ -28,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostConverter {
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
     private final PointConverter pointConverter;
     private final PostStateRepository postStateRepository;
 
@@ -49,6 +47,7 @@ public class PostConverter {
     public Post createPostRequestToPost(CreatePostRequest request) {
         User authorUser = userRepository.findById(request.getAuthorUserId()).get(); // Exception
         PostState postState = postStateRepository.findByState(PostStatus.CLOSED.toString()).get();
+      
         return Post.builder()
             .title(request.getTitle())
             .previewText(request.getPreviewText())
@@ -81,6 +80,7 @@ public class PostConverter {
             .title(post.getTitle())
             .previewText(post.getPreviewText())
             .availableAt(post.getAvailableAt())
+            .state(post.getState().getState())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .authorityCount(postAuthorities.size())
             .authorityImageList(getAuthorityImageList(post))

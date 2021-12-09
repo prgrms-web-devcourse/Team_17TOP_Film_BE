@@ -8,8 +8,9 @@ import com.programmers.film.domain.post.domain.PostStatus;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
+import lombok.Getter;
 
-@Builder
+@Builder @Getter
 public class CreatePostResponse {
 
     private Long postId;
