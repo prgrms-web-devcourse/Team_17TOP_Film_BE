@@ -7,9 +7,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Entity
+@Entity @Getter
 @Table(name = "post_states")
+@Builder
+@NoArgsConstructor
 public class PostState {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
