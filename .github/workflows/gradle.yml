@@ -34,6 +34,20 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
     
+    - name: Copy S3 secret
+      env: 
+        AWS_S3_SECRET: ${{ secrets.AWS_S3_CREDENTIALS }}
+        SECRET_DIR: film-external/src/main/resources
+        SECRET_FILE_NAME: application-aws.yml
+      run: echo $AWS_S3_SECRET | base64 --decode > $SECRET_DIR/$SECRET_FILE_NAME    
+      
+    - name: Copy OAUTH2 secret
+      env:
+        OAUTH2_SECRET: ${{ secrets.OAUTH2_SECRET }}
+        SECRET_DIR: film-api/src/main/resources
+        SECRET_FILE_NAME: application-secret.yml
+      run: echo $OAUTH2_SECRET | base64 --decode > $SECRET_DIR/$SECRET_FILE_NAME
+    
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
         
