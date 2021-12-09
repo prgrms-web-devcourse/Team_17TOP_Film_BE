@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.programmers.film.api.post.dto.common.AuthorityImage;
 import com.programmers.film.api.post.dto.common.PointDto;
 import com.programmers.film.domain.post.domain.PostState;
+import com.programmers.film.domain.post.domain.PostStatus;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class CreatePostResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate availableAt;
 
-    private PostState state;
+    private String state;
 
     private PointDto location;
 
