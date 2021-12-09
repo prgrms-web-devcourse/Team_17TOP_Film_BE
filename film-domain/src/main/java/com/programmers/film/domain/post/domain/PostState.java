@@ -11,10 +11,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity @Getter
-@Table(name = "post_states")
-@Builder
+@Builder @Getter
 @NoArgsConstructor
+@Entity
+@Table(name = "post_states")
 public class PostState {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
