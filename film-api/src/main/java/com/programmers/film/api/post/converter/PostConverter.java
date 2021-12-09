@@ -46,7 +46,8 @@ public class PostConverter {
 
     public Post createPostRequestToPost(CreatePostRequest request) {
         User authorUser = userRepository.findById(request.getAuthorUserId()).get(); // Exception
-        PostState postState = postStateRepository.findById(1L).get();
+        PostState postState = postStateRepository.findByState(PostStatus.CLOSED.toString()).get();
+      
         return Post.builder()
             .title(request.getTitle())
             .previewText(request.getPreviewText())

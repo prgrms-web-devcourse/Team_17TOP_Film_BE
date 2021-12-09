@@ -53,4 +53,10 @@ public class PostDetail {
         postImages.add(postImage);
         postImage.setPostDetail(this);
     }
+
+    public void firstOpen(User user){
+        this.opener = user;
+        this.openedAt = LocalDate.now();
+
+    }
 }

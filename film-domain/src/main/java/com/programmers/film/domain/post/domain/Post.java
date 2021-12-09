@@ -90,4 +90,9 @@ public class Post extends BaseEntity {
         }
         return id;
     }
+
+    public void setState(PostState state){
+        this.state=state;
+    }
+
 }
