@@ -2,7 +2,6 @@ package com.programmers.film.api.post.dto.response;
 
 import com.programmers.film.api.post.dto.common.AuthorityImage;
 import com.programmers.film.api.post.dto.common.PointDto;
-import com.programmers.film.domain.common.domain.Point;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
@@ -16,6 +15,7 @@ public class PreviewPostResponse {
     private String previewText;
 
     private LocalDate availableAt;
+    private String state;
     private PointDto location;
 
     private int authorityCount;

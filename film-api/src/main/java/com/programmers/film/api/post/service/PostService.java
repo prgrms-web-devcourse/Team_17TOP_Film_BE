@@ -22,7 +22,6 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -78,7 +77,9 @@ public class PostService {
     public PreviewPostResponse getPreview(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 엿보기를 할 수 없습니다."));
-        // TODO : 삭제된 게시물 못보게하기.
+        if(post.getIsDeleted() == 0) {
+            throw new PostIdNotFoundException("삭제된 게시물입니다. 게시물 엿보기를 할 수 없습니다.");
+        }
         return postConverter.postToPreviewPostResponse(post);
     }
 
@@ -94,8 +95,11 @@ public class PostService {
     public GetPostDetailResponse getPostDetail(Long postId){
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
+        if(post.getIsDeleted() == 0) {
+            throw new PostIdNotFoundException("삭제된 게시물입니다. 게시물 확인을 할 수 없습니다.");
+        }
         PostDetail postDetail = postDetailRepository.findById(postId)
-            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
+            .orElseThrow(() -> new PostIdNotFoundException("게시물 세부 내용을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
 
         return postConverter.postToGetPostDetailResponse(post,postDetail);
     }

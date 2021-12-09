@@ -1,7 +1,6 @@
 package com.programmers.film.api.post.converter;
 
 import com.programmers.film.api.post.dto.common.AuthorityImage;
-import com.programmers.film.api.post.dto.common.OrderImageFile;
 import com.programmers.film.api.post.dto.common.OrderImageUrl;
 import com.programmers.film.api.post.dto.request.CreatePostRequest;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
@@ -11,7 +10,6 @@ import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
 import com.programmers.film.domain.post.domain.PostDetail;
-import com.programmers.film.domain.post.repository.PostRepository;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Component;
@@ -25,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostConverter {
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
     private final PointConverter pointConverter;
 
     @Transactional(readOnly = true)
@@ -75,6 +72,7 @@ public class PostConverter {
             .title(post.getTitle())
             .previewText(post.getPreviewText())
             .availableAt(post.getAvailableAt())
+            .state(post.getState().getState())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .authorityCount(postAuthorities.size())
             .authorityImageList(getAuthorityImageList(post))
