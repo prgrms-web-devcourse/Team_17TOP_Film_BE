@@ -109,7 +109,7 @@ CREATE TABLE post_details
     `id`        bigint NOT NULL,
     `post_id`   bigint NOT NULL,
     `opener_id` bigint NULL,
-    `opened_at` TIMESTAMP NULL,
+    `opened_at` DATE NULL,
     `content`   TEXT NULL,
     CONSTRAINT PK_POST_DETAILS PRIMARY KEY (id, post_id, opener_id)
 );
