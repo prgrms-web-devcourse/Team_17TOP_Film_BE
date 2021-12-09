@@ -47,7 +47,7 @@ public class PostConverter {
         return Post.builder()
             .title(request.getTitle())
             .previewText(request.getPreviewText())
-            .location(request.getLocation())
+            .location(pointConverter.stringPointToDoublePoint(request.getLocation()))
             .availableAt(request.getAvailableAt())
             .author(authorUser)
             .build();
