@@ -12,7 +12,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-//@Component
+@Component
 @RequiredArgsConstructor
 public class Scheduler {
 
