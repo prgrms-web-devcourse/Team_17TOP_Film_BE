@@ -8,6 +8,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -28,7 +30,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostDetail {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
@@ -59,4 +61,13 @@ public class PostDetail {
         this.openedAt = LocalDate.now();
 
     }
+
+    public void setPost(Post post){
+        this.post=post;
+    }
+
+    public PostDetail(String content){
+        this.content = content;
+    }
+
 }

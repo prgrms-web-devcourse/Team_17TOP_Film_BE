@@ -12,6 +12,7 @@ import com.programmers.film.domain.post.domain.PostAuthority;
 import com.programmers.film.domain.post.domain.PostDetail;
 import com.programmers.film.domain.post.domain.PostState;
 import com.programmers.film.domain.post.domain.PostStatus;
+import com.programmers.film.domain.post.repository.PostRepository;
 import com.programmers.film.domain.post.repository.PostStateRepository;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
@@ -43,8 +44,7 @@ public class PostConverter {
             ).toList();
     }
 
-    public Post createPostRequestToPost(CreatePostRequest request) {
-        User authorUser = userRepository.findById(request.getAuthorUserId()).get(); // Exception
+    public Post createPostRequestToPost(CreatePostRequest request,User authorUser) {
         PostState postState = postStateRepository.findByState(PostStatus.CLOSED.toString()).get();
       
         return Post.builder()
