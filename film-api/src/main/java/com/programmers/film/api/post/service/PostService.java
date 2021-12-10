@@ -8,6 +8,7 @@ import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.exception.PostIdNotFoundException;
 import com.programmers.film.api.post.exception.PostCanNotOpenException;
+import com.programmers.film.api.post.util.PostValidateUtil;
 import com.programmers.film.api.user.exception.UserIdNotFoundExceoption;
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
@@ -41,6 +42,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostStateRepository postStateRepository;
     private final S3Service s3Service;
+    private final PostValidateUtil validateUtil;
 
     @Transactional
     public CreatePostResponse createPost(CreatePostRequest request, Long userId) {
@@ -100,9 +102,7 @@ public class PostService {
     public PreviewPostResponse getPreview(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 엿보기를 할 수 없습니다."));
-        if(post.getIsDeleted() == 1) {
-            throw new PostIdNotFoundException("삭제된 게시물입니다. 게시물 엿보기를 할 수 없습니다.");
-        }
+        validateUtil.checkIsDelete(post);
         return postConverter.postToPreviewPostResponse(post);
     }
 
@@ -110,36 +110,36 @@ public class PostService {
     public DeletePostResponse removePost(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 삭제를 할 수 없습니다."));
+        validateUtil.checkIsDelete(post);
         return postConverter.postToDeletePostResponse(post.removePost());
     }
 
     @Transactional
     public GetPostDetailResponse getPostDetail(Long postId, Long userId){
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserIdNotFoundExceoption("잘못된 유저 입니다.")); // TODO : 상황발생시 문구 수정
+            .orElseThrow(() -> new UserIdNotFoundExceoption("잘못된 유저 입니다. 게시물 확인을 할 수 없습니다.")); // TODO : 상황발생시 문구 수정
 
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
 
-        if(post.getIsDeleted() == 1) {
-            throw new PostIdNotFoundException("삭제된 게시물입니다. 게시물 확인을 할 수 없습니다.");
-        }
+        validateUtil.checkIsDelete(post);
+        validateUtil.checkAuthority(post, user);
 
         PostDetail postDetail = postDetailRepository.findByPostId(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물 세부 내용을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
 
-        if(post.getState().equals(PostStatus.OPENABLE.toString())){
-            PostState state = postStateRepository.findByState(PostStatus.OPENED.toString()).get();
-            post.setState(state);
-            postDetail.firstOpen(user);
-        }
-
-        else if(post.getState().equals(PostStatus.CLOSED.toString())){
+        PostState postState = post.getState();
+        if(postState.toString().equals(PostStatus.CLOSED.toString())){
             throw new PostCanNotOpenException("닫혀 있는 게시물 입니다.");
         }
+        else if(postState.toString().equals(PostStatus.OPENABLE.toString())){
+            PostState state = postStateRepository.findByPostStateValue(PostStatus.OPENED.toString()).get();
+            post.setState(state);
+            postDetail.firstOpen(user);
+            return postConverter.postToGetPostDetailResponse(post.getId(), userId);
+        }
 
-        return postConverter.postToGetPostDetailResponse(post,postDetail);
+        return postConverter.postToGetPostDetailResponse(post.getId());
     }
-
 
 }

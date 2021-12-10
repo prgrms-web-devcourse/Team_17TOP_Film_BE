@@ -50,4 +50,22 @@ public class PostAuthority {
 
         this.post = post;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PostAuthority that = (PostAuthority) o;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getUser(),
+            that.getUser()) && Objects.equals(getPost(), that.getPost());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUser(), getPost());
+    }
 }
