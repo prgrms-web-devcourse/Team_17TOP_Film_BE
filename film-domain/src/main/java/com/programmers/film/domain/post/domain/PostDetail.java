@@ -37,7 +37,7 @@ public class PostDetail {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @OneToMany(mappedBy = "postDetail", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "postDetail", orphanRemoval = true)
     private List<PostImage> postImages = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
