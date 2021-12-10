@@ -100,7 +100,7 @@ public class PostService {
     public PreviewPostResponse getPreview(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 엿보기를 할 수 없습니다."));
-        if(post.getIsDeleted() == 0) {
+        if(post.getIsDeleted() == 1) {
             throw new PostIdNotFoundException("삭제된 게시물입니다. 게시물 엿보기를 할 수 없습니다.");
         }
         return postConverter.postToPreviewPostResponse(post);
@@ -121,7 +121,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
 
-        if(post.getIsDeleted() == 0) {
+        if(post.getIsDeleted() == 1) {
             throw new PostIdNotFoundException("삭제된 게시물입니다. 게시물 확인을 할 수 없습니다.");
         }
 
