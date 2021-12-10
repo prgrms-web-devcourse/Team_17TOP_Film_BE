@@ -23,4 +23,12 @@ VALUES (0, 'CLOSED'),
        (2, 'OPENED')
 ;
 
+INSERT INTO users(nickname, provider, provider_id, created_at, updated_at, is_deleted)
+VALUES ('iyj', 'kakao', '2009852607', '2021-12-10 15:12:34.060692', '2021-12-10 15:12:34.060692', 0)
+;
+
+
+INSERT INTO auths(username, provider, provider_id, group_id, user_id)
+VALUES ('임연재', 'kakao', '2009852607', 1, 1)
+;
 
