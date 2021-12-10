@@ -9,7 +9,6 @@ import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.exception.PostIdNotFoundException;
 import com.programmers.film.api.post.exception.PostCanNotOpenException;
 import com.programmers.film.api.user.exception.UserIdNotFoundExceoption;
-import com.programmers.film.common.error.exception.InvalidInputValueException;
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
@@ -26,12 +25,10 @@ import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
 import com.programmers.film.img.S3Service;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
