@@ -71,7 +71,7 @@ CREATE TABLE auths
 CREATE TABLE post_states
 (
     `id`    bigint      NOT NULL AUTO_INCREMENT,
-    `state` varchar(20) NOT NULL,
+    `post_state_value` varchar(20) NOT NULL,
     CONSTRAINT PK_POST_STATES PRIMARY KEY (id)
 );
 
@@ -130,6 +130,7 @@ CREATE TABLE post_images
     `post_detail_id` bigint       NOT NULL,
     `original_url`   varchar(255) NOT NULL,
     `small_size_url` varchar(255) NULL,
+    `image_order`    int          NOT NULL,
     CONSTRAINT PK_POST_IMAGES PRIMARY KEY (id)
 );
 

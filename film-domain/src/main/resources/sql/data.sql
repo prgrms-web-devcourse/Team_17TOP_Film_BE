@@ -17,9 +17,9 @@ VALUES (1, 1, 1),
 ;
 
 -- post_state
-INSERT INTO post_states
+INSERT INTO post_states(id, post_state_value)
 VALUES (0, 'CLOSED'),
-       (1, 'OPENALBE'),
+       (1, 'OPENABLE'),
        (2, 'OPENED')
 ;
 
