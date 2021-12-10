@@ -40,14 +40,14 @@ public class Post extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    @OneToMany(mappedBy = "post", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<PostAuthority> postAuthorities = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private User author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "state_id")
     private PostState state;
 
@@ -94,5 +94,4 @@ public class Post extends BaseEntity {
     public void setState(PostState state){
         this.state=state;
     }
-
 }

@@ -91,7 +91,7 @@ CREATE TABLE posts
     `deleted_at`   TIMESTAMP NULL,
     `latitude`     DOUBLE       NOT NULL,
     `longitude`    DOUBLE       NOT NULL,
-    CONSTRAINT PK_POSTS PRIMARY KEY (id, author_id, state_id)
+    CONSTRAINT PK_POSTS PRIMARY KEY (id)
 );
 
 ALTER TABLE posts
@@ -106,12 +106,12 @@ ALTER TABLE posts
 -- post_details Table Create SQL
 CREATE TABLE post_details
 (
-    `id`        bigint NOT NULL,
+    `id`        bigint NOT NULL AUTO_INCREMENT,
     `post_id`   bigint NOT NULL,
     `opener_id` bigint NULL,
     `opened_at` DATE NULL,
     `content`   TEXT NULL,
-    CONSTRAINT PK_POST_DETAILS PRIMARY KEY (id, post_id, opener_id)
+    CONSTRAINT PK_POST_DETAILS PRIMARY KEY (id)
 );
 
 ALTER TABLE post_details
@@ -130,7 +130,7 @@ CREATE TABLE post_images
     `post_detail_id` bigint       NOT NULL,
     `original_url`   varchar(255) NOT NULL,
     `small_size_url` varchar(255) NULL,
-    CONSTRAINT PK_POST_IMAGES PRIMARY KEY (id, post_detail_id)
+    CONSTRAINT PK_POST_IMAGES PRIMARY KEY (id)
 );
 
 ALTER TABLE post_images
@@ -142,13 +142,13 @@ ALTER TABLE post_images
 CREATE TABLE post_authorities
 (
     `id`        bigint NOT NULL AUTO_INCREMENT,
-    `member_id` bigint NOT NULL,
+    `user_id` bigint NOT NULL,
     `post_id`   bigint NOT NULL,
-    CONSTRAINT PK_AUTHORITIES PRIMARY KEY (id, member_id, post_id)
+    CONSTRAINT PK_AUTHORITIES PRIMARY KEY (id)
 );
 
 ALTER TABLE post_authorities
-    ADD CONSTRAINT FK_post_authorities_member_id_users_id FOREIGN KEY (member_id)
+    ADD CONSTRAINT FK_post_authorities_user_id_users_id FOREIGN KEY (user_id)
         REFERENCES users (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE post_authorities

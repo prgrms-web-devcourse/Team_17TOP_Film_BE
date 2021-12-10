@@ -12,6 +12,7 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,68 +24,70 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
-	name = "users",
-	uniqueConstraints = {@UniqueConstraint(columnNames = {"nickname"})}
+    name = "users",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"nickname"})}
 )
 public class User extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@NotNull
-	@Column(length = 20, name = "nickname")
-	private String nickname;
+    @NotNull
+    @Column(length = 20, name = "nickname")
+    private String nickname;
 
-	@NotNull
-	@Column(name = "provider")
-	private String provider;
+    @NotNull
+    @Column(name = "provider")
+    private String provider;
 
-	@NotNull
-	@Column(name = "provider_id")
-	private String providerId;
+    @NotNull
+    @Column(name = "provider_id")
+    private String providerId;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<PostAuthority> postAuthorities = new ArrayList<>();
 
     @OneToMany(mappedBy = "author", orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
-	@Embedded
-	@AttributeOverrides({
-		@AttributeOverride(name = "originalSizeUrl", column = @Column(name = "profile_image")),
-		@AttributeOverride(name = "smallSizeUrl", column = @Column(name = "profile_thumbnail_image"))
-	})
-	private ImageUrl profileImageUrl;
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "originalSizeUrl", column = @Column(name = "profile_image")),
+        @AttributeOverride(name = "smallSizeUrl", column = @Column(name = "profile_thumbnail_image"))
+    })
+    private ImageUrl profileImageUrl;
 
-	@Column(name = "last_login_at")
-	private LocalDateTime lastLoginAt;
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
 
-	@Builder
-	public User(Long id, String nickname) {
+    @Builder
+    public User(Long id, String nickname) {
 
-		this.id = id;
-		this.nickname = nickname;
-	}
+        this.id = id;
+        this.nickname = nickname;
+    }
 
-	public void updateProvider(String provider, String providerId) {
-		this.provider = provider;
-		this.providerId = providerId;
-	}
+    public void updateProvider(String provider, String providerId) {
+        this.provider = provider;
+        this.providerId = providerId;
+    }
 
 
-	public void addAuthority(PostAuthority authority) {
-		postAuthorities.add(authority);
-		authority.setUser(this);
-	}
+    public void addAuthority(PostAuthority authority) {
+        postAuthorities.add(authority);
+        authority.setUser(this);
+    }
 
-	public void addPost(Post post) {
-		posts.add(post);
-		post.setAuthor(this);
-	}
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setAuthor(this);
+    }
+
 }
