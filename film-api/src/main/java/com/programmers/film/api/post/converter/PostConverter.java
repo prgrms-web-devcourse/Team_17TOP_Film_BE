@@ -7,6 +7,7 @@ import com.programmers.film.api.post.dto.response.CreatePostResponse;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
 import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
+import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
 import com.programmers.film.domain.post.domain.PostDetail;
@@ -26,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class PostConverter {
-    private final UserRepository userRepository;
     private final PointConverter pointConverter;
     private final PostStateRepository postStateRepository;
 
@@ -36,17 +36,27 @@ public class PostConverter {
 
         return post.getPostAuthorities().stream()
             .map(
-                postAuthority -> AuthorityImageDto.builder()
-                    .authorityId(postAuthority.getUser().getId())
-                    .imageOrder(index.getAndIncrement())
-                    .imageUrl(postAuthority.getUser().getProfileImageUrl().getOriginalSizeUrl())
-                    .build()
+                postAuthority -> {
+                    User user = postAuthority.getUser();
+                    ImageUrl profileImageUrl = user.getProfileImageUrl();
+                    if(profileImageUrl != null) {
+                        return AuthorityImageDto.builder()
+                            .authorityId(user.getId())
+                            .imageOrder(index.getAndIncrement())
+                            .imageUrl(profileImageUrl.getOriginalSizeUrl())
+                            .build();
+                    }
+                    return AuthorityImageDto.builder()
+                        .authorityId(user.getId())
+                        .imageOrder(index.getAndIncrement())
+                        .imageUrl(null)
+                        .build();
+                }
             ).toList();
     }
 
-    public Post createPostRequestToPost(CreatePostRequest request,User authorUser) {
+    public Post createPostRequestToPost(CreatePostRequest request, User authorUser) {
         PostState postState = postStateRepository.findByState(PostStatus.CLOSED.toString()).get();
-      
         return Post.builder()
             .title(request.getTitle())
             .previewText(request.getPreviewText())
@@ -54,6 +64,7 @@ public class PostConverter {
             .availableAt(request.getAvailableAt())
             .author(authorUser)
             .state(postState)
+            .postAuthorities(new ArrayList<>())
             .build();
     }
 

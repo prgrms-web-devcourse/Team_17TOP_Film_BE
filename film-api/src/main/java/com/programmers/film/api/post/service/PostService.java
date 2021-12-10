@@ -9,6 +9,7 @@ import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.exception.PostIdNotFoundException;
 import com.programmers.film.api.post.exception.PostCanNotOpenException;
 import com.programmers.film.api.user.exception.UserIdNotFoundExceoption;
+import com.programmers.film.common.error.exception.InvalidInputValueException;
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
@@ -26,9 +27,11 @@ import com.programmers.film.domain.user.repository.UserRepository;
 import com.programmers.film.img.S3Service;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -42,78 +45,59 @@ public class PostService {
     private final PostStateRepository postStateRepository;
     private final S3Service s3Service;
 
+    @Transactional
     public CreatePostResponse createPost(CreatePostRequest request, Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserIdNotFoundExceoption("사용자 ID를 찾을 수 없습니다. 게시물을 생성할 수 없습니다."));
+        Post draftPost = postConverter.createPostRequestToPost(request, user);
+        Post post = postRepository.save(draftPost);
 
-        Post post = createPostMethod(request, userId);
         // TODO : must have 권한, 이미지 1개 , exception
-        PostAuthority postAuthority = createAuthrityMethod(post,userId);
-
-        PostDetail postDetail = createPostDetail(request, post);
-
-        //System.out.println(postDetail);
+        PostAuthority authority = new PostAuthority();
+        post.addPostAuthority(authority);
+        user.addAuthority(authority);
+        authorityRepository.save(authority);
 
         // img upload
-        if(request.getImageFiles().size()!=0) {
-            String ImgUrl = new String();
-            try {
-                ImgUrl = s3Service.upload(request.getImageFiles().get(0).getImage());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        List<String> ImgUrls = request.getImageFiles().stream()
+            .map(orderImageFileDto -> {
+                try {
+                    return s3Service.upload(orderImageFileDto.getImage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            })
+            .toList();
 
-            ImageUrl imageUrl = ImageUrl.builder()
-                .originalSizeUrl(ImgUrl)
+        PostImage postImage = null;
+        try {
+            String ImgUrl = ImgUrls.get(0);
+            PostImage draftPostImage = PostImage.builder()
+                .imageUrl(
+                    ImageUrl.builder()
+                        .originalSizeUrl(ImgUrl)
+                        .build()
+                )
                 .build();
-
-            PostImage postImage = PostImage.builder()
-                .imageUrl(imageUrl)
-                .build();
-            postImage.setPostDetail(postDetail);
-            postImageRepository.save(postImage);
+            postImage = postImageRepository.save(draftPostImage);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+        PostDetail draftPostDetail = PostDetail.builder()
+            .id(post.getId())
+            .post(post)
+            .content(request.getContent())
+            .build();
+        PostDetail postDetail = postDetailRepository.save(draftPostDetail);
 
-        System.out.println("============test========log");
-        Post foundPost = postRepository.findById(post.getId()).get();
-        System.out.println(foundPost.getPostAuthorities());
+        if(postImage != null) {
+            postDetail.addPostImage(postImage);
+        }
 
-        return postConverter.postToCreatePostResponse(foundPost);
+        return postConverter.postToCreatePostResponse(post);
     }
-
-    @Transactional
-    protected PostDetail createPostDetail(CreatePostRequest request, Post findPost) {
-        PostDetail postDetail = new PostDetail(request.getContent());
-        postDetail.setPost(findPost);
-        return postDetailRepository.save(postDetail);
-    }
-
-    @Transactional
-    protected PostAuthority createAuthrityMethod(Post post,Long userId) {
-        User user = userRepository.findById(userId).orElseThrow( ()->new UserIdNotFoundExceoption("잘못된 유저 입니다."));
-        PostAuthority authority = new PostAuthority();
-        Post foundPost = postRepository.findById(post.getId()).get();
-
-        System.out.println("=========error");
-        user.addAuthority(authority);
-        foundPost.addPostAuthority(authority);
-
-//        authority.setPost(findPost);
-//        authority.setUser(user);
-        System.out.println("==========user user user");
-        System.out.println(authority.getUser());
-        System.out.println(authority.getPost());
-        return authorityRepository.save(authority);
-
-    }
-
-    @Transactional
-    protected Post createPostMethod(CreatePostRequest request, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow( ()->new UserIdNotFoundExceoption("잘못된 유저 입니다."));
-        Post post = postConverter.createPostRequestToPost(request, user);
-        Post findPost = postRepository.save(post);
-        return findPost;
-    }
-
 
     @Transactional(readOnly = true)
     public PreviewPostResponse getPreview(Long postId) {
