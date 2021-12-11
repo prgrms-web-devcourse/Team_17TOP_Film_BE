@@ -1,5 +1,6 @@
 package com.programmers.film.common.error.exception;
 
+import com.programmers.film.common.error.ErrorCode;
 import lombok.Getter;
 
 @Getter

@@ -1,7 +1,6 @@
 package com.programmers.film.common.error;
 
 import com.programmers.film.common.error.exception.BusinessException;
-import com.programmers.film.common.error.exception.ErrorCode;
 import java.nio.file.AccessDeniedException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
