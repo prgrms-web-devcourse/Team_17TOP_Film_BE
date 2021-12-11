@@ -24,6 +24,13 @@ public class UserService {
 
 	private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
+	@Transactional(readOnly = true)
+	public boolean checkUser(Long userId) {
+		checkArgument(userId != null, "userId must be provided.");
+
+		return userRepository.findById(userId).isPresent();
+	}
+
 	@Transactional
 	public SignUpResponse signUp(SignUpRequest signUpRequest, ProviderAttribute provider) {
 
