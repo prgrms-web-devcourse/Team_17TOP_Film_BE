@@ -2,12 +2,16 @@ package com.programmers.film.common.error;
 
 import com.programmers.film.common.error.exception.ErrorCode;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ErrorResponse {
 
     private String message;
@@ -20,12 +24,19 @@ public class ErrorResponse {
         this.code = code.getCode();
     }
 
-    public static ErrorResponse of(final ErrorCode code) {
+    public static ErrorResponse from(final ErrorCode code) {
         return new ErrorResponse(code);
     }
 
-    public static ErrorResponse of(MethodArgumentTypeMismatchException e) {
-        final String value = e.getValue() == null ? "" : e.getValue().toString();
+    public static ErrorResponse from(MethodArgumentTypeMismatchException e) {
         return new ErrorResponse(ErrorCode.INVALID_TYPE_VALUE);
+    }
+
+    public static ErrorResponse of(final ErrorCode code, final String message) {
+        return ErrorResponse.builder()
+            .message(message)
+            .status(code.getStatus())
+            .code(code.getCode())
+            .build();
     }
 }
