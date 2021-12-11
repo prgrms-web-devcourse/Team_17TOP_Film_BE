@@ -39,7 +39,9 @@ public enum ErrorCode {
     AUTHORITY_ERROR(400, "P006", "Authority Error"),
     AUTHOR_NICKNAME_ERROR(400, "P007", "Author Nickname Error"),
     IMAGE_ERROR(400, "P008", "Image Error"),
-    CONTENT_ERROR(400, "P009", "Content Error");
+    CONTENT_ERROR(400, "P009", "Content Error"),
+    CLOSED_POST_ERROR(403,"P010","POST Closed");
+
 
     private final int status;
     private final String code;
