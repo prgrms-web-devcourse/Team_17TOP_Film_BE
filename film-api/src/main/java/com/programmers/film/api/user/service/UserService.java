@@ -7,10 +7,10 @@ import com.programmers.film.api.auth.dto.ProviderAttribute;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
 import com.programmers.film.api.user.dto.response.SignUpResponse;
+import com.programmers.film.api.user.exception.NicknameDuplicatedException;
 import com.programmers.film.api.user.mapper.UserMapper;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
@@ -24,11 +24,22 @@ public class UserService {
 
 	private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
+	@Transactional(readOnly = true)
+	public boolean checkUser(Long userId) {
+		checkArgument(userId != null, "userId must be provided.");
+
+		return userRepository.findById(userId).isPresent();
+	}
+
 	@Transactional
 	public SignUpResponse signUp(SignUpRequest signUpRequest, ProviderAttribute provider) {
 
 		checkArgument(signUpRequest != null, "signUpRequest must be provided.");
 		checkArgument(provider != null, "provider must be provided.");
+
+		if (checkDuplicated(signUpRequest.getNickname())) {
+			throw new NicknameDuplicatedException("중복된 닉네임입니다");
+		}
 
 		User user = userMapper.requestToEntity(signUpRequest);
 		user.updateProvider(provider.getProvider(), provider.getProviderId());
@@ -45,7 +56,11 @@ public class UserService {
 
 		return CheckNicknameResponse.builder()
 			.nickname(nickname)
-			.isDuplicate(userRepository.findByNickname(nickname).isPresent())
+			.isDuplicate(checkDuplicated(nickname))
 			.build();
+	}
+
+	public boolean checkDuplicated(String nickname) {
+		return userRepository.findByNickname(nickname).isPresent();
 	}
 }

@@ -17,7 +17,7 @@ subprojects {
         plugin('io.spring.dependency-management')
     }
 
-    sourceCompatibility = "16"
+    sourceCompatibility = "17"
 
     repositories {
         mavenCentral()

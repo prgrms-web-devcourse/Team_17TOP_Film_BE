@@ -1,9 +1,11 @@
 package com.programmers.film.common.error;
 
 import com.programmers.film.common.error.exception.BusinessException;
-import com.programmers.film.common.error.exception.ErrorCode;
 import java.nio.file.AccessDeniedException;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -14,62 +16,70 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    // @Valid binding error
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
-        MethodArgumentNotValidException e) {
-        log.error("handleMethodArgumentNotValidException", e);
-        ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
+	// @Valid error
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+		MethodArgumentNotValidException e
+	) {
+		log.error("handleMethodArgumentNotValidException", e);
 
-        return ResponseEntity.badRequest().body(errorResponse);
-    }
+		String message = e.getBindingResult().getFieldErrors()
+			.stream()
+			.map(DefaultMessageSourceResolvable::getDefaultMessage)
+			.collect(Collectors.joining("\n"));
 
-    // @RequestParam enum type mismatch error
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
-        MethodArgumentTypeMismatchException e) {
-        log.error("handleMethodArgumentTypeMismatchException", e);
-        ErrorResponse errorResponse = ErrorResponse.of(e);
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.REQUEST_INVALID, message);
 
-        return ResponseEntity.badRequest().body(errorResponse);
-    }
+		return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ErrorCode.REQUEST_INVALID.getStatus()));
+	}
 
-    // 지원하지 않는 HTTP Method error
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
-        HttpRequestMethodNotSupportedException e) {
-        log.error("handleAccessDeniedException", e);
-        ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED);
+	// @RequestParam enum type mismatch error
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
+		MethodArgumentTypeMismatchException e) {
+		log.error("handleMethodArgumentTypeMismatchException", e);
+		ErrorResponse errorResponse = ErrorResponse.from(e);
 
-        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
-    }
+		return ResponseEntity.badRequest().body(errorResponse);
+	}
 
-    @ExceptionHandler(AccessDeniedException.class)
-    protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
-        log.error("handleAccessDeniedException", e);
-        final ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.HANDLE_ACCESS_DENIED);
+	// 지원하지 않는 HTTP Method error
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
+		HttpRequestMethodNotSupportedException e) {
+		log.error("handleAccessDeniedException", e);
+		ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.METHOD_NOT_ALLOWED);
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
-    }
+		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
+	}
 
-    // Business error
-    @ExceptionHandler(BusinessException.class)
-    protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
-        log.error("handleBusinessException", e);
-        final ErrorCode errorCode = e.getErrorCode();
-        final ErrorResponse errorResponse = ErrorResponse.of(errorCode);
+	@ExceptionHandler(AccessDeniedException.class)
+	protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
+		log.error("handleAccessDeniedException", e);
+		final ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.HANDLE_ACCESS_DENIED);
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorCode.getStatus()));
-    }
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+	}
 
-    // other Exception
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.error("handleException", e);
-        final ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
+	// Business error
+	@ExceptionHandler(BusinessException.class)
+	protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+		log.error("handleBusinessException", e);
+		final ErrorCode errorCode = e.getErrorCode();
+		final ErrorResponse errorResponse = ErrorResponse.from(errorCode);
 
-        return ResponseEntity.internalServerError().body(errorResponse);
-    }
+		return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorCode.getStatus()));
+	}
+
+	// other Exception
+	@ExceptionHandler(Exception.class)
+	protected ResponseEntity<ErrorResponse> handleException(Exception e) {
+		log.error("handleException", e);
+		final ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR);
+
+		return ResponseEntity.internalServerError().body(errorResponse);
+	}
 }

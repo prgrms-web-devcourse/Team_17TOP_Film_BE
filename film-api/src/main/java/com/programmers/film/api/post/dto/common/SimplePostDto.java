@@ -1,10 +1,15 @@
 package com.programmers.film.api.post.dto.common;
 
-import com.programmers.film.domain.common.domain.Point;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Builder @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SimplePostDto {
     private Long postId;
     private String state;
-    private List<Point> location;
+    private PointDto location;
 }

@@ -1,6 +1,6 @@
 package com.programmers.film.api.post.dto.request;
 
-import com.programmers.film.api.post.dto.common.OrderImageFile;
+import com.programmers.film.api.post.dto.common.OrderImageFileDto;
 import com.programmers.film.api.post.dto.common.PointDto;
 import java.time.LocalDate;
 import lombok.Builder;
@@ -23,7 +23,7 @@ public class CreatePostRequest {
 
     private List<Long> authorities;
 
-    private List<OrderImageFile> imageFiles;
+    private List<OrderImageFileDto> imageFiles;
 
     private String content;
 

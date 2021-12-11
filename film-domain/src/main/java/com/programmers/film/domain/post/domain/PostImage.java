@@ -22,9 +22,9 @@ import lombok.NoArgsConstructor;
 
 @Getter @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
 @Table(name = "post_images")
-@AllArgsConstructor
 public class PostImage {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +41,8 @@ public class PostImage {
     })
     private ImageUrl imageUrl;
 
-    private int order;
+    @Column(name = "image_order")
+    private int imageOrder;
 
     public void setPostDetail(PostDetail postDetail) {
         if (Objects.nonNull(this.postDetail)) {

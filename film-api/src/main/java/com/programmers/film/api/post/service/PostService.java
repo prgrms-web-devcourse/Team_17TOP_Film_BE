@@ -7,22 +7,29 @@ import com.programmers.film.api.post.dto.response.DeletePostResponse;
 import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.exception.PostIdNotFoundException;
+import com.programmers.film.api.post.exception.PostCanNotOpenException;
+import com.programmers.film.api.post.util.PostValidateUtil;
+import com.programmers.film.api.user.exception.UserIdNotFoundExceoption;
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
 import com.programmers.film.domain.post.domain.PostDetail;
 import com.programmers.film.domain.post.domain.PostImage;
+import com.programmers.film.domain.post.domain.PostState;
+import com.programmers.film.domain.post.domain.PostStatus;
 import com.programmers.film.domain.post.repository.PostAuthorityRepository;
 import com.programmers.film.domain.post.repository.PostDetailRepository;
 import com.programmers.film.domain.post.repository.PostImageRepository;
 import com.programmers.film.domain.post.repository.PostRepository;
+import com.programmers.film.domain.post.repository.PostStateRepository;
+import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
 import com.programmers.film.img.S3Service;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,43 +40,60 @@ public class PostService {
     private final PostImageRepository postImageRepository;
     private final PostConverter postConverter;
     private final UserRepository userRepository;
+    private final PostStateRepository postStateRepository;
     private final S3Service s3Service;
+    private final PostValidateUtil validateUtil;
 
     @Transactional
     public CreatePostResponse createPost(CreatePostRequest request, Long userId) {
-        Post post = postConverter.createPostRequestToPost(request);
-        postRepository.save(post);
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserIdNotFoundExceoption("사용자 ID를 찾을 수 없습니다. 게시물을 생성할 수 없습니다."));
+        Post draftPost = postConverter.createPostRequestToPost(request, user);
+        Post post = postRepository.save(draftPost);
 
         // TODO : must have 권한, 이미지 1개 , exception
         PostAuthority authority = new PostAuthority();
-        authority.setPost(post);
-        authority.setUser(userRepository.findById(request.getAuthorUserId()).get());
+        post.addPostAuthority(authority);
+        user.addAuthority(authority);
         authorityRepository.save(authority);
 
-        PostDetail postDetail = PostDetail.builder()
+        // img upload
+        List<String> ImgUrls = request.getImageFiles().stream()
+            .map(orderImageFileDto -> {
+                try {
+                    return s3Service.upload(orderImageFileDto.getImage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            })
+            .toList();
+
+        PostImage postImage = null;
+        try {
+            String ImgUrl = ImgUrls.get(0);
+            PostImage draftPostImage = PostImage.builder()
+                .imageUrl(
+                    ImageUrl.builder()
+                        .originalSizeUrl(ImgUrl)
+                        .build()
+                )
+                .build();
+            postImage = postImageRepository.save(draftPostImage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        PostDetail draftPostDetail = PostDetail.builder()
             .id(post.getId())
             .post(post)
             .content(request.getContent())
             .build();
-        postDetailRepository.save(postDetail);
+        PostDetail postDetail = postDetailRepository.save(draftPostDetail);
 
-        // img upload
-        String ImgUrl = new String();
-        try {
-            ImgUrl = s3Service.upload(request.getImageFiles().get(0).getImage());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(postImage != null) {
+            postDetail.addPostImage(postImage);
         }
-
-        ImageUrl imageUrl = ImageUrl.builder()
-            .originalSizeUrl(ImgUrl)
-            .build();
-
-        PostImage postImage = PostImage.builder()
-            .imageUrl(imageUrl)
-            .build();
-        postImage.setPostDetail(postDetail);
-        postImageRepository.save(postImage);
 
         return postConverter.postToCreatePostResponse(post);
     }
@@ -78,26 +102,44 @@ public class PostService {
     public PreviewPostResponse getPreview(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 엿보기를 할 수 없습니다."));
-
-        return postConverter.PostToPreviewPostResponse(post);
+        validateUtil.checkIsDelete(post);
+        return postConverter.postToPreviewPostResponse(post);
     }
 
     @Transactional
-    public DeletePostResponse deletePost(Long postId) {
+    public DeletePostResponse removePost(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 삭제를 할 수 없습니다."));
-        post.deletePost();
-
-        return postConverter.PostToDeletePostResponse(post);
+        validateUtil.checkIsDelete(post);
+        return postConverter.postToDeletePostResponse(post.removePost());
     }
 
-    @Transactional(readOnly = true)
-    public GetPostDetailResponse getPostDetail(Long postId){
+    @Transactional
+    public GetPostDetailResponse getPostDetail(Long postId, Long userId){
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserIdNotFoundExceoption("잘못된 유저 입니다. 게시물 확인을 할 수 없습니다.")); // TODO : 상황발생시 문구 수정
+
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
-        PostDetail postDetail = postDetailRepository.findById(postId)
-            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
 
-        return postConverter.postToGetPostDetailResponse(post,postDetail);
+        validateUtil.checkIsDelete(post);
+        validateUtil.checkAuthority(post, user);
+
+        PostDetail postDetail = postDetailRepository.findByPostId(postId)
+            .orElseThrow(() -> new PostIdNotFoundException("게시물 세부 내용을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
+
+        PostState postState = post.getState();
+        if(postState.toString().equals(PostStatus.CLOSED.toString())){
+            throw new PostCanNotOpenException("닫혀 있는 게시물 입니다.");
+        }
+        else if(postState.toString().equals(PostStatus.OPENABLE.toString())){
+            PostState state = postStateRepository.findByPostStateValue(PostStatus.OPENED.toString()).get();
+            post.setState(state);
+            postDetail.firstOpen(user);
+            return postConverter.postToGetPostDetailResponse(post.getId(), userId);
+        }
+
+        return postConverter.postToGetPostDetailResponse(post.getId());
     }
+
 }

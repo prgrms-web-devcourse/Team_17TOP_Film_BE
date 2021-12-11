@@ -1,128 +1,181 @@
 package com.programmers.film.api.post.converter;
 
-import com.programmers.film.api.post.dto.common.AuthorityImage;
-import com.programmers.film.api.post.dto.common.OrderImageFile;
-import com.programmers.film.api.post.dto.common.OrderImageUrl;
+import com.programmers.film.api.post.dto.common.AuthorityImageDto;
+import com.programmers.film.api.post.dto.common.OrderImageUrlDto;
 import com.programmers.film.api.post.dto.request.CreatePostRequest;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
 import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
+import com.programmers.film.api.post.exception.PostIdNotFoundException;
+import com.programmers.film.api.user.exception.UserIdNotFoundExceoption;
+import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
 import com.programmers.film.domain.post.domain.PostDetail;
+import com.programmers.film.domain.post.domain.PostState;
+import com.programmers.film.domain.post.domain.PostStatus;
+import com.programmers.film.domain.post.repository.PostDetailRepository;
 import com.programmers.film.domain.post.repository.PostRepository;
+import com.programmers.film.domain.post.repository.PostStateRepository;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class PostConverter {
-
-    private final UserRepository userRepository;
-    private final PostRepository postRepository;
     private final PointConverter pointConverter;
+    private final PostStateRepository postStateRepository;
+    private final PostRepository postRepository;
+    private final PostDetailRepository postDetailRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<AuthorityImage> getAuthorityImageList(Post post) {
-        List<PostAuthority> postAuthorities = post.getPostAuthorities();
-        List<AuthorityImage> authorityImageList = new ArrayList<>();
-        for (int i = 0; i < postAuthorities.size(); i++) {
-            PostAuthority postAuthority = postAuthorities.get(i);
-            authorityImageList.add(
-                AuthorityImage.builder()
-                    .authorityId(postAuthority.getUser().getId())
-                    .imageOrder(i)
-                    .imageUrl(postAuthority.getUser().getProfileImageUrl().getOriginalSizeUrl())
-                    .build()
-            );
-        }
+    public List<AuthorityImageDto> getAuthorityImageList(Post post) {
+        AtomicInteger index = new AtomicInteger();
 
-        return authorityImageList;
+        return post.getPostAuthorities().stream()
+            .map(
+                postAuthority -> {
+                    User user = postAuthority.getUser();
+                    ImageUrl profileImageUrl = user.getProfileImageUrl();
+                    if(profileImageUrl != null) {
+                        return AuthorityImageDto.builder()
+                            .authorityId(user.getId())
+                            .imageOrder(index.getAndIncrement())
+                            .imageUrl(profileImageUrl.getOriginalSizeUrl())
+                            .build();
+                    }
+                    return AuthorityImageDto.builder()
+                        .authorityId(user.getId())
+                        .imageOrder(index.getAndIncrement())
+                        .imageUrl(null)
+                        .build();
+                }
+            ).toList();
     }
 
-    public Post createPostRequestToPost(CreatePostRequest request) {
-        User authorUser = userRepository.findById(request.getAuthorUserId()).get(); // Exception
-
-        Post post = Post.builder()
+    public Post createPostRequestToPost(CreatePostRequest request, User authorUser) {
+        PostState postState = postStateRepository.findByPostStateValue(PostStatus.CLOSED.toString()).get();
+        return Post.builder()
             .title(request.getTitle())
             .previewText(request.getPreviewText())
             .location(pointConverter.stringPointToDoublePoint(request.getLocation()))
             .availableAt(request.getAvailableAt())
             .author(authorUser)
+            .state(postState)
+            .postAuthorities(new ArrayList<>())
             .build();
-        return post;
     }
 
-    public CreatePostResponse postToCreatePostResponse(Post post) {
-        CreatePostResponse createPostResponse = CreatePostResponse.builder()
+    public CreatePostResponse postToCreatePostResponse(Post post){
+        return CreatePostResponse.builder()
             .postId(post.getId())
             .title(post.getTitle())
             .previewText(post.getPreviewText())
             .availableAt(post.getAvailableAt())
-            // TODO : state 설정
+            .state(post.getState().getPostStateValue())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .authorityCount(1)
             .authorityImageList(getAuthorityImageList(post))
             .build();
-        return createPostResponse;
     }
 
     @Transactional(readOnly = true)
-    public PreviewPostResponse PostToPreviewPostResponse(Post post) {
+    public PreviewPostResponse postToPreviewPostResponse(Post post) {
         List<PostAuthority> postAuthorities = post.getPostAuthorities();
         return PreviewPostResponse.builder()
             .postId(post.getId())
             .title(post.getTitle())
             .previewText(post.getPreviewText())
             .availableAt(post.getAvailableAt())
+            .state(post.getState().getPostStateValue())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .authorityCount(postAuthorities.size())
             .authorityImageList(getAuthorityImageList(post))
             .build();
     }
 
-    public DeletePostResponse PostToDeletePostResponse(Post post) {
+    public DeletePostResponse postToDeletePostResponse(Long postId) {
         return DeletePostResponse.builder()
-            .postId(post.getId())
+            .postId(postId)
             .build();
     }
 
-    public GetPostDetailResponse postToGetPostDetailResponse(Post post, PostDetail postDetail) {
-        boolean isOpened = false;
-        if (postDetail.getOpener() != null) {
-            isOpened = true;
-        }
+    @Transactional(readOnly = true)
+    public GetPostDetailResponse postToGetPostDetailResponse(Long postId, Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserIdNotFoundExceoption("사용자를 찾을 수 없습니다."));
+        PostDetail postDetail = postDetailRepository.findByPostId(postId)
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다."));
+        Post post = postDetail.getPost();
+
+        User author = post.getAuthor();
+        ImageUrl authorProfileImageUrl = author.getProfileImageUrl();
+        ImageUrl openerProfileImageUrl = user.getProfileImageUrl();
+
         return GetPostDetailResponse.builder()
             .authorityImageList(getAuthorityImageList(post))
             .postId(post.getId())
             .title(post.getTitle())
             .content(postDetail.getContent())
             .imageUrls(getImageUrls(postDetail))
-            .authorNickname(post.getAuthor().getNickname())
-            .authorImageUrl(post.getAuthor().getProfileImageUrl().getOriginalSizeUrl())
+            .authorNickname(author.getNickname())
+            .authorImageUrl(authorProfileImageUrl != null ? authorProfileImageUrl.getOriginalSizeUrl() : null)
             .createdAt(post.getCreatedAt().toLocalDate())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .openedAt(postDetail.getOpenedAt())
-            .openerNickname(postDetail.getOpener().getNickname())
-            .openerImageUrl(postDetail.getOpener().getProfileImageUrl().getOriginalSizeUrl())
-            .isOpened(isOpened)
+            .openerNickname(user.getNickname())
+            .openerImageUrl(openerProfileImageUrl != null ? openerProfileImageUrl.getOriginalSizeUrl() : null)
+            .isOpened(true)
             .openedAt(postDetail.getOpenedAt())
             .previewText(post.getPreviewText())
             .build();
     }
 
     @Transactional(readOnly = true)
-    public List<OrderImageUrl> getImageUrls(PostDetail postDetail) {
-        List<OrderImageUrl> imgUrls = new ArrayList<>();
+    public GetPostDetailResponse postToGetPostDetailResponse(Long postId) {
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new UserIdNotFoundExceoption("사용자를 찾을 수 없습니다."));
+        PostDetail postDetail = postDetailRepository.findByPostId(postId)
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다."));
+
+        User author = post.getAuthor();
+        ImageUrl authorProfileImageUrl = author.getProfileImageUrl();
+        User opener = postDetail.getOpener();
+        ImageUrl openerProfileImageUrl = opener != null ? opener.getProfileImageUrl() : null;
+
+        return GetPostDetailResponse.builder()
+            .authorityImageList(getAuthorityImageList(post))
+            .postId(post.getId())
+            .title(post.getTitle())
+            .content(postDetail.getContent())
+            .imageUrls(getImageUrls(postDetail))
+            .authorNickname(author.getNickname())
+            .authorImageUrl(authorProfileImageUrl != null ? authorProfileImageUrl.getOriginalSizeUrl() : null)
+            .createdAt(post.getCreatedAt().toLocalDate())
+            .location(pointConverter.doublePointToStringPoint(post.getLocation()))
+            .openedAt(postDetail.getOpenedAt())
+            .openerNickname(opener.getNickname())
+            .openerImageUrl(openerProfileImageUrl != null ? openerProfileImageUrl.getOriginalSizeUrl() : null)
+            .isOpened(false)
+            .openedAt(postDetail.getOpenedAt())
+            .previewText(post.getPreviewText())
+            .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderImageUrlDto> getImageUrls(PostDetail postDetail) {
+        List<OrderImageUrlDto> imgUrls = new ArrayList<>();
         for (var postImage : postDetail.getPostImages()) {
-            OrderImageUrl orderImage = OrderImageUrl.builder()
-                .imageOrder(postImage.getOrder())
+            OrderImageUrlDto orderImage = OrderImageUrlDto.builder()
+                .imageOrder(postImage.getImageOrder())
                 .imageUrl(postImage.getImageUrl().getOriginalSizeUrl())
                 .build();
 
