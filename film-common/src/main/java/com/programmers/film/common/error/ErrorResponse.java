@@ -1,6 +1,5 @@
 package com.programmers.film.common.error;
 
-import com.programmers.film.common.error.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

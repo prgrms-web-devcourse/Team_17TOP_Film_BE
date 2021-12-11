@@ -1,4 +1,4 @@
-package com.programmers.film.common.error.exception;
+package com.programmers.film.common.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;

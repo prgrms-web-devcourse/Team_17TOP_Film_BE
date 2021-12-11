@@ -1,5 +1,7 @@
 package com.programmers.film.common.error.exception;
 
+import com.programmers.film.common.error.ErrorCode;
+
 public class InvalidInputValueException extends BusinessException {
 
     public InvalidInputValueException(String message) {
