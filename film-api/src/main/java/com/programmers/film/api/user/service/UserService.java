@@ -10,7 +10,6 @@ import com.programmers.film.api.user.dto.response.SignUpResponse;
 import com.programmers.film.api.user.mapper.UserMapper;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,13 @@ public class UserService {
 	private final UserRepository userRepository;
 
 	private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+
+	@Transactional(readOnly = true)
+	public boolean checkUser(Long userId) {
+		checkArgument(userId != null, "userId must be provided.");
+
+		return userRepository.findById(userId).isPresent();
+	}
 
 	@Transactional
 	public SignUpResponse signUp(SignUpRequest signUpRequest, ProviderAttribute provider) {

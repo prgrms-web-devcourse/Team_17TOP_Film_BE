@@ -8,7 +8,6 @@ import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
 import com.programmers.film.api.user.dto.response.SignUpResponse;
 import com.programmers.film.api.user.service.UserService;
-import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +26,9 @@ public class UserController {
     private final UserService userService;
 
     @Auth
-    @PostMapping("/signup")
-    public ResponseEntity<SignUpResponse> signUp(
-		@Valid @RequestBody final SignUpRequest request,
-        @Provider final ProviderAttribute provider
-	) {
-        SignUpResponse response = userService.signUp(request, provider);
-        return ResponseEntity.ok(response);
+    @GetMapping("/duplicate")
+    public ResponseEntity<Boolean> checkUserDuplicate(@UserId final Long userId) {
+        return ResponseEntity.ok(userService.checkUser(userId));
     }
 
     @GetMapping("/{nickname}")
@@ -41,6 +36,16 @@ public class UserController {
         @PathVariable final String nickname
     ) {
         CheckNicknameResponse response = userService.checkNickname(nickname);
+        return ResponseEntity.ok(response);
+    }
+
+    @Auth
+    @PostMapping("/signup")
+    public ResponseEntity<SignUpResponse> signUp(
+        @Valid @RequestBody final SignUpRequest request,
+        @Provider final ProviderAttribute provider
+    ) {
+        SignUpResponse response = userService.signUp(request, provider);
         return ResponseEntity.ok(response);
     }
 }
