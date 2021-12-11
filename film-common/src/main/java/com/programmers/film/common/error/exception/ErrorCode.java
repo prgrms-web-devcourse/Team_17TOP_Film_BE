@@ -11,9 +11,10 @@ public enum ErrorCode {
     INVALID_INPUT_VALUE(400, "C001", "Invalid Input value"),
     INVALID_TYPE_VALUE(400, "C002", "Invalid Type Value"),
     ENTITY_NOT_FOUND(400, "C003", "Entity Not Found"),
-    METHOD_NOT_ALLOWED(405, "C004", "Invalid Input value"),
+    METHOD_NOT_ALLOWED(405, "C004", "Method Not Allowed"),
     INTERNAL_SERVER_ERROR(500, "C005", "Server Error"),
     HANDLE_ACCESS_DENIED(403, "C006", "Access is denied"),
+    REQUEST_INVALID(400, "C007", "Invalid Request"),
 
     // Login
     NICKNAME_NULL(400, "L001", "Nickname Not Exist"),
