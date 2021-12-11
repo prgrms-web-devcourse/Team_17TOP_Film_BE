@@ -57,32 +57,7 @@ public class PostService {
         user.addAuthority(authority);
         authorityRepository.save(authority);
 
-        // img upload
-        List<String> ImgUrls = request.getImageFiles().stream()
-            .map(orderImageFileDto -> {
-                try {
-                    return s3Service.upload(orderImageFileDto.getImage());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            })
-            .toList();
 
-        PostImage postImage = null;
-        try {
-            String ImgUrl = ImgUrls.get(0);
-            PostImage draftPostImage = PostImage.builder()
-                .imageUrl(
-                    ImageUrl.builder()
-                        .originalSizeUrl(ImgUrl)
-                        .build()
-                )
-                .build();
-            postImage = postImageRepository.save(draftPostImage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         PostDetail draftPostDetail = PostDetail.builder()
             .id(post.getId())
@@ -91,8 +66,27 @@ public class PostService {
             .build();
         PostDetail postDetail = postDetailRepository.save(draftPostDetail);
 
+        // img upload
+        PostImage postImage = null;
+        try {
+            if(request.getImageFiles()!=null) {
+                String ImgUrl = request.getImageFiles().get(0).getUrl();
+                PostImage draftPostImage = PostImage.builder()
+                    .imageUrl(
+                        ImageUrl.builder()
+                            .originalSizeUrl(ImgUrl)
+                            .build()
+                    )
+                    .postDetail(postDetail)
+                    .build();
+                postImage = postImageRepository.save(draftPostImage);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if(postImage != null) {
-            postDetail.addPostImage(postImage);
+            //postDetail.addPostImage(postImage);
         }
 
         return postConverter.postToCreatePostResponse(post);

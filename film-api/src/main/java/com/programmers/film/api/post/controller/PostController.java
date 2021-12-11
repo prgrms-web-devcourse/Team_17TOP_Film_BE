@@ -8,16 +8,21 @@ import com.programmers.film.api.post.dto.response.DeletePostResponse;
 import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.service.PostService;
+import com.programmers.film.img.S3Service;
+import java.io.IOException;
 import java.net.URI;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -25,12 +30,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class PostController {
 
     private final PostService postService;
+    private final S3Service s3Service;
 
     @Auth
     @PostMapping
-    public ResponseEntity<CreatePostResponse> createPost(@RequestBody CreatePostRequest request, @UserId Long userId){
-        CreatePostResponse response = postService.createPost(request,userId);
-        return ResponseEntity.created(URI.create("/api/v1/posts/"+response.getPostId())).body(response);
+    public ResponseEntity<CreatePostResponse> createPost(
+        @RequestPart(value = "files" , required = false) List<MultipartFile> files,
+        @Valid @RequestPart("com") CreatePostRequest request,
+        @UserId Long userId) throws IOException {
+        if(files != null) request.setImageFiles(s3Service.upload(files));
+        CreatePostResponse response = postService.createPost(request, userId);
+        return ResponseEntity.created(URI.create("/api/v1/posts/" + response.getPostId()))
+            .body(response);
     }
 
     @GetMapping("/{postId}")
