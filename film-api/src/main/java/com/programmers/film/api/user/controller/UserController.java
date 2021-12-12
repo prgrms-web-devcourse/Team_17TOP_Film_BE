@@ -27,8 +27,8 @@ public class UserController {
 
     @Auth
     @GetMapping("/duplicate")
-    public ResponseEntity<Boolean> checkUserDuplicate(@UserId final Long userId) {
-        return ResponseEntity.ok(userService.checkUser(userId));
+    public ResponseEntity<Boolean> checkUserDuplicate(@Provider final ProviderAttribute provider) {
+        return ResponseEntity.ok(userService.checkUser(provider));
     }
 
     @GetMapping("/{nickname}")
