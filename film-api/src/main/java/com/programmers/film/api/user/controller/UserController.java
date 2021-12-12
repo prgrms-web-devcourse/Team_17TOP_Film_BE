@@ -6,7 +6,7 @@ import com.programmers.film.api.config.resolver.Provider;
 import com.programmers.film.api.config.resolver.UserId;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
-import com.programmers.film.api.user.dto.response.SignUpResponse;
+import com.programmers.film.api.user.dto.response.UserResponse;
 import com.programmers.film.api.user.service.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +26,13 @@ public class UserController {
     private final UserService userService;
 
     @Auth
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getUser(@UserId final Long userId) {
+        UserResponse response = userService.getUser(userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Auth
     @GetMapping("/duplicate")
     public ResponseEntity<Boolean> checkUserDuplicate(@Provider final ProviderAttribute provider) {
         return ResponseEntity.ok(userService.checkUser(provider));
@@ -41,11 +48,11 @@ public class UserController {
 
     @Auth
     @PostMapping("/signup")
-    public ResponseEntity<SignUpResponse> signUp(
+    public ResponseEntity<UserResponse> signUp(
         @Valid @RequestBody final SignUpRequest request,
         @Provider final ProviderAttribute provider
     ) {
-        SignUpResponse response = userService.signUp(request, provider);
+        UserResponse response = userService.signUp(request, provider);
         return ResponseEntity.ok(response);
     }
 }

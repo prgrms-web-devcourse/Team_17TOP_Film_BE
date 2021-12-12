@@ -5,8 +5,9 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class SignUpResponse {
+public class UserResponse {
 
-	private Long userId;
 	private String nickname;
+
+	private String profileUrl;
 }
