@@ -1,26 +1,21 @@
 package com.programmers.film.api.user.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
-import com.programmers.film.api.user.dto.response.SignUpResponse;
+import com.programmers.film.api.user.dto.response.UserResponse;
 import com.programmers.film.api.user.service.UserService;
 import com.programmers.film.common.error.GlobalExceptionHandler;
-import com.programmers.film.domain.user.domain.User;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -55,6 +50,7 @@ class UserControllerTest {
 	}
 
 	@Test
+	@DisplayName("올바르지 못한 닉네임으로 회원가입하는 경우")
 	public void signupWithInvalidNicknameRequest() throws Exception {
 
 		// Given
@@ -62,8 +58,7 @@ class UserControllerTest {
 		final SignUpRequest signUpRequest = SignUpRequest.builder()
 			.nickname(nickname)
 			.build();
-		final SignUpResponse signUpResponse = SignUpResponse.builder()
-			.userId(1L)
+		final UserResponse signUpResponse = UserResponse.builder()
 			.nickname(nickname)
 			.build();
 
