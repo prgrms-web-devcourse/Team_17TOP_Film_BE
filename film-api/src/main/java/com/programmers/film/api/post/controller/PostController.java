@@ -33,7 +33,7 @@ public class PostController {
     private final S3Service s3Service;
 
     @Auth
-    @PostMapping
+    @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<CreatePostResponse> createPost(
         @RequestPart(value = "files" , required = false) List<MultipartFile> files,
         @Valid @RequestPart("com") CreatePostRequest request,
