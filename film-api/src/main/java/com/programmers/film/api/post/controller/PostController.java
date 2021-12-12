@@ -1,8 +1,11 @@
 package com.programmers.film.api.post.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.programmers.film.api.config.interceptor.Auth;
 import com.programmers.film.api.config.resolver.UserId;
 import com.programmers.film.api.post.dto.request.CreatePostRequest;
+import com.programmers.film.api.post.dto.request.CreatePostRequestString;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
 import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
@@ -13,6 +16,9 @@ import java.io.IOException;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,10 +41,19 @@ public class PostController {
     @Auth
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<CreatePostResponse> createPost(
-        @RequestPart(value = "files" , required = false) List<MultipartFile> files,
-        @Valid @RequestPart("com") CreatePostRequest request,
+        @RequestPart(value = "files", required = false) List<MultipartFile> files,
+        @Valid @RequestPart("com") String str,
         @UserId Long userId) throws IOException {
-        if(files != null) request.setImageFiles(s3Service.upload(files));
+
+        Gson gson = new Gson();
+        CreatePostRequestString requestString = gson.fromJson(str, CreatePostRequestString.class);
+
+        CreatePostRequest request = CreatePostRequest.builder().build();
+        request.mappingString(requestString);
+
+        if (files != null) {
+            request.setImageFiles(s3Service.upload(files));
+        }
         CreatePostResponse response = postService.createPost(request, userId);
         return ResponseEntity.created(URI.create("/api/v1/posts/" + response.getPostId()))
             .body(response);

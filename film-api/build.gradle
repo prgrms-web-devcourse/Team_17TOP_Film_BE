@@ -5,6 +5,7 @@ plugins {
 dependencies {
     implementation project(':film-domain')
     implementation project(':film-external')
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.5.6'
     implementation 'com.auth0:java-jwt:3.18.2'
