@@ -6,8 +6,9 @@ import static org.assertj.core.util.Preconditions.checkArgument;
 import com.programmers.film.api.auth.dto.ProviderAttribute;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
-import com.programmers.film.api.user.dto.response.SignUpResponse;
+import com.programmers.film.api.user.dto.response.UserResponse;
 import com.programmers.film.api.user.exception.NicknameDuplicatedException;
+import com.programmers.film.api.user.exception.UserIdNotFoundExceoption;
 import com.programmers.film.api.user.mapper.UserMapper;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
@@ -25,6 +26,15 @@ public class UserService {
 	private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
 	@Transactional(readOnly = true)
+	public UserResponse getUser(Long userId) {
+		checkArgument(userId != null, "userId must be provided.");
+
+		return userRepository.findById(userId)
+			.map(userMapper::entityToUserResponse)
+			.orElseThrow(() -> new UserIdNotFoundExceoption("사용자를 찾을 수 없습니다."));
+	}
+
+	@Transactional(readOnly = true)
 	public boolean checkUser(ProviderAttribute provider) {
 		checkArgument(provider != null, "provider must be provided.");
 
@@ -33,7 +43,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public SignUpResponse signUp(SignUpRequest signUpRequest, ProviderAttribute provider) {
+	public UserResponse signUp(SignUpRequest signUpRequest, ProviderAttribute provider) {
 
 		checkArgument(signUpRequest != null, "signUpRequest must be provided.");
 		checkArgument(provider != null, "provider must be provided.");
@@ -47,7 +57,7 @@ public class UserService {
 
 		User savedUser = userRepository.save(user);
 
-		return userMapper.entityToResponse(savedUser);
+		return userMapper.entityToUserResponse(savedUser);
 	}
 
 	@Transactional(readOnly = true)
