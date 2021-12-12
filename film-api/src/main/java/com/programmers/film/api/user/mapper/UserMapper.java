@@ -11,6 +11,6 @@ public interface UserMapper {
 
 	User requestToEntity(SignUpRequest signUpRequest);
 
-	@Mapping(source = "id", target = "userId")
+	@Mapping(source = "profileImageUrl.originalSizeUrl", target = "profileImageUrl")
 	UserResponse entityToUserResponse(User user);
 }

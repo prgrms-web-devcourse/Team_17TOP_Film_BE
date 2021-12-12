@@ -1,5 +1,6 @@
 package com.programmers.film.api.user.dto.response;
 
+import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,5 +10,5 @@ public class UserResponse {
 
 	private String nickname;
 
-	private String profileUrl;
+	private String profileImageUrl;
 }

@@ -6,6 +6,8 @@ import lombok.Getter;
 @Builder
 @Getter
 public class CheckNicknameResponse {
-    String nickname;
-    Boolean isDuplicate;
+
+    private String nickname;
+
+    private Boolean isDuplicate;
 }
