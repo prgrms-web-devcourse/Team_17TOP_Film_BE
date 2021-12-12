@@ -8,7 +8,7 @@ import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
 import com.programmers.film.api.user.dto.response.UserResponse;
 import com.programmers.film.api.user.exception.NicknameDuplicatedException;
-import com.programmers.film.api.user.exception.UserIdNotFoundExceoption;
+import com.programmers.film.api.user.exception.UserIdNotFoundException;
 import com.programmers.film.api.user.mapper.UserMapper;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
@@ -31,7 +31,7 @@ public class UserService {
 
 		return userRepository.findById(userId)
 			.map(userMapper::entityToUserResponse)
-			.orElseThrow(() -> new UserIdNotFoundExceoption("사용자를 찾을 수 없습니다."));
+			.orElseThrow(() -> new UserIdNotFoundException("사용자를 찾을 수 없습니다."));
 	}
 
 	@Transactional(readOnly = true)

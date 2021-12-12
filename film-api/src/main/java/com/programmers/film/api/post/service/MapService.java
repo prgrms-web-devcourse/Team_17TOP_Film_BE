@@ -4,7 +4,7 @@ import com.programmers.film.api.post.converter.PointConverter;
 import com.programmers.film.api.post.dto.common.SimplePostDto;
 import com.programmers.film.api.post.dto.response.GetMapResponse;
 import com.programmers.film.api.post.util.PostValidateUtil;
-import com.programmers.film.api.user.exception.UserIdNotFoundExceoption;
+import com.programmers.film.api.user.exception.UserIdNotFoundException;
 import com.programmers.film.domain.post.domain.PostAuthority;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
@@ -29,7 +29,7 @@ public class MapService {
     public GetMapResponse getMapData(Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(
-                () -> new UserIdNotFoundExceoption("사용자를 찾을 수 없습니다. 볼 수 있는 게시물 목록들을 찾을 수 없습니다."));
+                () -> new UserIdNotFoundException("사용자를 찾을 수 없습니다. 볼 수 있는 게시물 목록들을 찾을 수 없습니다."));
 
         List<SimplePostDto> collect = user.getPostAuthorities().stream()
             .map(PostAuthority::getPost)

@@ -8,7 +8,7 @@ import com.programmers.film.api.post.dto.response.DeletePostResponse;
 import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.exception.PostIdNotFoundException;
-import com.programmers.film.api.user.exception.UserIdNotFoundExceoption;
+import com.programmers.film.api.user.exception.UserIdNotFoundException;
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
@@ -111,7 +111,7 @@ public class PostConverter {
     @Transactional(readOnly = true)
     public GetPostDetailResponse postToGetPostDetailResponse(Long postId, Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserIdNotFoundExceoption("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new UserIdNotFoundException("사용자를 찾을 수 없습니다."));
         PostDetail postDetail = postDetailRepository.findByPostId(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다."));
         Post post = postDetail.getPost();
@@ -142,7 +142,7 @@ public class PostConverter {
     @Transactional(readOnly = true)
     public GetPostDetailResponse postToGetPostDetailResponse(Long postId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new UserIdNotFoundExceoption("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new UserIdNotFoundException("사용자를 찾을 수 없습니다."));
         PostDetail postDetail = postDetailRepository.findByPostId(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다."));
 

@@ -9,7 +9,7 @@ import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.exception.PostIdNotFoundException;
 import com.programmers.film.api.post.exception.PostCanNotOpenException;
 import com.programmers.film.api.post.util.PostValidateUtil;
-import com.programmers.film.api.user.exception.UserIdNotFoundExceoption;
+import com.programmers.film.api.user.exception.UserIdNotFoundException;
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
@@ -25,8 +25,6 @@ import com.programmers.film.domain.post.repository.PostStateRepository;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
 import com.programmers.film.img.S3Service;
-import java.io.IOException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +45,7 @@ public class PostService {
     @Transactional
     public CreatePostResponse createPost(CreatePostRequest request, Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserIdNotFoundExceoption("사용자 ID를 찾을 수 없습니다. 게시물을 생성할 수 없습니다."));
+            .orElseThrow(() -> new UserIdNotFoundException("사용자 ID를 찾을 수 없습니다. 게시물을 생성할 수 없습니다."));
         Post draftPost = postConverter.createPostRequestToPost(request, user);
         Post post = postRepository.save(draftPost);
 
@@ -111,7 +109,7 @@ public class PostService {
     @Transactional
     public GetPostDetailResponse getPostDetail(Long postId, Long userId){
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserIdNotFoundExceoption("잘못된 유저 입니다. 게시물 확인을 할 수 없습니다.")); // TODO : 상황발생시 문구 수정
+            .orElseThrow(() -> new UserIdNotFoundException("잘못된 유저 입니다. 게시물 확인을 할 수 없습니다.")); // TODO : 상황발생시 문구 수정
 
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
