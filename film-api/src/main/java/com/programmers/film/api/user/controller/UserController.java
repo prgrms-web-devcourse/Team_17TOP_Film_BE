@@ -6,6 +6,7 @@ import com.programmers.film.api.config.resolver.Provider;
 import com.programmers.film.api.config.resolver.UserId;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
+import com.programmers.film.api.user.dto.response.CheckUserResponse;
 import com.programmers.film.api.user.dto.response.UserResponse;
 import com.programmers.film.api.user.service.UserService;
 import javax.validation.Valid;
@@ -34,7 +35,8 @@ public class UserController {
 
     @Auth
     @GetMapping("/duplicate")
-    public ResponseEntity<Boolean> checkUserDuplicate(@Provider final ProviderAttribute provider) {
+    public ResponseEntity<CheckUserResponse> checkUserDuplicate(
+        @Provider final ProviderAttribute provider) {
         return ResponseEntity.ok(userService.checkUser(provider));
     }
 

@@ -6,6 +6,7 @@ import static org.assertj.core.util.Preconditions.checkArgument;
 import com.programmers.film.api.auth.dto.ProviderAttribute;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
+import com.programmers.film.api.user.dto.response.CheckUserResponse;
 import com.programmers.film.api.user.dto.response.UserResponse;
 import com.programmers.film.api.user.exception.NicknameDuplicatedException;
 import com.programmers.film.api.user.exception.UserIdNotFoundException;
@@ -35,20 +36,33 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public boolean checkUser(ProviderAttribute provider) {
+	public CheckUserResponse checkUser(ProviderAttribute provider) {
 		checkArgument(provider != null, "provider must be provided.");
 
-		return userRepository.findByProviderAndProviderId(provider.getProvider(),
+		boolean isUserDuplicate = userRepository.findByProviderAndProviderId(provider.getProvider(),
 			provider.getProviderId()).isPresent();
+
+		return CheckUserResponse.builder()
+			.isDuplicate(isUserDuplicate)
+			.build();
+	}
+
+	@Transactional(readOnly = true)
+	public CheckNicknameResponse checkNickname(String nickname) {
+		checkArgument(isNotEmpty(nickname), "nickname must be provided.");
+
+		return CheckNicknameResponse.builder()
+			.nickname(nickname)
+			.isDuplicate(checkNicknameDuplicated(nickname))
+			.build();
 	}
 
 	@Transactional
 	public UserResponse signUp(SignUpRequest signUpRequest, ProviderAttribute provider) {
-
 		checkArgument(signUpRequest != null, "signUpRequest must be provided.");
 		checkArgument(provider != null, "provider must be provided.");
 
-		if (checkDuplicated(signUpRequest.getNickname())) {
+		if (checkNicknameDuplicated(signUpRequest.getNickname())) {
 			throw new NicknameDuplicatedException("중복된 닉네임입니다");
 		}
 
@@ -60,18 +74,7 @@ public class UserService {
 		return userMapper.entityToUserResponse(savedUser);
 	}
 
-	@Transactional(readOnly = true)
-	public CheckNicknameResponse checkNickname(String nickname) {
-
-		checkArgument(isNotEmpty(nickname), "nickname must be provided.");
-
-		return CheckNicknameResponse.builder()
-			.nickname(nickname)
-			.isDuplicate(checkDuplicated(nickname))
-			.build();
-	}
-
-	public boolean checkDuplicated(String nickname) {
+	public boolean checkNicknameDuplicated(String nickname) {
 		return userRepository.findByNickname(nickname).isPresent();
 	}
 }

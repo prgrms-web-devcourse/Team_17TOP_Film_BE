@@ -3,11 +3,9 @@ package com.programmers.film.api.user.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
-public class UserResponse {
+@Builder
+public class CheckUserResponse {
 
-	private final String nickname;
-
-	private final String profileImageUrl;
+	private final Boolean isDuplicate;
 }
