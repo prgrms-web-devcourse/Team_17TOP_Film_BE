@@ -1,6 +1,7 @@
 package com.programmers.film.api.user.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -52,8 +53,158 @@ class UserControllerTest {
 	@MockBean
 	private UserService userService;
 
+	@DisplayName("토큰으로 유저 정보 가져오는 API test")
 	@Test
+	public void getUserWithToken() throws Exception {
+		// Given
+		final UserResponse userResponse = UserResponse.builder()
+			.nickname("iyj6707")
+			.profileImageUrl("http://dummy")
+			.build();
+		given(userService.getUser(any())).willReturn(userResponse);
+
+		// When
+		final ResultActions resultActions = mockMvc.perform(
+			get("/api/v1/users/me")
+				.header("Authorization", "Bearer ${token_value}")
+		);
+
+		// Then
+		resultActions.andExpect(status().isOk())
+			.andDo(
+				document(
+					"users/get-user",
+					preprocessRequest(prettyPrint()),
+					preprocessResponse(prettyPrint()),
+					requestHeaders(
+						headerWithName("Authorization").description("jwt 액세스 토큰")
+					),
+					responseFields(
+						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+						fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
+							.description("프로필 이미지 URL")
+					)
+				)
+			);
+	}
+
+	@DisplayName("회원가입 여부 검사")
+	@Test
+	public void checkUserDuplicate() throws Exception {
+		// Given
+		final CheckUserResponse checkUserResponse = CheckUserResponse.builder()
+			.isDuplicate(true)
+			.build();
+		given(userService.checkUser(any())).willReturn(checkUserResponse);
+
+		// When
+		final ResultActions resultActions = mockMvc.perform(
+			get("/api/v1/users/duplicate")
+				.header("Authorization", "Bearer ${token_value}")
+		);
+
+		// Then
+		resultActions.andExpect(status().isOk())
+			.andDo(
+				document(
+					"users/duplicate-user",
+					preprocessRequest(prettyPrint()),
+					preprocessResponse(prettyPrint()),
+					requestHeaders(
+						headerWithName("Authorization").description("jwt 액세스 토큰")
+					),
+					responseFields(
+						fieldWithPath("isDuplicate").type(JsonFieldType.BOOLEAN)
+							.description("중복 여부")
+					)
+				)
+			);
+	}
+
+	@DisplayName("중복 닉네임 검사")
+	@Test
+	public void checkNicknameDuplicate() throws Exception {
+		// Given
+		final String nickname = "iyj";
+		final CheckNicknameResponse response = CheckNicknameResponse.builder()
+			.nickname(nickname)
+			.isDuplicate(false)
+			.build();
+
+		given(userService.checkNickname(anyString())).willReturn(response);
+
+		// When
+		final ResultActions resultActions = mockMvc.perform(
+			get("/api/v1/users/{nickname}", nickname)
+		);
+
+		// Then
+		resultActions.andExpect(status().isOk())
+			.andDo(
+				document(
+					"users/duplicate-nickname",
+					preprocessRequest(prettyPrint()),
+					preprocessResponse(prettyPrint()),
+					pathParameters(
+						parameterWithName("nickname").description("닉네임")
+					),
+					responseFields(
+						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+						fieldWithPath("isDuplicate").type(JsonFieldType.BOOLEAN)
+							.description("중복 여부")
+					)
+				)
+			);
+	}
+
+	@DisplayName("회원가입")
+	@Test
+	public void signup() throws Exception {
+		// Given
+		final String nickname = "iyj";
+		final SignUpRequest request = SignUpRequest.builder()
+			.nickname(nickname)
+			.build();
+
+		final UserResponse response = UserResponse.builder()
+			.nickname(nickname)
+			.profileImageUrl("http://dummy")
+			.build();
+
+		given(userService.signUp(any(), any())).willReturn(response);
+
+		// When
+		final ResultActions resultActions = mockMvc.perform(
+			post("/api/v1/users/signup")
+				.header("Authorization", "Bearer ${token_value}")
+				.content(objectMapper.writeValueAsString(request))
+				.contentType(MediaType.APPLICATION_JSON)
+		);
+
+		// Then
+		resultActions.andExpect(status().isOk())
+			.andDo(
+				document(
+					"users/signup",
+					preprocessRequest(prettyPrint()),
+					preprocessResponse(prettyPrint()),
+					requestHeaders(
+						headerWithName("Authorization").description("jwt 액세스 토큰")
+					),
+					requestFields(
+						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임")
+					),
+					responseFields(
+						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+						fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
+							.description("프로필 이미지 URL")
+					)
+				)
+			);
+	}
+
 	@DisplayName("올바르지 못한 닉네임으로 회원가입하는 경우")
+	@Test
 	public void signupWithInvalidNicknameRequest() throws Exception {
 		// Given
 		final String nickname = "asdasd@d"; // Invalid nickname
