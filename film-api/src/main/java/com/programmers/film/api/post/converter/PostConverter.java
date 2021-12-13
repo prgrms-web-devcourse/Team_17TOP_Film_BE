@@ -95,6 +95,7 @@ public class PostConverter {
             .title(post.getTitle())
             .previewText(post.getPreviewText())
             .availableAt(post.getAvailableAt())
+            .authorNickname(post.getAuthor().getNickname())
             .state(post.getState().getPostStateValue())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .authorityCount(postAuthorities.size())
