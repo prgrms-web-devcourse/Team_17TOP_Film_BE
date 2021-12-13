@@ -38,8 +38,6 @@ public class MyPageService {
             .map(PostAuthority::getPost)
             .filter(postValidateUtil::checkIsDelete)
             .map(post -> {
-//                    log.trace("postId :" + post.getId() + "/ postIsDeleted :" + post.getIsDeleted()
-//                        + " / post state : " + post.getState().toString());
                     return postConverter.postToPreviewPostResponse(post);
                 }
             )

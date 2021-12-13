@@ -19,7 +19,7 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     @Auth
-    @GetMapping()
+    @GetMapping("/posts")
     public ResponseEntity<List<PreviewPostResponse>> previewPost(@UserId Long userId) {
         List<PreviewPostResponse> response = myPageService.getMyPosts(userId);
         return ResponseEntity.ok(response);
