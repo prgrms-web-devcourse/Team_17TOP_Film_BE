@@ -19,7 +19,7 @@ spring:
       hibernate.format_sql: true
   datasource:
     driver-class-name: org.h2.Driver
-    url: "jdbc:h2:file:~/film_db/film.db;MODE=MYSQL;DB_CLOSE_DELAY=-1"
+    url: "jdbc:h2:mem:film;MODE=MYSQL;DB_CLOSE_DELAY=-1"
     username: sa
     password:
     hikari:
@@ -28,7 +28,6 @@ spring:
       pool-name: H2_DB
   sql:
     init:
-      mode: always
       platform: h2
       schema-locations: classpath:sql/schema.sql, classpath:org/springframework/security/oauth2/client/oauth2-client-schema.sql
       data-locations: classpath:sql/data.sql
