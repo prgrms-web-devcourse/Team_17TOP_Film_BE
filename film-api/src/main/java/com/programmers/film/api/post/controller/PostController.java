@@ -1,6 +1,5 @@
 package com.programmers.film.api.post.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.programmers.film.api.config.interceptor.Auth;
 import com.programmers.film.api.config.resolver.UserId;
@@ -16,9 +15,6 @@ import java.io.IOException;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
