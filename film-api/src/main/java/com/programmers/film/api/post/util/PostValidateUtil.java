@@ -11,11 +11,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PostValidateUtil {
+    /**
+    * is deleted return true / or not false
+     **/
     public boolean checkIsDelete(Post post){
         if(post.getIsDeleted() == 1) {
-            throw new PostIdNotFoundException("삭제된 게시물입니다. 게시물 확인을 할 수 없습니다.");
+            return true;
         }
-        return true;
+        return false;
     }
 
     public boolean checkAuthority(Post post, User user) {
@@ -26,8 +29,8 @@ public class PostValidateUtil {
                 .equals(user.getId())).collect(Collectors.toList());
 
         if(collect.size() <= 0) {
-            throw new PostCanNotOpenException("열람 권한이 없습니다.");
+            return true;
         }
-        return true;
+        return false;
     }
 }

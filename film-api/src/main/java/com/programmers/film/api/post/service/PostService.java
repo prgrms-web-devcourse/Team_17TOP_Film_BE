@@ -89,7 +89,9 @@ public class PostService {
     public PreviewPostResponse getPreview(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 엿보기를 할 수 없습니다."));
-        validateUtil.checkIsDelete(post);
+        if(validateUtil.checkIsDelete(post)) {
+            throw new PostCanNotOpenException("삭제된 게시물입니다. 게시물을 게시물 엿보기를 할 수 없습니다.");
+        }
         return postConverter.postToPreviewPostResponse(post);
     }
 
@@ -97,7 +99,9 @@ public class PostService {
     public DeletePostResponse removePost(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 삭제를 할 수 없습니다."));
-        validateUtil.checkIsDelete(post);
+        if(validateUtil.checkIsDelete(post)) {
+            throw new PostCanNotOpenException("삭제된 게시물입니다. 게시물 삭제를 할 수 없습니다.");
+        }
         return postConverter.postToDeletePostResponse(post.removePost());
     }
 
@@ -110,7 +114,9 @@ public class PostService {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
 
-        validateUtil.checkIsDelete(post);
+        if(validateUtil.checkIsDelete(post)) {
+            throw new PostCanNotOpenException("삭제된 게시물입니다. 게시물 확인을 할 수 없습니다.");
+        }
         validateUtil.checkAuthority(post, user);
 
         PostDetail postDetail = postDetailRepository.findByPostId(postId)

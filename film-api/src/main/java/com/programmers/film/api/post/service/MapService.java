@@ -33,7 +33,7 @@ public class MapService {
 
         List<SimplePostDto> collect = user.getPostAuthorities().stream()
             .map(PostAuthority::getPost)
-            .filter(postValidateUtil::checkIsDelete)
+            .filter(posts -> !postValidateUtil.checkIsDelete(posts))
             .map(post -> {
                 log.trace("postId : " + post.getId() + " / post state : " + post.getState().toString());
                 return SimplePostDto.builder()
