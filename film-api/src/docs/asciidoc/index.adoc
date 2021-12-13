@@ -1,0 +1,63 @@
+:hardbreaks:
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+:toc: left
+
+= OurHome Community API
+
+== User
+
+=== 사용자 정보 가져오기
+
+`*Request*`
+
+include::{snippets}/users/get-user/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/users/get-user/http-response.adoc[]
+include::{snippets}/users/get-user/response-fields.adoc[]
+
+'''
+
+=== 회원가입 여부 검사
+
+`*Request*`
+
+include::{snippets}/users/duplicate-user/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/users/duplicate-user/http-response.adoc[]
+include::{snippets}/users/duplicate-user/response-fields.adoc[]
+
+'''
+
+=== 중복 닉네임 검사
+
+`*Request*`
+
+include::{snippets}/users/duplicate-nickname/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/users/duplicate-nickname/http-response.adoc[]
+include::{snippets}/users/duplicate-nickname/response-fields.adoc[]
+
+'''
+
+=== 회원가입
+
+`*Request*`
+
+include::{snippets}/users/signup/http-request.adoc[]
+include::{snippets}/users/signup/request-fields.adoc[]
+
+`*Response*`
+
+include::{snippets}/users/signup/http-response.adoc[]
+include::{snippets}/users/signup/response-fields.adoc[]
+
+'''
