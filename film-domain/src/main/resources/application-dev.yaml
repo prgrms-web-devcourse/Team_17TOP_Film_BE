@@ -28,7 +28,7 @@ spring:
       pool-name: H2_DB
   sql:
     init:
-      mode: always
+      mode: never
       platform: h2
       schema-locations: classpath:sql/schema.sql, classpath:org/springframework/security/oauth2/client/oauth2-client-schema.sql
       data-locations: classpath:sql/data.sql
