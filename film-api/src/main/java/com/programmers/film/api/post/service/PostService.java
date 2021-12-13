@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class PostService {
+
     private final PostAuthorityRepository authorityRepository;
     private final PostRepository postRepository;
     private final PostDetailRepository postDetailRepository;
@@ -55,8 +56,6 @@ public class PostService {
         user.addAuthority(authority);
         authorityRepository.save(authority);
 
-
-
         PostDetail draftPostDetail = PostDetail.builder()
             .id(post.getId())
             .post(post)
@@ -67,7 +66,7 @@ public class PostService {
         // img upload
         PostImage postImage = null;
         try {
-            if(request.getImageFiles()!=null) {
+            if (request.getImageFiles() != null) {
                 String ImgUrl = request.getImageFiles().get(0).getUrl();
                 PostImage draftPostImage = PostImage.builder()
                     .imageUrl(
@@ -81,10 +80,6 @@ public class PostService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        if(postImage != null) {
-            //postDetail.addPostImage(postImage);
         }
 
         return postConverter.postToCreatePostResponse(post);
@@ -107,9 +102,10 @@ public class PostService {
     }
 
     @Transactional
-    public GetPostDetailResponse getPostDetail(Long postId, Long userId){
+    public GetPostDetailResponse getPostDetail(Long postId, Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserIdNotFoundException("잘못된 유저 입니다. 게시물 확인을 할 수 없습니다.")); // TODO : 상황발생시 문구 수정
+            .orElseThrow(() -> new UserIdNotFoundException(
+                "잘못된 유저 입니다. 게시물 확인을 할 수 없습니다.")); // TODO : 상황발생시 문구 수정
 
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
@@ -118,14 +114,15 @@ public class PostService {
         validateUtil.checkAuthority(post, user);
 
         PostDetail postDetail = postDetailRepository.findByPostId(postId)
-            .orElseThrow(() -> new PostIdNotFoundException("게시물 세부 내용을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
+            .orElseThrow(
+                () -> new PostIdNotFoundException("게시물 세부 내용을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
 
         PostState postState = post.getState();
-        if(postState.toString().equals(PostStatus.CLOSED.toString())){
+        if (postState.toString().equals(PostStatus.CLOSED.toString())) {
             throw new PostCanNotOpenException("닫혀 있는 게시물 입니다.");
-        }
-        else if(postState.toString().equals(PostStatus.OPENABLE.toString())){
-            PostState state = postStateRepository.findByPostStateValue(PostStatus.OPENED.toString()).get();
+        } else if (postState.toString().equals(PostStatus.OPENABLE.toString())) {
+            PostState state = postStateRepository.findByPostStateValue(PostStatus.OPENED.toString())
+                .get();
             post.setState(state);
             postDetail.firstOpen(user);
             return postConverter.postToGetPostDetailResponse(post.getId(), userId);
