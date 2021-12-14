@@ -1,7 +1,5 @@
 package com.programmers.film.api.post.util;
 
-import com.programmers.film.api.post.exception.PostCanNotOpenException;
-import com.programmers.film.api.post.exception.PostIdNotFoundException;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
 import com.programmers.film.domain.user.domain.User;

@@ -55,15 +55,19 @@ public class PostController {
             .body(response);
     }
 
+    @Auth
     @GetMapping("/{postId}")
-    public ResponseEntity<PreviewPostResponse> previewPost(@PathVariable("postId") Long postId) {
-        PreviewPostResponse preview = postService.getPreview(postId);
+    public ResponseEntity<PreviewPostResponse> previewPost(@PathVariable("postId") Long postId,
+        @UserId Long userId) {
+        PreviewPostResponse preview = postService.getPreview(postId, userId);
         return ResponseEntity.ok(preview);
     }
 
+    @Auth
     @DeleteMapping("/{postId}")
-    public ResponseEntity<DeletePostResponse> deletePost(@PathVariable("postId") Long postId) {
-        DeletePostResponse deletePostResponse = postService.removePost(postId);
+    public ResponseEntity<DeletePostResponse> deletePost(@PathVariable("postId") Long postId,
+        @UserId Long userId) {
+        DeletePostResponse deletePostResponse = postService.removePost(postId, userId);
         return ResponseEntity.ok(deletePostResponse);
     }
 
