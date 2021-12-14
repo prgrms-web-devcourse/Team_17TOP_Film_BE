@@ -125,7 +125,7 @@ public class PostService {
 
         PostState postState = post.getState();
         if (postState.toString().equals(PostStatus.CLOSED.toString())) {
-            throw new PostCanNotOpenException("닫혀 있는 게시물 입니다.");
+            throw new PostCanNotOpenException("닫혀 있는 게시물 입니다. 게시물을 확인을 할 수 없습니다.");
         } else if (postState.toString().equals(PostStatus.OPENABLE.toString())) {
             PostState state = postStateRepository.findByPostStateValue(PostStatus.OPENED.toString())
                 .get();
