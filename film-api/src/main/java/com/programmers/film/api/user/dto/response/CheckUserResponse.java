@@ -8,4 +8,8 @@ import lombok.Getter;
 public class CheckUserResponse {
 
 	private final Boolean isDuplicate;
+
+	private final String nickname;
+
+	private final String profileImageUrl;
 }

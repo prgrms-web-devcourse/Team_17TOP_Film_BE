@@ -67,7 +67,7 @@ class UserControllerTest {
 		final ResultActions resultActions = mockMvc.perform(
 			get("/api/v1/users/me")
 				.header("Authorization", "Bearer ${token_value}")
-		);
+		).andDo(print());
 
 		// Then
 		resultActions.andExpect(status().isOk())
@@ -94,6 +94,8 @@ class UserControllerTest {
 		// Given
 		final CheckUserResponse checkUserResponse = CheckUserResponse.builder()
 			.isDuplicate(true)
+			.nickname("iyj")
+			.profileImageUrl("http://dummy")
 			.build();
 		given(userService.checkUser(any())).willReturn(checkUserResponse);
 
@@ -101,7 +103,7 @@ class UserControllerTest {
 		final ResultActions resultActions = mockMvc.perform(
 			get("/api/v1/users/duplicate")
 				.header("Authorization", "Bearer ${token_value}")
-		);
+		).andDo(print());
 
 		// Then
 		resultActions.andExpect(status().isOk())
@@ -115,7 +117,9 @@ class UserControllerTest {
 					),
 					responseFields(
 						fieldWithPath("isDuplicate").type(JsonFieldType.BOOLEAN)
-							.description("중복 여부")
+							.description("중복 여부"),
+						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임").optional(),
+						fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL").optional()
 					)
 				)
 			);
@@ -136,7 +140,7 @@ class UserControllerTest {
 		// When
 		final ResultActions resultActions = mockMvc.perform(
 			get("/api/v1/users/{nickname}", nickname)
-		);
+		).andDo(print());
 
 		// Then
 		resultActions.andExpect(status().isOk())
@@ -179,7 +183,7 @@ class UserControllerTest {
 				.header("Authorization", "Bearer ${token_value}")
 				.content(objectMapper.writeValueAsString(request))
 				.contentType(MediaType.APPLICATION_JSON)
-		);
+		).andDo(print());
 
 		// Then
 		resultActions.andExpect(status().isOk())
@@ -222,10 +226,9 @@ class UserControllerTest {
 			post("/api/v1/users/signup")
 				.content(objectMapper.writeValueAsString(signUpRequest))
 				.contentType(MediaType.APPLICATION_JSON)
-		);
+		).andDo(print());
 
 		// Then
-		resultActions.andExpect(status().isBadRequest())
-			.andDo(print());
+		resultActions.andExpect(status().isBadRequest());
 	}
 }

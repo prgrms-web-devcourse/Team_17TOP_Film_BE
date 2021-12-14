@@ -39,11 +39,21 @@ public class UserService {
 	public CheckUserResponse checkUser(ProviderAttribute provider) {
 		checkArgument(provider != null, "provider must be provided.");
 
-		boolean isUserDuplicate = userRepository.findByProviderAndProviderId(provider.getProvider(),
-			provider.getProviderId()).isPresent();
+		UserResponse userResponse = userRepository.findByProviderAndProviderId(provider.getProvider(),
+			provider.getProviderId())
+			.map(userMapper::entityToUserResponse)
+			.orElse(null);
+
+		if (userResponse == null) {
+			return CheckUserResponse.builder()
+				.isDuplicate(false)
+				.build();
+		}
 
 		return CheckUserResponse.builder()
-			.isDuplicate(isUserDuplicate)
+			.isDuplicate(true)
+			.nickname(userResponse.getNickname())
+			.profileImageUrl(userResponse.getProfileImageUrl())
 			.build();
 	}
 
