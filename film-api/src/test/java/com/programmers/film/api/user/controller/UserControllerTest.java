@@ -141,7 +141,7 @@ class UserControllerTest {
 		final ResultActions resultActions = mockMvc.perform(
 			get("/api/v1/users/{nickname}", nickname)
 		).andDo(print());
-
+    
 		// Then
 		resultActions.andExpect(status().isOk())
 			.andDo(
@@ -229,6 +229,7 @@ class UserControllerTest {
 		).andDo(print());
 
 		// Then
-		resultActions.andExpect(status().isBadRequest());
+		resultActions.andExpect(status().isBadRequest())
+			.andDo(print());
 	}
 }
