@@ -64,6 +64,12 @@ public class Auth {
 		this.group = group;
 	}
 
+	public void setUser(User user) {
+		checkArgument(user != null, "user must be provided.");
+
+		this.user = user;
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
