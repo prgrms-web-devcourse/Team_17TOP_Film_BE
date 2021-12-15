@@ -1,7 +1,7 @@
 spring:
   profiles:
-    active: prod
-    default: dev
+    active: dev
+    default: local
     include:
       - security
       - secret
