@@ -1,11 +1,3 @@
-server:
-  port: 8080
-  servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
-
 spring:
   profiles:
     active: prod
@@ -13,5 +5,4 @@ spring:
     include:
       - security
       - secret
-      - domain
       - aws
