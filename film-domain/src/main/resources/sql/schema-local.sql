@@ -1,3 +1,14 @@
+DROP TABLE IF EXISTS group_permission CASCADE;
+DROP TABLE IF EXISTS groups CASCADE;
+DROP TABLE IF EXISTS permissions CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS auths CASCADE;
+DROP TABLE IF EXISTS `posts`;
+DROP TABLE IF EXISTS `post_images`;
+DROP TABLE IF EXISTS `post_details`;
+DROP TABLE IF EXISTS `post_states`;
+DROP TABLE IF EXISTS `post_authorities`;
+
 CREATE TABLE users
 (
     `id`                      bigint      NOT NULL AUTO_INCREMENT,
