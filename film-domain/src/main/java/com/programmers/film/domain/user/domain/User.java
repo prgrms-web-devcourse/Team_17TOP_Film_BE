@@ -29,7 +29,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -95,5 +94,4 @@ public class User extends BaseEntity {
         posts.add(post);
         post.setAuthor(this);
     }
-
 }

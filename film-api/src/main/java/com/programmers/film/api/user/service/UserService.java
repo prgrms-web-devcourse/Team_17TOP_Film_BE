@@ -44,7 +44,7 @@ public class UserService {
 		checkArgument(provider != null, "provider must be provided.");
 
 		UserResponse userResponse = userRepository.findByProviderAndProviderId(provider.getProvider(),
-			provider.getProviderId())
+				provider.getProviderId())
 			.map(userMapper::entityToUserResponse)
 			.orElse(null);
 

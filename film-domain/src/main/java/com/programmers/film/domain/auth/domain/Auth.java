@@ -80,5 +80,4 @@ public class Auth {
 			.append("profileImage", profileImage)
 			.toString();
 	}
-
 }
