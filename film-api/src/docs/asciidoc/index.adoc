@@ -82,6 +82,7 @@ include::{snippets}/maps/get-maps/response-fields.adoc[]
 `*Request*`
 
 include::{snippets}/posts/get-preview/http-request.adoc[]
+include::{snippets}/posts/get-preview/path-parameters.adoc[]
 
 `*Response*`
 
@@ -95,6 +96,7 @@ include::{snippets}/posts/get-preview/response-fields.adoc[]
 `*Request*`
 
 include::{snippets}/posts/delete-posts/http-request.adoc[]
+include::{snippets}/posts/delete-posts/path-parameters.adoc[]
 
 `*Response*`
 

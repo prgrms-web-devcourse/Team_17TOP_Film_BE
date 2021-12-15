@@ -12,6 +12,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,17 +86,21 @@ class PostControllerTest {
         ResultActions resultActions = mockMvc.perform(
             get("/api/v1/posts/{postId}",1)
                 .header("Authorization", "Bearer ${token_value}")
-        ).andDo(print());
+        ).andDo(
+            document("posts/get-preview",
+                preprocessRequest(prettyPrint()),
+                pathParameters(
+                    parameterWithName("postId").description("게시물 ID")
+                ),
+                requestHeaders(headerWithName("Authorization").description("jwt 액세스 토큰"))
+            )
+        );
         // Then
         resultActions.andExpect(status().isOk())
             .andDo(
                 document(
                     "posts/get-preview",
-                    preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
-                    requestHeaders(
-                        headerWithName("Authorization").description("jwt 액세스 토큰")
-                    ),
                     responseFields(
                         fieldWithPath("postId").type(JsonFieldType.NUMBER).description("게시물 ID"),
                         fieldWithPath("title").type(JsonFieldType.STRING).description("게시물 제목"),
@@ -126,18 +132,22 @@ class PostControllerTest {
         ResultActions resultActions = mockMvc.perform(
             delete("/api/v1/posts/{postId}",1)
                 .header("Authorization", "Bearer ${token_value}")
-        ).andDo(print());
+        ).andDo(
+            document("posts/delete-posts",
+                preprocessRequest(prettyPrint()),
+                pathParameters(
+                    parameterWithName("postId").description("게시물 ID")
+                ),
+                requestHeaders(headerWithName("Authorization").description("jwt 액세스 토큰"))
+            )
+        );
 
         // Then
         resultActions.andExpect(status().isOk())
             .andDo(
                 document(
                     "posts/delete-posts",
-                    preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
-                    requestHeaders(
-                        headerWithName("Authorization").description("jwt 액세스 토큰")
-                    ),
                     responseFields(
                         fieldWithPath("postId").type(JsonFieldType.NUMBER).description("게시물 ID")
                     )
