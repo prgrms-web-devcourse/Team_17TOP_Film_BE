@@ -2,6 +2,7 @@ package com.programmers.film.domain.user.domain;
 
 import static org.assertj.core.util.Preconditions.checkArgument;
 
+import com.programmers.film.domain.auth.domain.Auth;
 import com.programmers.film.domain.common.domain.BaseEntity;
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
@@ -9,6 +10,7 @@ import com.programmers.film.domain.post.domain.PostAuthority;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -19,6 +21,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
