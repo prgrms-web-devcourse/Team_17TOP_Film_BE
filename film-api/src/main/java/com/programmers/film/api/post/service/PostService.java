@@ -86,38 +86,52 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PreviewPostResponse getPreview(Long postId) {
+    public PreviewPostResponse getPreview(Long postId, Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserIdNotFoundException("잘못된 유저 입니다. 게시물 엿보기를 할 수 없습니다."));
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 엿보기를 할 수 없습니다."));
+
         if(validateUtil.checkIsDelete(post)) {
             throw new PostCanNotOpenException("삭제된 게시물입니다. 게시물을 게시물 엿보기를 할 수 없습니다.");
         }
+        if(validateUtil.checkAuthority(post, user)){
+            throw new PostCanNotOpenException("열람 권한이 없는 게시물입니다. 게시물을 게시물 엿보기를 할 수 없습니다.");
+        }
+
         return postConverter.postToPreviewPostResponse(post);
     }
 
     @Transactional
-    public DeletePostResponse removePost(Long postId) {
+    public DeletePostResponse removePost(Long postId, Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserIdNotFoundException("잘못된 유저 입니다. 게시물 엿보기를 할 수 없습니다."));
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 삭제를 할 수 없습니다."));
+
         if(validateUtil.checkIsDelete(post)) {
             throw new PostCanNotOpenException("삭제된 게시물입니다. 게시물 삭제를 할 수 없습니다.");
         }
+        if(validateUtil.checkAuthority(post, user)){
+            throw new PostCanNotOpenException("열람 권한이 없는 게시물입니다. 게시물 삭제를 할 수 없습니다.");
+        }
+
         return postConverter.postToDeletePostResponse(post.removePost());
     }
 
     @Transactional
     public GetPostDetailResponse getPostDetail(Long postId, Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserIdNotFoundException(
-                "잘못된 유저 입니다. 게시물 확인을 할 수 없습니다.")); // TODO : 상황발생시 문구 수정
-
+            .orElseThrow(() -> new UserIdNotFoundException("잘못된 유저 입니다. 게시물 확인을 할 수 없습니다."));
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 확인을 할 수 없습니다."));
 
         if(validateUtil.checkIsDelete(post)) {
             throw new PostCanNotOpenException("삭제된 게시물입니다. 게시물 확인을 할 수 없습니다.");
         }
-        validateUtil.checkAuthority(post, user);
+        if(validateUtil.checkAuthority(post, user)){
+            throw new PostCanNotOpenException("열람 권한이 없는 게시물입니다. 게시물 확인을 할 수 없습니다.");
+        }
 
         PostDetail postDetail = postDetailRepository.findByPostId(postId)
             .orElseThrow(
@@ -125,7 +139,7 @@ public class PostService {
 
         PostState postState = post.getState();
         if (postState.toString().equals(PostStatus.CLOSED.toString())) {
-            throw new PostCanNotOpenException("닫혀 있는 게시물 입니다.");
+            throw new PostCanNotOpenException("닫혀 있는 게시물 입니다. 게시물을 확인을 할 수 없습니다.");
         } else if (postState.toString().equals(PostStatus.OPENABLE.toString())) {
             PostState state = postStateRepository.findByPostStateValue(PostStatus.OPENED.toString())
                 .get();

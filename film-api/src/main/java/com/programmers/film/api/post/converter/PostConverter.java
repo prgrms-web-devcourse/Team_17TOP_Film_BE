@@ -112,9 +112,9 @@ public class PostConverter {
     @Transactional(readOnly = true)
     public GetPostDetailResponse postToGetPostDetailResponse(Long postId, Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserIdNotFoundException("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new UserIdNotFoundException("사용자를 찾을 수 없습니다. 게시물을 열 수 없습니다."));
         PostDetail postDetail = postDetailRepository.findByPostId(postId)
-            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다."));
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물을 열 수 없습니다."));
         Post post = postDetail.getPost();
 
         User author = post.getAuthor();
@@ -143,9 +143,9 @@ public class PostConverter {
     @Transactional(readOnly = true)
     public GetPostDetailResponse postToGetPostDetailResponse(Long postId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new UserIdNotFoundException("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new UserIdNotFoundException("사용자를 찾을 수 없습니다. 게시물을 열 수 없습니다."));
         PostDetail postDetail = postDetailRepository.findByPostId(postId)
-            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다."));
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물을 열 수 없습니다."));
 
         User author = post.getAuthor();
         ImageUrl authorProfileImageUrl = author.getProfileImageUrl();
