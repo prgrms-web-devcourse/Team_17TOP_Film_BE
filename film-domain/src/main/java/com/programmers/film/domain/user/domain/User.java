@@ -1,5 +1,7 @@
 package com.programmers.film.domain.user.domain;
 
+import static org.assertj.core.util.Preconditions.checkArgument;
+
 import com.programmers.film.domain.common.domain.BaseEntity;
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
@@ -24,7 +26,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -51,12 +52,6 @@ public class User extends BaseEntity {
     @Column(name = "provider_id")
     private String providerId;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<PostAuthority> postAuthorities = new ArrayList<>();
-
-    @OneToMany(mappedBy = "author", orphanRemoval = true)
-    private List<Post> posts = new ArrayList<>();
-
     @Embedded
     @AttributeOverrides({
         @AttributeOverride(name = "originalSizeUrl", column = @Column(name = "profile_image")),
@@ -67,18 +62,25 @@ public class User extends BaseEntity {
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<PostAuthority> postAuthorities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author", orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
     @Builder
     public User(Long id, String nickname) {
-
         this.id = id;
         this.nickname = nickname;
     }
 
-    public void updateProvider(String provider, String providerId) {
+    public void setProvider(String provider, String providerId) {
+        checkArgument(provider != null, "provider must be provided.");
+        checkArgument(providerId != null, "providerId must be provided.");
+
         this.provider = provider;
         this.providerId = providerId;
     }
-
 
     public void addAuthority(PostAuthority authority) {
         postAuthorities.add(authority);
@@ -89,5 +91,4 @@ public class User extends BaseEntity {
         posts.add(post);
         post.setAuthor(this);
     }
-
 }
