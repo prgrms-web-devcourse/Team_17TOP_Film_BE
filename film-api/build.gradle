@@ -38,6 +38,7 @@ build {
 
 bootJar {
     dependsOn copyAsciidoc
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from ("${asciidoctor.outputDir}") {
         into "BOOT-INF/classes/static/docs"
     }
