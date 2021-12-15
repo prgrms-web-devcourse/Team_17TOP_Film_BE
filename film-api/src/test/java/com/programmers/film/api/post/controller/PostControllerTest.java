@@ -18,11 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.programmers.film.api.post.converter.PointConverter;
 import com.programmers.film.api.post.dto.common.AuthorityImageDto;
-import com.programmers.film.api.post.dto.common.SimplePostDto;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
-import com.programmers.film.api.post.dto.response.GetMapResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
-import com.programmers.film.api.post.service.MapService;
 import com.programmers.film.api.post.service.PostService;
 import com.programmers.film.domain.common.domain.Point;
 import com.programmers.film.domain.post.domain.PostStatus;
@@ -99,20 +96,20 @@ class PostControllerTest {
                         headerWithName("Authorization").description("jwt 액세스 토큰")
                     ),
                     responseFields(
-                        fieldWithPath("postId").type(JsonFieldType.NUMBER).description("postId"),
-                        fieldWithPath("title").type(JsonFieldType.STRING).description("title"),
-                        fieldWithPath("previewText").type(JsonFieldType.STRING).description("previewText"),
-                        fieldWithPath("authorNickname").type(JsonFieldType.STRING).description("authorNickname"),
-                        fieldWithPath("availableAt").type(JsonFieldType.STRING).description("availableAt"),
-                        fieldWithPath("state").type(JsonFieldType.STRING).description("state"),
-                        fieldWithPath("location").type(JsonFieldType.OBJECT).description("location"),
-                        fieldWithPath("location.latitude").type(JsonFieldType.STRING).description("latitude"),
-                        fieldWithPath("location.longitude").type(JsonFieldType.STRING).description("longitude"),
-                        fieldWithPath("authorityCount").type(JsonFieldType.NUMBER).description("authorityCount"),
-                        fieldWithPath("authorityImageList").type(JsonFieldType.ARRAY).description("authorityImageList"),
-                        fieldWithPath("authorityImageList.[].imageOrder").type(JsonFieldType.NUMBER).description("imageOrder"),
-                        fieldWithPath("authorityImageList.[].authorityId").type(JsonFieldType.NUMBER).description("authorityId"),
-                        fieldWithPath("authorityImageList.[].imageUrl").type(JsonFieldType.STRING).description("imageUrl")
+                        fieldWithPath("postId").type(JsonFieldType.NUMBER).description("게시물 ID"),
+                        fieldWithPath("title").type(JsonFieldType.STRING).description("게시물 제목"),
+                        fieldWithPath("previewText").type(JsonFieldType.STRING).description("엿보기 문구"),
+                        fieldWithPath("authorNickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                        fieldWithPath("availableAt").type(JsonFieldType.STRING).description("열 수 있는 시간"),
+                        fieldWithPath("state").type(JsonFieldType.STRING).description("게시물 상태"),
+                        fieldWithPath("location").type(JsonFieldType.OBJECT).description("위치"),
+                        fieldWithPath("location.latitude").type(JsonFieldType.STRING).description("위도"),
+                        fieldWithPath("location.longitude").type(JsonFieldType.STRING).description("경도"),
+                        fieldWithPath("authorityCount").type(JsonFieldType.NUMBER).description("열람가능 인원 수"),
+                        fieldWithPath("authorityImageList").type(JsonFieldType.ARRAY).description("열람가능 인원 리스트"),
+                        fieldWithPath("authorityImageList.[].imageOrder").type(JsonFieldType.NUMBER).description("이미지 순서"),
+                        fieldWithPath("authorityImageList.[].authorityId").type(JsonFieldType.NUMBER).description("사용자 ID"),
+                        fieldWithPath("authorityImageList.[].imageUrl").type(JsonFieldType.STRING).description("사용자 프로필 사진")
                     )
                 )
             );
@@ -142,7 +139,7 @@ class PostControllerTest {
                         headerWithName("Authorization").description("jwt 액세스 토큰")
                     ),
                     responseFields(
-                        fieldWithPath("postId").type(JsonFieldType.NUMBER).description("postId")
+                        fieldWithPath("postId").type(JsonFieldType.NUMBER).description("게시물 ID")
                     )
                 )
             );

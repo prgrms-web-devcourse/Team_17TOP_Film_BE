@@ -86,12 +86,12 @@ class MapControllerTest {
                         headerWithName("Authorization").description("jwt 액세스 토큰")
                     ),
                     responseFields(
-                        fieldWithPath("posts").type(JsonFieldType.ARRAY).description("posts"),
-                        fieldWithPath("posts.[].postId").type(JsonFieldType.NUMBER).description("postId"),
-                        fieldWithPath("posts.[].state").type(JsonFieldType.STRING).description("state"),
-                        fieldWithPath("posts.[].location").type(JsonFieldType.OBJECT).description("location"),
-                        fieldWithPath("posts.[].location.latitude").type(JsonFieldType.STRING).description("latitude"),
-                        fieldWithPath("posts.[].location.longitude").type(JsonFieldType.STRING).description("longitude")
+                        fieldWithPath("posts").type(JsonFieldType.ARRAY).description("게시물 리스트"),
+                        fieldWithPath("posts.[].postId").type(JsonFieldType.NUMBER).description("게시물 ID"),
+                        fieldWithPath("posts.[].state").type(JsonFieldType.STRING).description("게시물 상태"),
+                        fieldWithPath("posts.[].location").type(JsonFieldType.OBJECT).description("위치"),
+                        fieldWithPath("posts.[].location.latitude").type(JsonFieldType.STRING).description("위도"),
+                        fieldWithPath("posts.[].location.longitude").type(JsonFieldType.STRING).description("경도")
                     )
                 )
             );
