@@ -1,10 +1,14 @@
 #!/bin/bash
 
-DATE=$(date + "%Y%m%d")
+TODAY=$(date +"%Y%m%d")
 
 DEPLOY_PATH=/home/ec2-user/app/deploy/
-LOG_FILE=$DEPLOY_PATH/deploy_$DATE.log
-ERR_LOG_FILE=$DEPLOY_PATH/deploy_$DATE_err.log
+LINK_LOG_FILE=$DEPLOY_PATH/deploy.log
+LOG_FILE=$DEPLOY_PATH/deploy_$TODAY.log
+ERR_LOG_FILE=$DEPLOY_PATH/deploy_$TODAY_err.log
+
+rm $LINK_LOG_FILE
+ln -s $LOG_FILE $LINK_LOG_FILE
 
 BUILD_JAR=$(ls $DEPLOY_PATH/film-api/build/libs/*.jar)
 JAR_NAME=$(basename $BUILD_JAR)
