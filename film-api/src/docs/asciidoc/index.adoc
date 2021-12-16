@@ -60,22 +60,29 @@ include::{snippets}/users/signup/request-fields.adoc[]
 include::{snippets}/users/signup/http-response.adoc[]
 include::{snippets}/users/signup/response-fields.adoc[]
 
-'''
+== Posts
 
-== Maps
-
-=== 지도 게시물 정보 가져오기
+=== 게시물 생성
 
 `*Request*`
-
-include::{snippets}/maps/get-maps/http-request.adoc[]
+include::{snippets}/posts/create/StringCreate.adoc[]
 
 `*Response*`
 
-include::{snippets}/maps/get-maps/http-response.adoc[]
-include::{snippets}/maps/get-maps/response-fields.adoc[]
+include::{snippets}/posts/create/http-response.adoc[]
+include::{snippets}/posts/create/response-fields.adoc[]
 
-== Posts
+=== 게시물 조회
+
+`*Request*`
+include::{snippets}/posts/get-detail/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/posts/get-detail/http-response.adoc[]
+include::{snippets}/posts/get-detail/response-fields.adoc[]
+
+'''
 
 === 게시물 엿보기 정보 가져오기
 
@@ -103,5 +110,19 @@ include::{snippets}/posts/delete-posts/path-parameters.adoc[]
 include::{snippets}/posts/delete-posts/http-response.adoc[]
 include::{snippets}/posts/delete-posts/response-fields.adoc[]
 
-'''
+== Maps
+
+=== 지도 게시물 정보 가져오기
+
+`*Request*`
+
+include::{snippets}/maps/get-maps/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/maps/get-maps/http-response.adoc[]
+include::{snippets}/maps/get-maps/response-fields.adoc[]
+
+
+
 
