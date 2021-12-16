@@ -20,36 +20,24 @@ import com.programmers.film.api.post.dto.response.CreatePostResponse;
 import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.service.PostService;
 import com.programmers.film.img.S3Service;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.programmers.film.api.post.converter.PointConverter;
-import com.programmers.film.api.post.dto.common.AuthorityImageDto;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
-import com.programmers.film.api.post.service.PostService;
+
 import com.programmers.film.domain.common.domain.Point;
 import com.programmers.film.domain.post.domain.PostStatus;
-import com.programmers.film.img.S3Service;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,22 +52,7 @@ import org.springframework.mock.web.MockPart;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-
-
-import java.util.List;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 @AutoConfigureRestDocs
@@ -121,7 +94,8 @@ public class PostControllerTest {
         final List<AuthorityImageDto> authorityImages = new ArrayList<>();
         authorityImages.add(dto);
 
-        MockMultipartFile file = new MockMultipartFile("file","test.txt" , "text/plain" , "hello file".getBytes());
+        MockMultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain",
+            "hello file".getBytes());
 
         final CreatePostResponse response = CreatePostResponse.builder()
             .postId(1L)
@@ -286,7 +260,7 @@ public class PostControllerTest {
                         fieldWithPath("isOpened").type(JsonFieldType.BOOLEAN)
                             .description("열림 확인 여부"),
                         fieldWithPath("openedAt").type(JsonFieldType.STRING).description("열람 시간")
-                                          )
+                    )
                 )
             );
     }
@@ -298,9 +272,9 @@ public class PostControllerTest {
         PointConverter pointConverter = new PointConverter();
         List<AuthorityImageDto> authorityImageDtoList = new ArrayList<>();
         authorityImageDtoList.add(AuthorityImageDto.builder()
-                .imageOrder(0)
-                .authorityId(1L)
-                .imageUrl("testURL.com")
+            .imageOrder(0)
+            .authorityId(1L)
+            .imageUrl("testURL.com")
             .build());
         PreviewPostResponse response = PreviewPostResponse.builder()
             .postId(1L)
@@ -309,14 +283,15 @@ public class PostControllerTest {
             .authorNickname("nickname")
             .availableAt(LocalDate.now())
             .state(PostStatus.OPENABLE.toString())
-            .location(pointConverter.doublePointToStringPoint(new Point(37.491837217869616,127.02959879978368)))
+            .location(pointConverter.doublePointToStringPoint(
+                new Point(37.491837217869616, 127.02959879978368)))
             .authorityCount(authorityImageDtoList.size())
             .authorityImageList(authorityImageDtoList)
             .build();
         given(postService.getPreview(any(), any())).willReturn(response);
         // When
         ResultActions resultActions = mockMvc.perform(
-            get("/api/v1/posts/{postId}",1)
+            get("/api/v1/posts/{postId}", 1)
                 .header("Authorization", "Bearer ${token_value}")
         ).andDo(
             document("posts/get-preview",
@@ -336,18 +311,28 @@ public class PostControllerTest {
                     responseFields(
                         fieldWithPath("postId").type(JsonFieldType.NUMBER).description("게시물 ID"),
                         fieldWithPath("title").type(JsonFieldType.STRING).description("게시물 제목"),
-                        fieldWithPath("previewText").type(JsonFieldType.STRING).description("엿보기 문구"),
-                        fieldWithPath("authorNickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
-                        fieldWithPath("availableAt").type(JsonFieldType.STRING).description("열 수 있는 시간"),
+                        fieldWithPath("previewText").type(JsonFieldType.STRING)
+                            .description("엿보기 문구"),
+                        fieldWithPath("authorNickname").type(JsonFieldType.STRING)
+                            .description("작성자 닉네임"),
+                        fieldWithPath("availableAt").type(JsonFieldType.STRING)
+                            .description("열 수 있는 시간"),
                         fieldWithPath("state").type(JsonFieldType.STRING).description("게시물 상태"),
                         fieldWithPath("location").type(JsonFieldType.OBJECT).description("위치"),
-                        fieldWithPath("location.latitude").type(JsonFieldType.STRING).description("위도"),
-                        fieldWithPath("location.longitude").type(JsonFieldType.STRING).description("경도"),
-                        fieldWithPath("authorityCount").type(JsonFieldType.NUMBER).description("열람가능 인원 수"),
-                        fieldWithPath("authorityImageList").type(JsonFieldType.ARRAY).description("열람가능 인원 리스트"),
-                        fieldWithPath("authorityImageList.[].imageOrder").type(JsonFieldType.NUMBER).description("이미지 순서"),
-                        fieldWithPath("authorityImageList.[].authorityId").type(JsonFieldType.NUMBER).description("사용자 ID"),
-                        fieldWithPath("authorityImageList.[].imageUrl").type(JsonFieldType.STRING).description("사용자 프로필 사진")
+                        fieldWithPath("location.latitude").type(JsonFieldType.STRING)
+                            .description("위도"),
+                        fieldWithPath("location.longitude").type(JsonFieldType.STRING)
+                            .description("경도"),
+                        fieldWithPath("authorityCount").type(JsonFieldType.NUMBER)
+                            .description("열람가능 인원 수"),
+                        fieldWithPath("authorityImageList").type(JsonFieldType.ARRAY)
+                            .description("열람가능 인원 리스트"),
+                        fieldWithPath("authorityImageList.[].imageOrder").type(JsonFieldType.NUMBER)
+                            .description("이미지 순서"),
+                        fieldWithPath("authorityImageList.[].authorityId").type(
+                            JsonFieldType.NUMBER).description("사용자 ID"),
+                        fieldWithPath("authorityImageList.[].imageUrl").type(JsonFieldType.STRING)
+                            .description("사용자 프로필 사진")
                     )
                 )
             );
@@ -362,7 +347,7 @@ public class PostControllerTest {
 
         // When
         ResultActions resultActions = mockMvc.perform(
-            delete("/api/v1/posts/{postId}",1)
+            delete("/api/v1/posts/{postId}", 1)
                 .header("Authorization", "Bearer ${token_value}")
         ).andDo(
             document("posts/delete-posts",
