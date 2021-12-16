@@ -121,11 +121,14 @@ public class User extends BaseEntity {
         }
         User user = (User) o;
         return Objects.equals(getId(), user.getId())
-            && Objects.equals(getNickname(), user.getNickname());
+            && Objects.equals(getNickname(), user.getNickname())
+            && Objects.equals(getProvider(), user.getProvider())
+            && Objects.equals(getProviderId(), user.getProviderId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getNickname());
+        return Objects.hash(getId(), getNickname(), getProvider(), getProviderId());
     }
 }
+

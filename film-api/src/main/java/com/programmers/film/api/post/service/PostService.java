@@ -174,6 +174,8 @@ public class PostService {
             throw new PostCanNotOpenException("열람 권한이 없는 게시물입니다. 열람권한을 수정할 수 없습니다.");
         }
 
+        User author = post.getAuthor();
+
         request.getFixAuthorityList()
             .forEach(simpleFixAuthorityDto ->
                 {
@@ -182,8 +184,8 @@ public class PostService {
                         .orElseThrow(() -> new UserIdNotFoundException("잘못된 사용자ID 입니다. 열람권한을 수정할 수 없습니다." +
                             simpleFixAuthorityDto.getUserId()));
 
-                    if(post.getAuthor().equals(getUser)) {
-                        throw new PostAuthorityException("게시물 작성자는 열람권한을 수정할 수 없습니다.");
+                    if(author.equals(getUser)) {
+                        throw new PostAuthorityException("게시물 작성자의 열람권한은 수정할 수 없습니다.");
                     }
 
                     if(addOrDelete) {
