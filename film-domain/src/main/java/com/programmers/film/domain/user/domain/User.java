@@ -29,6 +29,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -93,5 +94,19 @@ public class User extends BaseEntity {
     public void addPost(Post post) {
         posts.add(post);
         post.setAuthor(this);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("id", id)
+            .append("nickname", nickname)
+            .append("provider", provider)
+            .append("providerId", providerId)
+            .append("profileImageUrl", profileImageUrl)
+            .append("lastLoginAt", lastLoginAt)
+            .append("postAuthorities", postAuthorities)
+            .append("posts", posts)
+            .toString();
     }
 }
