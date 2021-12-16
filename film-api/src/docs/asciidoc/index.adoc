@@ -158,7 +158,19 @@ include::{snippets}/posts/get-detail/response-fields.adoc[]
 
 '''
 
-=== 게시물 엿보기 정보 가져오기
+=== 게시물 삭제
+
+`*Request*`
+
+include::{snippets}/posts/delete-posts/http-request.adoc[]
+include::{snippets}/posts/delete-posts/path-parameters.adoc[]
+
+`*Response*`
+
+include::{snippets}/posts/delete-posts/http-response.adoc[]
+include::{snippets}/posts/delete-posts/response-fields.adoc[]
+
+=== 게시물 엿보기 정보 조회
 
 `*Request*`
 
@@ -172,17 +184,18 @@ include::{snippets}/posts/get-preview/response-fields.adoc[]
 
 '''
 
-=== 게시물 삭제
+=== 게시물 열람권한 수정
 
 `*Request*`
 
-include::{snippets}/posts/delete-posts/http-request.adoc[]
-include::{snippets}/posts/delete-posts/path-parameters.adoc[]
+include::{snippets}/posts/patch-authority/http-request.adoc[]
+include::{snippets}/posts/patch-authority/path-parameters.adoc[]
+include::{snippets}/posts/patch-authority/request-fields.adoc[]
 
 `*Response*`
 
-include::{snippets}/posts/delete-posts/http-response.adoc[]
-include::{snippets}/posts/delete-posts/response-fields.adoc[]
+include::{snippets}/posts/patch-authority/http-response.adoc[]
+include::{snippets}/posts/patch-authority/response-fields.adoc[]
 
 == Maps
 

@@ -5,8 +5,10 @@ import com.programmers.film.api.config.interceptor.Auth;
 import com.programmers.film.api.config.resolver.UserId;
 import com.programmers.film.api.post.dto.request.CreatePostRequest;
 import com.programmers.film.api.post.dto.request.CreatePostRequestString;
+import com.programmers.film.api.post.dto.request.FixPostAuthorityRequest;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
+import com.programmers.film.api.post.dto.response.FixPostAuthorityResponse;
 import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.service.PostService;
@@ -17,7 +19,9 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -77,5 +81,15 @@ public class PostController {
         @UserId Long userId) {
         GetPostDetailResponse response = postService.getPostDetail(postId, userId);
         return ResponseEntity.ok(response);
+    }
+
+    @Auth
+    @PatchMapping("/authority/{postId}")
+    public ResponseEntity<FixPostAuthorityResponse> fixPostAuthority(
+        @PathVariable("postId") Long postId,
+        @RequestBody FixPostAuthorityRequest request,
+        @UserId Long userId
+    ) {
+        return ResponseEntity.ok(postService.fixPostAuthority(request, postId, userId));
     }
 }
