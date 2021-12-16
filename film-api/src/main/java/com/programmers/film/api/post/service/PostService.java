@@ -173,8 +173,8 @@ public class PostService {
             .forEach(simpleFixAuthorityDto ->
             {
                 Boolean addOrDelete = simpleFixAuthorityDto.getAddOrDelete();
-                User getUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserIdNotFoundException("잘못된 유저 입니다. 열람권한을 수정할 수 없습니다."));
+                User getUser = userRepository.findById(simpleFixAuthorityDto.getUserId())
+                .orElseThrow(() -> new UserIdNotFoundException("잘못된 사용자ID 입니다. 열람권한을 수정할 수 없습니다." + simpleFixAuthorityDto.getUserId()));
 
                 if(post.getAuthor().equals(getUser)) {
                     throw new PostAuthorityException("게시물 작성자는 열람권한을 수정할 수 없습니다.");
