@@ -1,6 +1,7 @@
 package com.programmers.film.api.user.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -16,6 +17,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,8 +25,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
 import com.programmers.film.api.user.dto.response.CheckUserResponse;
+import com.programmers.film.api.user.dto.response.SearchUserResponse;
 import com.programmers.film.api.user.dto.response.UserResponse;
 import com.programmers.film.api.user.service.UserService;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,6 +207,68 @@ class UserControllerTest {
 						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
 						fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
 							.description("프로필 이미지 URL")
+					)
+				)
+			);
+	}
+
+	@DisplayName("유저 리스트 가져오기")
+	@Test
+	public void getUserList() throws Exception {
+		// Given
+		final SearchUserResponse response1 = SearchUserResponse.builder()
+			.id(1L)
+			.nickname("abd")
+			.profileImageUrl("www.dummy.com")
+			.build();
+
+		final SearchUserResponse response2 = SearchUserResponse.builder()
+			.id(2L)
+			.nickname("abcd")
+			.profileImageUrl("www.dummy.com")
+			.build();
+
+		final SearchUserResponse response3 = SearchUserResponse.builder()
+			.id(3L)
+			.nickname("abcde")
+			.profileImageUrl("www.dummy.com")
+			.build();
+
+		List<SearchUserResponse> responses = new ArrayList<>();
+		responses.add(response1);
+		responses.add(response2);
+		responses.add(response3);
+
+		given(userService.getUsersByKeyword(anyString(), anyString(), anyInt())).willReturn(responses);
+
+		// When
+		final ResultActions resultActions = mockMvc.perform(
+			get("/api/v1/users")
+				.header("Authorization", "Bearer ${token_value}")
+				.param("keyword", "ab")
+				.param("lastNickname", "abc")
+				.param("size", "5")
+		).andDo(print());
+
+		// Then
+		resultActions.andExpect(status().isOk())
+			.andDo(
+				document(
+					"users/get-users",
+					preprocessRequest(prettyPrint()),
+					preprocessResponse(prettyPrint()),
+					requestHeaders(
+						headerWithName("Authorization").description("jwt 액세스 토큰")
+					),
+					requestParameters(
+						parameterWithName("keyword").description("검색어"),
+						parameterWithName("lastNickname").description("마지막 유저 닉네임"),
+						parameterWithName("size").description("페이지 사이즈")
+					),
+					responseFields(
+						fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("유저 아이디"),
+						fieldWithPath("[].nickname").type(JsonFieldType.STRING).description("닉네임"),
+						fieldWithPath("[].profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL").optional()
 					)
 				)
 			);
