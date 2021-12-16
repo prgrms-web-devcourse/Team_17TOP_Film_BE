@@ -60,4 +60,26 @@ include::{snippets}/users/signup/request-fields.adoc[]
 include::{snippets}/users/signup/http-response.adoc[]
 include::{snippets}/users/signup/response-fields.adoc[]
 
+== Post
+
+=== 게시물 생성
+
+`*Request*`
+include::{snippets}/posts/create/StringCreate.adoc[]
+
+`*Response*`
+
+include::{snippets}/posts/create/http-response.adoc[]
+include::{snippets}/posts/create/response-fields.adoc[]
+
+=== 게시물 조회
+
+`*Request*`
+include::{snippets}/posts/get-detail/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/posts/get-detail/http-response.adoc[]
+include::{snippets}/posts/get-detail/response-fields.adoc[]
+
 '''

@@ -1,12 +1,7 @@
 package com.programmers.film.api.post.dto.request;
 
-import com.programmers.film.api.post.dto.common.OrderImageFileDto;
-import com.programmers.film.api.post.dto.common.PointDto;
-import java.time.LocalDate;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Builder
 @Getter
