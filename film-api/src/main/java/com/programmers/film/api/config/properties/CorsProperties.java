@@ -1,5 +1,6 @@
 package com.programmers.film.api.config.properties;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,9 +13,9 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "cors")
 public class CorsProperties {
 
-	private String allowedOrigins;
-	private String allowedMethods;
-	private String allowedHeaders;
+	private List<String> allowedOrigins;
+	private List<String> allowedMethods;
+	private List<String> allowedHeaders;
 	private Long maxAge;
 
 	@Override

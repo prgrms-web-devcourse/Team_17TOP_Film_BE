@@ -4,6 +4,7 @@ application-aws.yml
 application-secret.yml
 generated
 .html
+keystore.p12
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,intellij,java,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,intellij,java,gradle

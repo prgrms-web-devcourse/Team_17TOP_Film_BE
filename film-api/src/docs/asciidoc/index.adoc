@@ -5,7 +5,7 @@ endif::[]
 
 :toc: left
 
-= OurHome Community API
+= Film API
 
 == User
 
@@ -60,7 +60,7 @@ include::{snippets}/users/signup/request-fields.adoc[]
 include::{snippets}/users/signup/http-response.adoc[]
 include::{snippets}/users/signup/response-fields.adoc[]
 
-== Post
+== Posts
 
 === 게시물 생성
 
@@ -83,3 +83,46 @@ include::{snippets}/posts/get-detail/http-response.adoc[]
 include::{snippets}/posts/get-detail/response-fields.adoc[]
 
 '''
+
+=== 게시물 엿보기 정보 가져오기
+
+`*Request*`
+
+include::{snippets}/posts/get-preview/http-request.adoc[]
+include::{snippets}/posts/get-preview/path-parameters.adoc[]
+
+`*Response*`
+
+include::{snippets}/posts/get-preview/http-response.adoc[]
+include::{snippets}/posts/get-preview/response-fields.adoc[]
+
+'''
+
+=== 게시물 삭제
+
+`*Request*`
+
+include::{snippets}/posts/delete-posts/http-request.adoc[]
+include::{snippets}/posts/delete-posts/path-parameters.adoc[]
+
+`*Response*`
+
+include::{snippets}/posts/delete-posts/http-response.adoc[]
+include::{snippets}/posts/delete-posts/response-fields.adoc[]
+
+== Maps
+
+=== 지도 게시물 정보 가져오기
+
+`*Request*`
+
+include::{snippets}/maps/get-maps/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/maps/get-maps/http-response.adoc[]
+include::{snippets}/maps/get-maps/response-fields.adoc[]
+
+
+
+

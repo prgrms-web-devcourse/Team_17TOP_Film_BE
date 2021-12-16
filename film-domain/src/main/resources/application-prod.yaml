@@ -1,3 +1,16 @@
+server:
+  port: 8080
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-store-password:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
 spring:
   config:
     activate:
@@ -30,7 +43,7 @@ spring:
     init:
       mode: never
       platform: h2
-      schema-locations: classpath:sql/schema-prod.sql, classpath:org/springframework/security/oauth2/client/oauth2-client-schema.sql
+      schema-locations: classpath:sql/schema-dev.sql, classpath:org/springframework/security/oauth2/client/oauth2-client-schema.sql
       data-locations: classpath:sql/data.sql
       encoding: UTF-8
 
