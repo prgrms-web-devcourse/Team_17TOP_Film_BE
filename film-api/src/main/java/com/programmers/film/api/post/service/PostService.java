@@ -174,7 +174,8 @@ public class PostService {
             throw new PostCanNotOpenException("열람 권한이 없는 게시물입니다. 열람권한을 수정할 수 없습니다.");
         }
 
-        User author = post.getAuthor();
+        User author = userRepository.findById(post.getAuthor().getId())
+            .orElseThrow(() -> new PostIdNotFoundException("작성자를 찾을 수 없습니다. 열람권한을 수정할 수 없습니다."));
 
         request.getFixAuthorityList()
             .forEach(simpleFixAuthorityDto ->
