@@ -155,8 +155,13 @@ public class PostService {
         return postConverter.postToGetPostDetailResponse(post.getId());
     }
 
-    @Transactional
     public FixPostAuthorityResponse fixPostAuthority(FixPostAuthorityRequest request, Long postId, Long userId) {
+        runFixPostAuthority(request, postId, userId);
+        return getPostAuthority(postId);
+    }
+
+    @Transactional
+    public void runFixPostAuthority(FixPostAuthorityRequest request, Long postId, Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserIdNotFoundException("잘못된 유저 입니다. 열람권한을 수정할 수 없습니다."));
         Post post = postRepository.findById(postId)
@@ -171,49 +176,46 @@ public class PostService {
 
         request.getFixAuthorityList()
             .forEach(simpleFixAuthorityDto ->
-            {
-                Boolean addOrDelete = simpleFixAuthorityDto.getAddOrDelete();
-                User getUser = userRepository.findById(simpleFixAuthorityDto.getUserId())
-                .orElseThrow(() -> new UserIdNotFoundException("잘못된 사용자ID 입니다. 열람권한을 수정할 수 없습니다." +
-                    simpleFixAuthorityDto.getUserId()));
+                {
+                    Boolean addOrDelete = simpleFixAuthorityDto.getAddOrDelete();
+                    User getUser = userRepository.findById(simpleFixAuthorityDto.getUserId())
+                        .orElseThrow(() -> new UserIdNotFoundException("잘못된 사용자ID 입니다. 열람권한을 수정할 수 없습니다." +
+                            simpleFixAuthorityDto.getUserId()));
 
-                if(post.getAuthor().equals(getUser)) {
-                    throw new PostAuthorityException("게시물 작성자는 열람권한을 수정할 수 없습니다.");
-                }
-
-                if(addOrDelete) {
-                    // add authority
-                    if(authorityRepository.findByUserIdAndPostId(getUser.getId(), post.getId()).isPresent()) {
-                        throw new PostAuthorityException("이미 권한이 추가되어있는 사용자입니다. 열람권한을 추가할 수 없습니다. : " +
-                            getUser.getNickname());
-                    } else {
-                        PostAuthority postAuthority = new PostAuthority();
-                        post.addPostAuthority(postAuthority);
-                        getUser.addAuthority(postAuthority);
-                        authorityRepository.save(postAuthority);
+                    if(post.getAuthor().equals(getUser)) {
+                        throw new PostAuthorityException("게시물 작성자는 열람권한을 수정할 수 없습니다.");
                     }
-                } else {
-                    // delete authority
-                    Optional<PostAuthority> byUserIdAndPostId = authorityRepository.findByUserIdAndPostId(
-                        getUser.getId(), post.getId());
-                    if(byUserIdAndPostId.isPresent()) {
-                        authorityRepository.deleteById(byUserIdAndPostId.get().getId());
+
+                    if(addOrDelete) {
+                        // add authority
+                        if(authorityRepository.findByUserIdAndPostId(getUser.getId(), post.getId()).isPresent()) {
+                            throw new PostAuthorityException("이미 권한이 추가되어있는 사용자입니다. 열람권한을 추가할 수 없습니다. : " +
+                                getUser.getNickname());
+                        } else {
+                            PostAuthority postAuthority = new PostAuthority();
+                            post.addPostAuthority(postAuthority);
+                            getUser.addAuthority(postAuthority);
+                            authorityRepository.save(postAuthority);
+                        }
                     } else {
-                        throw new PostAuthorityException("권한이 없는 사용자입니다. 열람권한을 삭제할 수 없습니다. : " +
-                            getUser.getNickname());
+                        // delete authority
+                        Optional<PostAuthority> byUserIdAndPostId = authorityRepository.findByUserIdAndPostId(
+                            getUser.getId(), post.getId());
+                        if(byUserIdAndPostId.isPresent()) {
+                            authorityRepository.deleteById(byUserIdAndPostId.get().getId());
+                        } else {
+                            throw new PostAuthorityException("권한이 없는 사용자입니다. 열람권한을 삭제할 수 없습니다. : " +
+                                getUser.getNickname());
+                        }
                     }
                 }
-            }
-        );
-
-        return postConverter.postToFixPostAuthorityResponse(post.getId());
+            );
     }
 
     @Transactional(readOnly = true)
     public FixPostAuthorityResponse getPostAuthority(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 열람권한 불러올 수 없습니다."));
-
         return postConverter.postToFixPostAuthorityResponse(post.getId());
     }
 }
