@@ -72,7 +72,9 @@ public class PostConverter {
         return post.getPostAuthorities().stream()
             .map(
                 postAuthority -> {
-                    User user = postAuthority.getUser();
+                    User userProxy = postAuthority.getUser();
+                    User user = userRepository.findById(userProxy.getId())
+                        .orElseThrow(() -> new PostIdNotFoundException("userId를 찾을 수 없습니다. 권한 목록을 불러올 수 없습니다."));
                     ImageUrl profileImageUrl = user.getProfileImageUrl();
                     if(profileImageUrl != null) {
                         return SimpleAuthorityDto.builder()
