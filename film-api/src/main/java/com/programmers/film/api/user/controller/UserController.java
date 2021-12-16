@@ -7,8 +7,10 @@ import com.programmers.film.api.config.resolver.UserId;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
 import com.programmers.film.api.user.dto.response.CheckUserResponse;
+import com.programmers.film.api.user.dto.response.SearchUserResponse;
 import com.programmers.film.api.user.dto.response.UserResponse;
 import com.programmers.film.api.user.service.UserService;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -31,6 +34,17 @@ public class UserController {
     public ResponseEntity<UserResponse> getUser(@UserId final Long userId) {
         UserResponse response = userService.getUser(userId);
         return ResponseEntity.ok(response);
+    }
+
+    @Auth
+    @GetMapping
+    public ResponseEntity<List<SearchUserResponse>> getUsers(
+        @RequestParam(value = "keyword") String keyword,
+        @RequestParam(value = "lastNickname") String lastNickname,
+        @RequestParam(value = "size") int size
+    ) {
+        List<SearchUserResponse> responses = userService.getUsersByKeyword(keyword, lastNickname, size);
+        return ResponseEntity.ok(responses);
     }
 
     @Auth
