@@ -90,6 +90,7 @@ public class PostController {
         @RequestBody FixPostAuthorityRequest request,
         @UserId Long userId
     ) {
-        return ResponseEntity.ok(postService.fixPostAuthority(request, postId, userId));
+        postService.fixPostAuthority(request, postId, userId);
+        return ResponseEntity.ok(postService.getPostAuthority(postId));
     }
 }
