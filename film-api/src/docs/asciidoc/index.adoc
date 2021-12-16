@@ -60,6 +60,22 @@ include::{snippets}/users/signup/request-fields.adoc[]
 include::{snippets}/users/signup/http-response.adoc[]
 include::{snippets}/users/signup/response-fields.adoc[]
 
+
+=== 검색어로 유저 리스트 가져오기
+
+`*Request*`
+
+include::{snippets}/users/get-users/http-request.adoc[]
+include::{snippets}/users/get-users/request-fields.adoc[]
+include::{snippets}/users/get-users/request-parameters.adoc[]
+
+`*Response*`
+
+include::{snippets}/users/get-users/http-response.adoc[]
+include::{snippets}/users/get-users/response-fields.adoc[]
+
+'''
+
 == Posts
 
 === 게시물 생성

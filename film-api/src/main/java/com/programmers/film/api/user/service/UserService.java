@@ -8,6 +8,7 @@ import com.programmers.film.api.auth.exception.AuthNotFoundException;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
 import com.programmers.film.api.user.dto.response.CheckUserResponse;
+import com.programmers.film.api.user.dto.response.SearchUserResponse;
 import com.programmers.film.api.user.dto.response.UserResponse;
 import com.programmers.film.api.user.exception.NicknameDuplicatedException;
 import com.programmers.film.api.user.exception.UserIdNotFoundException;
@@ -16,8 +17,13 @@ import com.programmers.film.domain.auth.domain.Auth;
 import com.programmers.film.domain.auth.repository.AuthRepository;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +43,14 @@ public class UserService {
 		return userRepository.findById(userId)
 			.map(userMapper::entityToUserResponse)
 			.orElseThrow(() -> new UserIdNotFoundException("사용자를 찾을 수 없습니다."));
+	}
+
+	@Transactional(readOnly = true)
+	public List<SearchUserResponse> getUsersByKeyword(String keyword, String lastNickname, int size) {
+		Page<User> pages = fetchPages(keyword, lastNickname, size);
+		return pages.getContent().stream()
+			.map(userMapper::entityToSearchUserResponse)
+			.toList();
 	}
 
 	@Transactional(readOnly = true)
@@ -86,7 +100,7 @@ public class UserService {
 		Auth auth = authRepository.findByProviderAndProviderId(provider, providerId)
 			.orElseThrow(() -> new AuthNotFoundException("사용자를 찾을 수 없습니다."));
 
-		User user = userMapper.requestToEntity(signUpRequest);
+		User user = userMapper.signUpRequestToEntity(signUpRequest);
 		user.setProvider(provider, providerId);
 
 		auth.setUser(user);
@@ -97,5 +111,11 @@ public class UserService {
 
 	public boolean checkNicknameDuplicated(String nickname) {
 		return userRepository.findByNickname(nickname).isPresent();
+	}
+
+	public Page<User> fetchPages(String keyword, String lastNickname, int size) {
+		Sort sort = JpaSort.unsafe("LENGTH(nickname)").and(Sort.by("nickname"));
+		PageRequest pageRequest = PageRequest.of(0, size, sort);
+		return userRepository.findByNicknameStartsWithAndNicknameGreaterThan(keyword, lastNickname, pageRequest);
 	}
 }

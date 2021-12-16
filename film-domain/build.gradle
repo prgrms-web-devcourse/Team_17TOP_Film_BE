@@ -10,3 +10,7 @@ bootJar { enabled = false }
 
 jar { enabled = true }
 targetCompatibility = JavaVersion.VERSION_17
+
+test {
+    useJUnitPlatform()
+}
