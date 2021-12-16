@@ -2,7 +2,7 @@
 
 TODAY=$(date +"%Y%m%d")
 
-DEPLOY_PATH=/home/ec2-user/app/deploy/
+DEPLOY_PATH=/home/ec2-user/app/deploy
 LINK_LOG_FILE=$DEPLOY_PATH/deploy.log
 LOG_FILE=$DEPLOY_PATH/deploy_$TODAY.log
 ERR_LOG_FILE=$DEPLOY_PATH/deploy_$TODAY_err.log
