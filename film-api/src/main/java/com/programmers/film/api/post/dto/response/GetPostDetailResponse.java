@@ -39,7 +39,7 @@ public class GetPostDetailResponse {
 
     private String openerImageUrl;
 
-    private boolean isOpened;
+    private Boolean isOpened;
 
     private LocalDate openedAt;
 

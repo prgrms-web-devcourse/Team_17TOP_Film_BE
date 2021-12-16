@@ -17,7 +17,7 @@ public class Scheduler {
     private final PostRepository postRepository;
     private final PostStateRepository postStateRepository;
 
-    @Scheduled(cron="00 00 00 * * ?", zone = "Asia/Seoul")
+    @Scheduled(cron="01 00 00 * * ?", zone = "Asia/Seoul")
     @Transactional
     public void PostStateUpdateScheduled() {
         PostState postState = postStateRepository.findByPostStateValue(PostStatus.OPENABLE.toString()).get();
