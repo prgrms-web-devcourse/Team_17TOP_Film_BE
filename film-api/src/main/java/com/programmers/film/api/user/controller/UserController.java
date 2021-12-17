@@ -71,4 +71,12 @@ public class UserController {
         UserResponse response = userService.signUp(request, provider);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/dummy-signup")
+    public ResponseEntity<UserResponse> signUp(
+        @Valid @RequestBody final SignUpRequest request
+    ) {
+        UserResponse response = userService.dummySignUp(request);
+        return ResponseEntity.ok(response);
+    }
 }

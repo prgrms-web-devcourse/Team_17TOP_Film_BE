@@ -109,6 +109,20 @@ public class UserService {
 		return userMapper.entityToUserResponse(savedUser);
 	}
 
+	@Transactional
+	public UserResponse dummySignUp(SignUpRequest signUpRequest) {
+		checkArgument(signUpRequest != null, "signUpRequest must be provided.");
+
+		if (checkNicknameDuplicated(signUpRequest.getNickname())) {
+			throw new NicknameDuplicatedException("중복된 닉네임입니다");
+		}
+
+		User user = userMapper.signUpRequestToEntity(signUpRequest);
+		User savedUser = userRepository.save(user);
+
+		return userMapper.entityToUserResponse(savedUser);
+	}
+
 	public boolean checkNicknameDuplicated(String nickname) {
 		return userRepository.findByNickname(nickname).isPresent();
 	}
