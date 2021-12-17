@@ -75,7 +75,7 @@ include::{snippets}/users/get-users/http-response.adoc[]
 include::{snippets}/users/get-users/response-fields.adoc[]
 
 '''
-=== 검색어로 유저 리스트 가져오기
+=== dummy user 
 
 `*Request*`
 

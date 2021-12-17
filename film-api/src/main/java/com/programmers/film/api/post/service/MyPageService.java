@@ -1,8 +1,6 @@
 package com.programmers.film.api.post.service;
 
-import com.programmers.film.api.post.converter.PointConverter;
 import com.programmers.film.api.post.converter.PostConverter;
-import com.programmers.film.api.post.dto.common.SimplePostDto;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.util.PostValidateUtil;
 import com.programmers.film.api.user.exception.UserIdNotFoundException;
@@ -23,10 +21,7 @@ public class MyPageService {
 
     private final UserRepository userRepository;
     private final PostValidateUtil postValidateUtil;
-    private final PointConverter pointConverter;
     private final PostConverter postConverter;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional(readOnly = true)
     public List<PreviewPostResponse> getMyPosts(Long userId) {
@@ -34,16 +29,11 @@ public class MyPageService {
             .orElseThrow(
                 () -> new UserIdNotFoundException("사용자를 찾을 수 없습니다. 볼 수 있는 게시물 목록들을 찾을 수 없습니다."));
 
-        List<PreviewPostResponse> collect = user.getPostAuthorities().stream()
+        return user.getPostAuthorities().stream()
             .map(PostAuthority::getPost)
             .filter(postValidateUtil::checkIsDelete)
-            .map(post -> {
-                    return postConverter.postToPreviewPostResponse(post);
-                }
-            )
+            .map(postConverter::postToPreviewPostResponse)
             .collect(Collectors.toList());
-
-        return collect;
     }
 
 }

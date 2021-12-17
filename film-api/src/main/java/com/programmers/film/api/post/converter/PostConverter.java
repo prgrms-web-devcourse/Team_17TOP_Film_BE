@@ -64,7 +64,7 @@ public class PostConverter {
     }
 
     @Transactional(readOnly = true)
-    public List<SimpleAuthorityDto> getAuthorityList(Long postId) {
+    public List<SimpleAuthorityDto> getPostAuthorityList(Long postId) {
         AtomicInteger index = new AtomicInteger();
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostIdNotFoundException("postId를 찾을 수 없습니다. 권한 목록을 불러올 수 없습니다."));
@@ -222,7 +222,7 @@ public class PostConverter {
     public FixPostAuthorityResponse postToFixPostAuthorityResponse(Long postId) {
         return FixPostAuthorityResponse.builder()
             .postId(postId)
-            .authorityList(getAuthorityList(postId))
+            .authorityList(getPostAuthorityList(postId))
             .build();
     }
 }

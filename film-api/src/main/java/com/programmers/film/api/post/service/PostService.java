@@ -28,7 +28,7 @@ import com.programmers.film.domain.post.repository.PostStateRepository;
 import com.programmers.film.domain.user.domain.User;
 import com.programmers.film.domain.user.repository.UserRepository;
 import com.programmers.film.img.S3Service;
-import java.util.Optional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +44,6 @@ public class PostService {
     private final PostConverter postConverter;
     private final UserRepository userRepository;
     private final PostStateRepository postStateRepository;
-    private final S3Service s3Service;
     private final PostValidateUtil validateUtil;
 
     @Transactional
@@ -176,11 +175,27 @@ public class PostService {
 
         User author = userRepository.findById(post.getAuthor().getId())
             .orElseThrow(() -> new PostIdNotFoundException("작성자를 찾을 수 없습니다. 열람권한을 수정할 수 없습니다."));
+        if(!author.equals(user)) {
+            throw new PostAuthorityException("작성자만 열람권한을 수정할 수 있습니다. 열람권한을 수정할 수 없습니다.");
+        }
 
+        List<PostAuthority> postAuthorityList = authorityRepository.findByPostId(postId);
+        // delete all saved data
+        postAuthorityList.forEach(
+            postAuthority -> {
+                User getUser = userRepository.findById(postAuthority.getUser().getId())
+                    .orElseThrow(() -> new UserIdNotFoundException("저장 오류. 게시물 열람권한 목록을 불러오는데 실패했습니다."));
+
+                // delete except post author
+                if(!author.equals(getUser)) {
+                    authorityRepository.deleteById(postAuthority.getId());
+                }
+            }
+        );
+
+        // save request data
         request.getFixAuthorityList()
-            .forEach(simpleFixAuthorityDto ->
-                {
-                    Boolean addOrDelete = simpleFixAuthorityDto.getAddOrDelete();
+            .forEach(simpleFixAuthorityDto -> {
                     User getUser = userRepository.findById(simpleFixAuthorityDto.getUserId())
                         .orElseThrow(() -> new UserIdNotFoundException("잘못된 사용자ID 입니다. 열람권한을 수정할 수 없습니다." +
                             simpleFixAuthorityDto.getUserId()));
@@ -189,28 +204,11 @@ public class PostService {
                         throw new PostAuthorityException("게시물 작성자의 열람권한은 수정할 수 없습니다.");
                     }
 
-                    if(addOrDelete) {
-                        // add authority
-                        if(authorityRepository.findByUserIdAndPostId(getUser.getId(), post.getId()).isPresent()) {
-                            throw new PostAuthorityException("이미 권한이 추가되어있는 사용자입니다. 열람권한을 추가할 수 없습니다. : " +
-                                getUser.getNickname());
-                        } else {
-                            PostAuthority postAuthority = new PostAuthority();
-                            post.addPostAuthority(postAuthority);
-                            getUser.addAuthority(postAuthority);
-                            authorityRepository.save(postAuthority);
-                        }
-                    } else {
-                        // delete authority
-                        Optional<PostAuthority> byUserIdAndPostId = authorityRepository.findByUserIdAndPostId(
-                            getUser.getId(), post.getId());
-                        if(byUserIdAndPostId.isPresent()) {
-                            authorityRepository.deleteById(byUserIdAndPostId.get().getId());
-                        } else {
-                            throw new PostAuthorityException("권한이 없는 사용자입니다. 열람권한을 삭제할 수 없습니다. : " +
-                                getUser.getNickname());
-                        }
-                    }
+                    // add post authority to get user
+                    PostAuthority postAuthority = new PostAuthority();
+                    post.addPostAuthority(postAuthority);
+                    getUser.addAuthority(postAuthority);
+                    authorityRepository.save(postAuthority);
                 }
             );
     }
