@@ -210,6 +210,18 @@ include::{snippets}/maps/get-maps/http-request.adoc[]
 include::{snippets}/maps/get-maps/http-response.adoc[]
 include::{snippets}/maps/get-maps/response-fields.adoc[]
 
+== MyPage
+
+=== 마이페이지 게시물 조회
+
+`*Request*`
+
+include::{snippets}/mypage/posts/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/mypage/posts/http-response.adoc[]
+include::{snippets}/mypage/posts/response-fields.adoc[]
 
 
 

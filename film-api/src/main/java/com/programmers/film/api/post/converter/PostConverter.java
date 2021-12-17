@@ -165,6 +165,7 @@ public class PostConverter {
             .createdAt(post.getCreatedAt().toLocalDate())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .openedAt(postDetail.getOpenedAt())
+            .availableAt(post.getAvailableAt())
             .openerNickname(user.getNickname())
             .openerImageUrl(openerProfileImageUrl != null ? openerProfileImageUrl.getOriginalSizeUrl() : null)
             .isOpened(true)
