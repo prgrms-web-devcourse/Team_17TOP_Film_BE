@@ -381,19 +381,21 @@ public class PostControllerTest {
             );
     }
 
-    @DisplayName("게시물 열람권한 추가 및 삭제")
+    @DisplayName("게시물 열람권한 수정")
     @Test
     void fixPostAuthority() throws Exception {
         // Given
         // set request
         List<SimpleFixAuthorityDto> fixAuthorityDtos = new ArrayList<>();
-        fixAuthorityDtos.add(SimpleFixAuthorityDto.builder()
+        fixAuthorityDtos.add(
+            SimpleFixAuthorityDto.builder()
             .userId(2L)
-            .addOrDelete(true)
-            .build());
+            .build()
+        );
         FixPostAuthorityRequest request = FixPostAuthorityRequest.builder()
                 .fixAuthorityList(fixAuthorityDtos)
                 .build();
+
         // set response
         List<SimpleAuthorityDto> authorityDtos = new ArrayList<>();
         authorityDtos.add(
@@ -437,9 +439,7 @@ public class PostControllerTest {
                     fieldWithPath("fixAuthorityList").type(JsonFieldType.ARRAY)
                         .description("권한 수정 목록"),
                     fieldWithPath("fixAuthorityList.[].userId").type(JsonFieldType.NUMBER)
-                        .description("사용자 ID"),
-                    fieldWithPath("fixAuthorityList.[].addOrDelete").type(JsonFieldType.BOOLEAN)
-                        .description("권한 추가 및 삭제 선택 (추가 : true / 삭제 : false)")
+                        .description("사용자 ID")
                 )
             )
         );
