@@ -47,6 +47,10 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public List<SearchUserResponse> getUsersByKeyword(String keyword, String lastNickname, int size) {
+		checkArgument(keyword != null, "keyword must be provided.");
+		checkArgument(lastNickname != null, "lastNickname must be provided.");
+		checkArgument(size > 0, "size must be more than 0");
+
 		Page<User> pages = fetchPages(keyword, lastNickname, size);
 		return pages.getContent().stream()
 			.map(userMapper::entityToSearchUserResponse)
@@ -57,12 +61,10 @@ public class UserService {
 	public CheckUserResponse checkUser(ProviderAttribute provider) {
 		checkArgument(provider != null, "provider must be provided.");
 
-		UserResponse userResponse = userRepository.findByProviderAndProviderId(provider.getProvider(),
-				provider.getProviderId())
-			.map(userMapper::entityToUserResponse)
-			.orElse(null);
+		User user = userRepository.findByProviderAndProviderId(provider.getProvider(),
+				provider.getProviderId()).orElse(null);
 
-		if (userResponse == null) {
+		if (user == null) {
 			return CheckUserResponse.builder()
 				.isDuplicate(false)
 				.build();
@@ -70,8 +72,8 @@ public class UserService {
 
 		return CheckUserResponse.builder()
 			.isDuplicate(true)
-			.nickname(userResponse.getNickname())
-			.profileImageUrl(userResponse.getProfileImageUrl())
+			.nickname(user.getNickname())
+			.profileImageUrl(user.getProfileImageUrl().getOriginalSizeUrl())
 			.build();
 	}
 

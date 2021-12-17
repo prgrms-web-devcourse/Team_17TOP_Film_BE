@@ -4,34 +4,41 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.programmers.film.api.post.dto.common.AuthorityImageDto;
 import com.programmers.film.api.post.dto.common.OrderImageUrlDto;
 import com.programmers.film.api.post.dto.common.PointDto;
+import com.programmers.film.api.post.dto.common.SimpleAuthorityDto;
+import com.programmers.film.api.post.dto.common.SimpleFixAuthorityDto;
+import com.programmers.film.api.post.dto.request.FixPostAuthorityRequest;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
+import com.programmers.film.api.post.dto.response.FixPostAuthorityResponse;
 import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.service.PostService;
 import com.programmers.film.img.S3Service;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import com.programmers.film.api.post.converter.PointConverter;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
@@ -52,7 +59,6 @@ import org.springframework.mock.web.MockPart;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import org.springframework.test.web.servlet.ResultActions;
 
 @AutoConfigureRestDocs
@@ -200,6 +206,7 @@ public class PostControllerTest {
             .isOpened(true)
             .openedAt(LocalDate.now())
             .openerImageUrl("testUrl.com")
+            .availableAt(LocalDate.now())
             .build();
 
         given(postService.getPostDetail(any(), any())).willReturn(response);
@@ -227,11 +234,11 @@ public class PostControllerTest {
                         fieldWithPath("title").type(JsonFieldType.STRING).description("게시물 제목"),
                         fieldWithPath("content").type(JsonFieldType.STRING).description("게시물 내용"),
                         fieldWithPath("imageUrls").type(JsonFieldType.ARRAY)
-                            .description("게시물 사진 url 리스트"),
+                            .description("게시물 이미지 url 리스트"),
                         fieldWithPath("imageUrls.[].imageOrder").type(JsonFieldType.NUMBER)
-                            .description("게시물 사진 순서"),
+                            .description("게시물 이미지 순서"),
                         fieldWithPath("imageUrls.[].imageUrl").type(JsonFieldType.STRING)
-                            .description("게시물 사진 url"),
+                            .description("게시물 이미지 url"),
                         fieldWithPath("previewText").type(JsonFieldType.STRING)
                             .description("엿보기 문구"),
                         fieldWithPath("authorNickname").type(JsonFieldType.STRING)
@@ -246,20 +253,22 @@ public class PostControllerTest {
                         fieldWithPath("location.longitude").type(JsonFieldType.STRING)
                             .description("경도"),
                         fieldWithPath("authorityImageList").type(JsonFieldType.ARRAY)
-                            .description("열람가능 인원 리스트"),
+                            .description("열람가능 권한 목록"),
                         fieldWithPath("authorityImageList.[].imageOrder").type(JsonFieldType.NUMBER)
-                            .description("이미지 순서"),
+                            .description("열람 권한 목록 순서"),
                         fieldWithPath("authorityImageList.[].authorityId").type(
                             JsonFieldType.NUMBER).description("사용자 ID"),
                         fieldWithPath("authorityImageList.[].imageUrl").type(JsonFieldType.STRING)
-                            .description("사용자 프로필 사진"),
+                            .description("사용자 프로필 이미지 링크"),
                         fieldWithPath("openerNickname").type(JsonFieldType.STRING)
-                            .description("열람자 닉네임"),
+                            .description("최초 열람자 닉네임"),
                         fieldWithPath("openerImageUrl").type(JsonFieldType.STRING)
-                            .description("열람자 프로필 사진"),
+                            .description("최초 열람자 프로필 이미지"),
                         fieldWithPath("isOpened").type(JsonFieldType.BOOLEAN)
-                            .description("열림 확인 여부"),
-                        fieldWithPath("openedAt").type(JsonFieldType.STRING).description("열람 시간")
+                            .description("게시물 최초 열람 날짜"),
+                        fieldWithPath("openedAt").type(JsonFieldType.STRING).description("열람 시간"),
+                        fieldWithPath("availableAt").type(JsonFieldType.STRING)
+                            .description("열람가능 날짜")
                     )
                 )
             );
@@ -326,13 +335,13 @@ public class PostControllerTest {
                         fieldWithPath("authorityCount").type(JsonFieldType.NUMBER)
                             .description("열람가능 인원 수"),
                         fieldWithPath("authorityImageList").type(JsonFieldType.ARRAY)
-                            .description("열람가능 인원 리스트"),
+                            .description("열람가능 권한 목록"),
                         fieldWithPath("authorityImageList.[].imageOrder").type(JsonFieldType.NUMBER)
-                            .description("이미지 순서"),
+                            .description("열람가능 순서"),
                         fieldWithPath("authorityImageList.[].authorityId").type(
                             JsonFieldType.NUMBER).description("사용자 ID"),
                         fieldWithPath("authorityImageList.[].imageUrl").type(JsonFieldType.STRING)
-                            .description("사용자 프로필 사진")
+                            .description("사용자 프로필 이미지 링크")
                     )
                 )
             );
@@ -367,6 +376,92 @@ public class PostControllerTest {
                     preprocessResponse(prettyPrint()),
                     responseFields(
                         fieldWithPath("postId").type(JsonFieldType.NUMBER).description("게시물 ID")
+                    )
+                )
+            );
+    }
+
+    @DisplayName("게시물 열람권한 추가 및 삭제")
+    @Test
+    void fixPostAuthority() throws Exception {
+        // Given
+        // set request
+        List<SimpleFixAuthorityDto> fixAuthorityDtos = new ArrayList<>();
+        fixAuthorityDtos.add(SimpleFixAuthorityDto.builder()
+            .userId(2L)
+            .addOrDelete(true)
+            .build());
+        FixPostAuthorityRequest request = FixPostAuthorityRequest.builder()
+                .fixAuthorityList(fixAuthorityDtos)
+                .build();
+        // set response
+        List<SimpleAuthorityDto> authorityDtos = new ArrayList<>();
+        authorityDtos.add(
+            SimpleAuthorityDto.builder()
+            .imageOrder(0)
+            .authorityId(1L)
+            .authorityNickName("testNickName1")
+            .imageUrl("testUrl1.com")
+            .build()
+        );
+        authorityDtos.add(
+            SimpleAuthorityDto.builder()
+                .imageOrder(1)
+                .authorityId(2L)
+                .authorityNickName("testNickName2")
+                .imageUrl("testUrl2.com")
+                .build()
+        );
+        FixPostAuthorityResponse response = FixPostAuthorityResponse.builder()
+            .postId(1L)
+            .authorityList(authorityDtos)
+            .build();
+
+        given(postService.fixPostAuthority(any(), any(), any())).willReturn(response);
+
+        // When
+        ResultActions resultActions = mockMvc.perform(
+            patch("/api/v1/posts/authority/{postId}", 1)
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("utf-8")
+                .header("Authorization", "Bearer ${token_value}")
+        ).andDo(
+            document("posts/patch-authority",
+                preprocessRequest(prettyPrint()),
+                pathParameters(
+                    parameterWithName("postId").description("게시물 ID")
+                ),
+                requestHeaders(headerWithName("Authorization").description("jwt 액세스 토큰")),
+                requestFields(
+                    fieldWithPath("fixAuthorityList").type(JsonFieldType.ARRAY)
+                        .description("권한 수정 목록"),
+                    fieldWithPath("fixAuthorityList.[].userId").type(JsonFieldType.NUMBER)
+                        .description("사용자 ID"),
+                    fieldWithPath("fixAuthorityList.[].addOrDelete").type(JsonFieldType.BOOLEAN)
+                        .description("권한 추가 및 삭제 선택 (추가 : true / 삭제 : false)")
+                )
+            )
+        );
+
+        // Then
+        resultActions.andExpect(status().isOk())
+            .andDo(
+                document(
+                    "posts/patch-authority",
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("postId").type(JsonFieldType.NUMBER).description("게시물 ID"),
+                        fieldWithPath("authorityList").type(JsonFieldType.ARRAY)
+                            .description("열람가능 권한 목록"),
+                        fieldWithPath("authorityList.[].imageOrder").type(JsonFieldType.NUMBER)
+                            .description("열람 권한 목록 순서"),
+                        fieldWithPath("authorityList.[].authorityId").type(JsonFieldType.NUMBER)
+                            .description("사용자 ID"),
+                        fieldWithPath("authorityList.[].authorityNickName").type(JsonFieldType.STRING)
+                            .description("사용자 닉네임"),
+                        fieldWithPath("authorityList.[].imageUrl").type(JsonFieldType.STRING)
+                            .description("사용자 프로필 이미지 링크")
                     )
                 )
             );

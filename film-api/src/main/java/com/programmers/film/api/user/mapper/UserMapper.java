@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
 
 	@Mapping(target = "id", ignore = true)
+	@Mapping(source = "profileImageUrl", target = "profileImageUrl.originalSizeUrl")
 	User signUpRequestToEntity(SignUpRequest signUpRequest);
 
 	@Mapping(source = "profileImageUrl.originalSizeUrl", target = "profileImageUrl")

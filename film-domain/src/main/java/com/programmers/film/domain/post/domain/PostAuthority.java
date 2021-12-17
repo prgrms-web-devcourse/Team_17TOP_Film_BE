@@ -60,8 +60,9 @@ public class PostAuthority {
             return false;
         }
         PostAuthority that = (PostAuthority) o;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getUser(),
-            that.getUser()) && Objects.equals(getPost(), that.getPost());
+        return Objects.equals(getId(), that.getId())
+            && Objects.equals(getUser(), that.getUser())
+            && Objects.equals(getPost(), that.getPost());
     }
 
     @Override

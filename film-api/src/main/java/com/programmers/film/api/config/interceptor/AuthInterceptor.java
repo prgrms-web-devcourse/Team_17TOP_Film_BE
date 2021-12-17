@@ -36,10 +36,10 @@ public class AuthInterceptor implements HandlerInterceptor {
             request.setAttribute("user_id", userId);
         }
 
-        ProviderAttribute provider = new ProviderAttribute(
-            authEntity.getProvider(),
-            authEntity.getProviderId()
-        );
+        ProviderAttribute provider = ProviderAttribute.builder()
+            .provider(authEntity.getProvider())
+            .providerId(authEntity.getProviderId())
+            .build();
 
         request.setAttribute("provider", provider);
 

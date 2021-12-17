@@ -2,9 +2,11 @@ package com.programmers.film.api.post.converter;
 
 import com.programmers.film.api.post.dto.common.AuthorityImageDto;
 import com.programmers.film.api.post.dto.common.OrderImageUrlDto;
+import com.programmers.film.api.post.dto.common.SimpleAuthorityDto;
 import com.programmers.film.api.post.dto.request.CreatePostRequest;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
+import com.programmers.film.api.post.dto.response.FixPostAuthorityResponse;
 import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.exception.PostIdNotFoundException;
@@ -54,6 +56,37 @@ public class PostConverter {
                     }
                     return AuthorityImageDto.builder()
                         .authorityId(user.getId())
+                        .imageOrder(index.getAndIncrement())
+                        .imageUrl(null)
+                        .build();
+                }
+            ).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleAuthorityDto> getAuthorityList(Long postId) {
+        AtomicInteger index = new AtomicInteger();
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new PostIdNotFoundException("postId를 찾을 수 없습니다. 권한 목록을 불러올 수 없습니다."));
+
+        return post.getPostAuthorities().stream()
+            .map(
+                postAuthority -> {
+                    User userProxy = postAuthority.getUser();
+                    User user = userRepository.findById(userProxy.getId())
+                        .orElseThrow(() -> new PostIdNotFoundException("userId를 찾을 수 없습니다. 권한 목록을 불러올 수 없습니다."));
+                    ImageUrl profileImageUrl = user.getProfileImageUrl();
+                    if(profileImageUrl != null) {
+                        return SimpleAuthorityDto.builder()
+                            .authorityId(user.getId())
+                            .authorityNickName(user.getNickname())
+                            .imageOrder(index.getAndIncrement())
+                            .imageUrl(profileImageUrl.getOriginalSizeUrl())
+                            .build();
+                    }
+                    return SimpleAuthorityDto.builder()
+                        .authorityId(user.getId())
+                        .authorityNickName(user.getNickname())
                         .imageOrder(index.getAndIncrement())
                         .imageUrl(null)
                         .build();
@@ -132,6 +165,7 @@ public class PostConverter {
             .createdAt(post.getCreatedAt().toLocalDate())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .openedAt(postDetail.getOpenedAt())
+            .availableAt(post.getAvailableAt())
             .openerNickname(user.getNickname())
             .openerImageUrl(openerProfileImageUrl != null ? openerProfileImageUrl.getOriginalSizeUrl() : null)
             .isOpened(true)
@@ -183,5 +217,12 @@ public class PostConverter {
             imgUrls.add(orderImage);
         }
         return imgUrls;
+    }
+
+    public FixPostAuthorityResponse postToFixPostAuthorityResponse(Long postId) {
+        return FixPostAuthorityResponse.builder()
+            .postId(postId)
+            .authorityList(getAuthorityList(postId))
+            .build();
     }
 }

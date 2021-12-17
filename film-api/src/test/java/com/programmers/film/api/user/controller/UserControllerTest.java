@@ -173,11 +173,12 @@ class UserControllerTest {
 		final String nickname = "iyj";
 		final SignUpRequest request = SignUpRequest.builder()
 			.nickname(nickname)
+			.profileImageUrl("http://dummy.com")
 			.build();
 
 		final UserResponse response = UserResponse.builder()
 			.nickname(nickname)
-			.profileImageUrl("http://dummy")
+			.profileImageUrl("http://dummy.com")
 			.build();
 
 		given(userService.signUp(any(), any())).willReturn(response);
@@ -201,7 +202,8 @@ class UserControllerTest {
 						headerWithName("Authorization").description("jwt 액세스 토큰")
 					),
 					requestFields(
-						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임")
+						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+						fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL")
 					),
 					responseFields(
 						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),

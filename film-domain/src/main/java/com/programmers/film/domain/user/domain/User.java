@@ -30,6 +30,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -73,9 +74,10 @@ public class User extends BaseEntity {
     private List<Post> posts = new ArrayList<>();
 
     @Builder
-    public User(Long id, String nickname) {
+    public User(Long id, String nickname, ImageUrl profileImageUrl) {
         this.id = id;
         this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public void setProvider(String provider, String providerId) {
@@ -95,10 +97,11 @@ public class User extends BaseEntity {
         posts.add(post);
         post.setAuthor(this);
     }
-
+ 
+  
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("id", id)
             .append("nickname", nickname)
             .append("provider", provider)
@@ -109,4 +112,25 @@ public class User extends BaseEntity {
             .append("posts", posts)
             .toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return Objects.equals(getId(), user.getId())
+            && Objects.equals(getNickname(), user.getNickname())
+            && Objects.equals(getProvider(), user.getProvider())
+            && Objects.equals(getProviderId(), user.getProviderId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getNickname(), getProvider(), getProviderId());
+    }
 }
+
