@@ -214,6 +214,54 @@ class UserControllerTest {
 			);
 	}
 
+	@DisplayName("더미 유저 회원가입")
+	@Test
+	public void dummySignup() throws Exception {
+		// Given
+		final String nickname = "iyj";
+		final SignUpRequest request = SignUpRequest.builder()
+			.nickname(nickname)
+			.profileImageUrl("http://dummy.com")
+			.build();
+
+		final UserResponse response = UserResponse.builder()
+			.nickname(nickname)
+			.profileImageUrl("http://dummy.com")
+			.build();
+
+		given(userService.dummySignUp(any())).willReturn(response);
+
+		// When
+		final ResultActions resultActions = mockMvc.perform(
+			post("/api/v1/users/dummy-signup")
+				.header("Authorization", "Bearer ${token_value}")
+				.content(objectMapper.writeValueAsString(request))
+				.contentType(MediaType.APPLICATION_JSON)
+		).andDo(print());
+
+		// Then
+		resultActions.andExpect(status().isOk())
+			.andDo(
+				document(
+					"users/dummy-signup",
+					preprocessRequest(prettyPrint()),
+					preprocessResponse(prettyPrint()),
+					requestHeaders(
+						headerWithName("Authorization").description("jwt 액세스 토큰")
+					),
+					requestFields(
+						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+						fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL")
+					),
+					responseFields(
+						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+						fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
+							.description("프로필 이미지 URL")
+					)
+				)
+			);
+	}
+
 	@DisplayName("유저 리스트 가져오기")
 	@Test
 	public void getUserList() throws Exception {
