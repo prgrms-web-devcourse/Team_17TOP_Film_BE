@@ -49,6 +49,7 @@ public class UserService {
 	public List<SearchUserResponse> getUsersByKeyword(String keyword, String lastNickname, int size) {
 		checkArgument(keyword != null, "keyword must be provided.");
 		checkArgument(lastNickname != null, "lastNickname must be provided.");
+		checkArgument(size > 0, "size must be more than 0");
 
 		Page<User> pages = fetchPages(keyword, lastNickname, size);
 		return pages.getContent().stream()
