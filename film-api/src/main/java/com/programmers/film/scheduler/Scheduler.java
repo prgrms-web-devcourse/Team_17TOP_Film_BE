@@ -21,7 +21,7 @@ public class Scheduler {
     private final PostStateRepository postStateRepository;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @Scheduled(cron="00 55 16 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron="30 00 00 * * *", zone = "Asia/Seoul")
     @Transactional
     public void PostStateUpdateScheduled() {
         PostState postState = postStateRepository.findByPostStateValue(PostStatus.OPENABLE.toString()).get();
