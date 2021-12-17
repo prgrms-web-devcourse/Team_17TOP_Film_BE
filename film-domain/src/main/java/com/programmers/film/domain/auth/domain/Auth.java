@@ -14,10 +14,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
 @Table(name = "auths")
@@ -47,8 +51,6 @@ public class Auth {
 	@OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
-
-	protected Auth() {/*no-op*/}
 
 	public Auth(String username, String provider, String providerId, String profileImage,
 		Group group) {
