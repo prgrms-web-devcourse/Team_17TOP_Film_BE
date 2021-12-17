@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter @Builder
 @NoArgsConstructor
@@ -36,7 +37,7 @@ public class ImageUrl {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("originalSizeUrl", originalSizeUrl)
             .append("smallSizeUrl", smallSizeUrl)
             .toString();

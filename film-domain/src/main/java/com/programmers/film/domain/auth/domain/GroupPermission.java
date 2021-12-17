@@ -7,6 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Entity
 @Getter
@@ -24,4 +26,13 @@ public class GroupPermission {
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "permission_id")
 	private Permission permission;
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+			.append("id", id)
+			.append("group", group)
+			.append("permission", permission)
+			.toString();
+	}
 }

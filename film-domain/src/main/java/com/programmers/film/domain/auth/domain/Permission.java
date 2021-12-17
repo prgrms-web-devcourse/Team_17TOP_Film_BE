@@ -27,5 +27,4 @@ public class Permission {
 			.append("name", name)
 			.toString();
 	}
-
 }
