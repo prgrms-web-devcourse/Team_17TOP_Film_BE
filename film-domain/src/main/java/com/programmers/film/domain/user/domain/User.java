@@ -73,9 +73,10 @@ public class User extends BaseEntity {
     private List<Post> posts = new ArrayList<>();
 
     @Builder
-    public User(Long id, String nickname) {
+    public User(Long id, String nickname, ImageUrl profileImageUrl) {
         this.id = id;
         this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public void setProvider(String provider, String providerId) {
