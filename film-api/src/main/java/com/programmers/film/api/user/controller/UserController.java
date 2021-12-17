@@ -39,9 +39,9 @@ public class UserController {
     @Auth
     @GetMapping
     public ResponseEntity<List<SearchUserResponse>> getUsers(
-        @RequestParam(value = "keyword") String keyword,
-        @RequestParam(value = "lastNickname") String lastNickname,
-        @RequestParam(value = "size") int size
+        @RequestParam(value = "keyword") final String keyword,
+        @RequestParam(value = "lastNickname") final String lastNickname,
+        @RequestParam(value = "size") final int size
     ) {
         List<SearchUserResponse> responses = userService.getUsersByKeyword(keyword, lastNickname, size);
         return ResponseEntity.ok(responses);
