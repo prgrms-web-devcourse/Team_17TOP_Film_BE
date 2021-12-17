@@ -8,6 +8,7 @@ import com.programmers.film.api.auth.exception.AuthNotFoundException;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
 import com.programmers.film.api.user.dto.response.CheckUserResponse;
+import com.programmers.film.api.user.dto.response.CheckUserResponse.CheckUserResponseBuilder;
 import com.programmers.film.api.user.dto.response.SearchUserResponse;
 import com.programmers.film.api.user.dto.response.UserResponse;
 import com.programmers.film.api.user.exception.NicknameDuplicatedException;
@@ -64,16 +65,20 @@ public class UserService {
 		User user = userRepository.findByProviderAndProviderId(provider.getProvider(),
 				provider.getProviderId()).orElse(null);
 
+		CheckUserResponseBuilder builder = CheckUserResponse.builder();
+
 		if (user == null) {
-			return CheckUserResponse.builder()
-				.isDuplicate(false)
+			return builder.isDuplicate(false)
 				.build();
 		}
 
-		return CheckUserResponse.builder()
+		if (user.getProfileImageUrl() != null) {
+			builder.profileImageUrl(user.getProfileImageUrl().getOriginalSizeUrl());
+		}
+
+		return builder
 			.isDuplicate(true)
 			.nickname(user.getNickname())
-			.profileImageUrl(user.getProfileImageUrl().getOriginalSizeUrl())
 			.build();
 	}
 
