@@ -120,6 +120,7 @@ public class UserService {
 		}
 
 		User user = userMapper.signUpRequestToEntity(signUpRequest);
+		user.setProvider("kakao", "12345678");
 		User savedUser = userRepository.save(user);
 
 		return userMapper.entityToUserResponse(savedUser);
