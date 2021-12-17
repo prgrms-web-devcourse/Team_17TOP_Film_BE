@@ -206,6 +206,7 @@ public class PostControllerTest {
             .isOpened(true)
             .openedAt(LocalDate.now())
             .openerImageUrl("testUrl.com")
+            .availableAt(LocalDate.now())
             .build();
 
         given(postService.getPostDetail(any(), any())).willReturn(response);
@@ -265,7 +266,9 @@ public class PostControllerTest {
                             .description("최초 열람자 프로필 이미지"),
                         fieldWithPath("isOpened").type(JsonFieldType.BOOLEAN)
                             .description("게시물 최초 열람 날짜"),
-                        fieldWithPath("openedAt").type(JsonFieldType.STRING).description("열람 시간")
+                        fieldWithPath("openedAt").type(JsonFieldType.STRING).description("열람 시간"),
+                        fieldWithPath("availableAt").type(JsonFieldType.STRING)
+                            .description("열람가능 날짜")
                     )
                 )
             );
