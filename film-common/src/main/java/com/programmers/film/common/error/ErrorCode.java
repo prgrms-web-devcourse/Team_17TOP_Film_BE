@@ -22,6 +22,7 @@ public enum ErrorCode {
     KAKAO_ERROR(500, "L003", "Kakao Server Error"),
     SERVER_ERROR(500, "L004", "DB Server Error"),
     INVALID_TOKEN(401, "L005", "Invalid Token"),
+    EMPTY_TOKEN(401, "L006", "Empty Token"),
 
     // Map
     LOCATION_ERROR(400, "M001", "Location Input Error"),
