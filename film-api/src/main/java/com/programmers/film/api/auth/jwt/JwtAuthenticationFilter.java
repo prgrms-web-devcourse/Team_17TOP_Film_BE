@@ -5,7 +5,9 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import com.programmers.film.api.auth.dto.request.JwtRequest;
+import com.programmers.film.api.auth.exception.InvalidTokenRequestException;
 import com.programmers.film.api.auth.util.HeaderUtil;
+import com.programmers.film.common.error.ErrorCode;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -61,6 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 					}
 				} catch (Exception e) {
 					log.warn("Jwt processing failed: {}", e.getMessage());
+					request.setAttribute("exception", ErrorCode.INVALID_TOKEN);
 				}
 			}
 		} else {

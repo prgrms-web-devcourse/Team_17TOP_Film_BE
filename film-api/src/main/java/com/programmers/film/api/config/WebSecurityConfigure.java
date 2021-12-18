@@ -1,5 +1,6 @@
 package com.programmers.film.api.config;
 
+import com.programmers.film.api.auth.CustomAuthenticationEntryPoint;
 import com.programmers.film.api.auth.jwt.Jwt;
 import com.programmers.film.api.auth.jwt.JwtAuthenticationFilter;
 import com.programmers.film.api.auth.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -9,7 +10,6 @@ import com.programmers.film.api.auth.service.AuthService;
 import com.programmers.film.api.config.properties.AppProperties;
 import com.programmers.film.api.config.properties.CorsProperties;
 import com.programmers.film.api.config.properties.JwtProperties;
-import java.util.Arrays;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -91,6 +91,7 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 			.failureHandler(oAuth2AuthenticationFailureHandler())
 			.and()
 			.exceptionHandling()
+				.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 				.accessDeniedHandler(accessDeniedHandler())
 				.and()
 			.addFilterAfter(jwtAuthenticationFilter(), SecurityContextPersistenceFilter.class);
