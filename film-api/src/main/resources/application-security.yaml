@@ -34,6 +34,7 @@ cors:
     - PUT
     - DELETE
     - OPTIONS
+    - PATCH
   allowed-headers: '*'
   max-age: 3600
 
