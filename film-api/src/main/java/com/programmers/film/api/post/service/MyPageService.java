@@ -27,11 +27,11 @@ public class MyPageService {
     public List<PreviewPostResponse> getMyPosts(Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(
-                () -> new UserIdNotFoundException("사용자를 찾을 수 없습니다. 볼 수 있는 게시물 목록들을 찾을 수 없습니다."));
+                () -> new UserIdNotFoundException("사용자를 찾을 수 없습니다. 마이페이지 요청 실패"));
 
         return user.getPostAuthorities().stream()
             .map(PostAuthority::getPost)
-            .filter(postValidateUtil::checkIsDelete)
+            .filter(posts -> !postValidateUtil.checkIsDelete(posts))
             .map(postConverter::postToPreviewPostResponse)
             .collect(Collectors.toList());
     }

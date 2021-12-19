@@ -35,4 +35,4 @@ DEPLOY_JAR=$DEPLOY_PATH/$JAR_NAME
 
 echo "> DEPLOY_JAR deploy: $DEPLOY_JAR" >> $LOG_FILE
 
-nohup java -jar $DEPLOY_JAR >> $LOG_FILE 2>$ERR_LOG_FILE &
+nohup java -jar -Duser.timezone=Asia/Seoul $DEPLOY_JAR >> $LOG_FILE 2>$ERR_LOG_FILE &
