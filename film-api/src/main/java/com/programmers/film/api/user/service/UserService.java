@@ -109,6 +109,7 @@ public class UserService {
 
 		User user = userMapper.signUpRequestToEntity(signUpRequest);
 		user.setProvider(provider, providerId);
+		user.setProfileImageUrl(auth.getProfileImage());
 
 		auth.setUser(user);
 		User savedUser = userRepository.save(user);

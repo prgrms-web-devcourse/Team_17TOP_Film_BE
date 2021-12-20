@@ -88,6 +88,12 @@ public class User extends BaseEntity {
         this.providerId = providerId;
     }
 
+    public void setProfileImageUrl(String imageUrl) {
+       checkArgument(imageUrl != null, "imageUrl must be provided.");
+
+        this.profileImageUrl.setOriginalSizeUrl(imageUrl);
+    }
+
     public void addAuthority(PostAuthority authority) {
         postAuthorities.add(authority);
         authority.setUser(this);

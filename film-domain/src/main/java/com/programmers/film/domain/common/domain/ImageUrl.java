@@ -17,6 +17,10 @@ public class ImageUrl {
     private String originalSizeUrl;
     private String smallSizeUrl;
 
+    public void setOriginalSizeUrl(String originalSizeUrl) {
+        this.originalSizeUrl = originalSizeUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
