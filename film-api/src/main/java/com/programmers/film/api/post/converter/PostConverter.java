@@ -193,6 +193,7 @@ public class PostConverter {
             .content(postDetail.getContent())
             .imageUrls(getImageUrls(postDetail))
             .authorNickname(author.getNickname())
+            .availableAt(post.getAvailableAt())
             .authorImageUrl(authorProfileImageUrl != null ? authorProfileImageUrl.getOriginalSizeUrl() : null)
             .createdAt(post.getCreatedAt().toLocalDate())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
