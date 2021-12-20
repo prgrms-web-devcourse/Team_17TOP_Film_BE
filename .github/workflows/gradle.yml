@@ -44,6 +44,13 @@ jobs:
         SECRET_FILE_NAME: application-secret.yml
       run: echo $OAUTH2_SECRET | base64 --decode > $SECRET_DIR/$SECRET_FILE_NAME
     
+    - name: Copy CERT secret
+      env:
+        CERT_SECRET: ${{ secrets.CERTIFICATE }}
+        SECRET_DIR: film-domain/src/main/resources
+        SECRET_FILE_NAME: keystore.p12
+      run: echo $CERT_SECRET | base64 --decode > $SECRET_DIR/$SECRET_FILE_NAME
+    
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
         
