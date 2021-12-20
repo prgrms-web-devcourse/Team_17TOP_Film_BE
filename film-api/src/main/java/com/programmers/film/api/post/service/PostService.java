@@ -113,10 +113,12 @@ public class PostService {
             .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물 삭제를 할 수 없습니다."));
 
         if(validateUtil.checkIsDelete(post)) {
-            throw new PostCanNotOpenException("삭제된 게시물입니다. 게시물 삭제를 할 수 없습니다.");
+            throw new PostCanNotOpenException("이미 삭제된 게시물입니다. 게시물 삭제를 할 수 없습니다.");
         }
-        if(validateUtil.checkAuthority(post, user)){
-            throw new PostCanNotOpenException("열람 권한이 없는 게시물입니다. 게시물 삭제를 할 수 없습니다.");
+
+        User getAuthor = post.getAuthor();
+        if(!getAuthor.equals(user)) {
+            throw new PostCanNotOpenException("작성자가 아닙니다. 게시물 삭제를 할 수 없습니다.");
         }
 
         return postConverter.postToDeletePostResponse(post.removePost());
