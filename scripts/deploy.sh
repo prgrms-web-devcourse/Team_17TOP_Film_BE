@@ -7,6 +7,7 @@ DEPLOY_PATH=/home/ec2-user/app/deploy
 LINK_LOG_FILE=$DEPLOY_PATH/deploy.log
 LOG_FILE=$DEPLOY_PATH/deploy_$TODAY.log
 ERR_LOG_FILE=$DEPLOY_PATH/deploy_err_$TODAY.log
+PROJECT_NAME=film
 
 rm $LINK_LOG_FILE
 ln -s $LOG_FILE $LINK_LOG_FILE
@@ -20,7 +21,7 @@ echo "> build copy file" >> $LOG_FILE
 cp $BUILD_JAR $DEPLOY_PATH
 
 echo "> pid check" >> $LOG_FILE
-CURRENT_PID=$(pgrep -f $JAR_NAME)
+CURRENT_PID=$(pgrep -f $PROJECT_NAME)
 
 if [ -z $CURRENT_PID ]
 then
