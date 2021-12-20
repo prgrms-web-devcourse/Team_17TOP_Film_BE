@@ -4,7 +4,7 @@ TODAY=$(date +"%Y%m%d")
 echo "> build start: $TODAY" >> $LOG_FILE
 
 DEPLOY_PATH=/home/ec2-user/app/deploy
-LOG_PATH=$DEPLOY_PATH/log/
+LOG_PATH=$DEPLOY_PATH/log
 LINK_LOG_FILE=$LOG_PATH/deploy.log
 LOG_FILE=$LOG_PATH/deploy_$TODAY.log
 ERR_LOG_FILE=$LOG_PATH/deploy_err_$TODAY.log
