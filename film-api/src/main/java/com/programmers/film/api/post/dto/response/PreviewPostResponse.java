@@ -15,6 +15,7 @@ public class PreviewPostResponse {
     private Long postId;
     private String title;
     private String previewText;
+    private String authorNickname;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate availableAt;

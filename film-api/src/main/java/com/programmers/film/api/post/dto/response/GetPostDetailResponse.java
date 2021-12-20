@@ -35,12 +35,16 @@ public class GetPostDetailResponse {
 
     private PointDto location;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate availableAt;
+
     private String openerNickname;
 
     private String openerImageUrl;
 
-    private boolean isOpened;
+    private Boolean isOpened;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate openedAt;
 
     private String previewText;

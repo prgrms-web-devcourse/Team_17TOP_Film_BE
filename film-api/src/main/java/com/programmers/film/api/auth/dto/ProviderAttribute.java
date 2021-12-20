@@ -1,14 +1,14 @@
 package com.programmers.film.api.auth.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
-@AllArgsConstructor
+@Builder
 public class ProviderAttribute {
 
-    private String provider;
-    private String providerId;
+    private final String provider;
+    private final String providerId;
 }

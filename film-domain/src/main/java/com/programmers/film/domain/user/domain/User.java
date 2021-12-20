@@ -1,5 +1,8 @@
 package com.programmers.film.domain.user.domain;
 
+import static org.assertj.core.util.Preconditions.checkArgument;
+
+import com.programmers.film.domain.auth.domain.Auth;
 import com.programmers.film.domain.common.domain.BaseEntity;
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
@@ -7,6 +10,7 @@ import com.programmers.film.domain.post.domain.PostAuthority;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -17,6 +21,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -24,7 +29,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -51,12 +57,6 @@ public class User extends BaseEntity {
     @Column(name = "provider_id")
     private String providerId;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<PostAuthority> postAuthorities = new ArrayList<>();
-
-    @OneToMany(mappedBy = "author", orphanRemoval = true)
-    private List<Post> posts = new ArrayList<>();
-
     @Embedded
     @AttributeOverrides({
         @AttributeOverride(name = "originalSizeUrl", column = @Column(name = "profile_image")),
@@ -67,18 +67,26 @@ public class User extends BaseEntity {
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
-    @Builder
-    public User(Long id, String nickname) {
+    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<PostAuthority> postAuthorities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "author", orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
+    @Builder
+    public User(Long id, String nickname, ImageUrl profileImageUrl) {
         this.id = id;
         this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
     }
 
-    public void updateProvider(String provider, String providerId) {
+    public void setProvider(String provider, String providerId) {
+        checkArgument(provider != null, "provider must be provided.");
+        checkArgument(providerId != null, "providerId must be provided.");
+
         this.provider = provider;
         this.providerId = providerId;
     }
-
 
     public void addAuthority(PostAuthority authority) {
         postAuthorities.add(authority);
@@ -89,5 +97,40 @@ public class User extends BaseEntity {
         posts.add(post);
         post.setAuthor(this);
     }
+ 
+  
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+            .append("id", id)
+            .append("nickname", nickname)
+            .append("provider", provider)
+            .append("providerId", providerId)
+            .append("profileImageUrl", profileImageUrl)
+            .append("lastLoginAt", lastLoginAt)
+            .append("postAuthorities", postAuthorities)
+            .append("posts", posts)
+            .toString();
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return Objects.equals(getId(), user.getId())
+            && Objects.equals(getNickname(), user.getNickname())
+            && Objects.equals(getProvider(), user.getProvider())
+            && Objects.equals(getProviderId(), user.getProviderId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getNickname(), getProvider(), getProviderId());
+    }
 }
+

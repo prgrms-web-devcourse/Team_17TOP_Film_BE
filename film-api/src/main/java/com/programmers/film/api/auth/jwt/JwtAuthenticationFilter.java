@@ -5,7 +5,10 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import com.programmers.film.api.auth.dto.request.JwtRequest;
+import com.programmers.film.api.auth.exception.EmptyTokenException;
+import com.programmers.film.api.auth.exception.InvalidTokenException;
 import com.programmers.film.api.auth.util.HeaderUtil;
+import com.programmers.film.common.error.ErrorCode;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -39,29 +42,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		// If not authenticated user
 		if (SecurityContextHolder.getContext().getAuthentication() == null) {
 			String token = getToken(request);
-			if (token != null) {
-				try {
-					Jwt.Claims claims = jwt.verify(token);
-					log.debug("Jwt parse result: {}", claims);
+			try {
+				if (token == null) throw new EmptyTokenException("Empty Token");
 
-					List<GrantedAuthority> authorities = getAuthorities(claims);
-					String provider = claims.provider;
-					String providerId = claims.providerId;
+				Jwt.Claims claims = jwt.verify(token);
+				log.debug("Jwt parse result: {}", claims);
 
-					if (isNotEmpty(provider) && isNotEmpty(providerId) && authorities.size() > 0) {
-						JwtAuthenticationToken authentication =
-							new JwtAuthenticationToken(
-								new JwtRequest(token, provider, providerId),
-								null,
-								authorities
-							);
-						authentication.setDetails(
-							new WebAuthenticationDetailsSource().buildDetails(request));
-						SecurityContextHolder.getContext().setAuthentication(authentication);
-					}
-				} catch (Exception e) {
-					log.warn("Jwt processing failed: {}", e.getMessage());
+				List<GrantedAuthority> authorities = getAuthorities(claims);
+				String provider = claims.provider;
+				String providerId = claims.providerId;
+
+				if (isNotEmpty(provider) && isNotEmpty(providerId) && authorities.size() > 0) {
+					JwtAuthenticationToken authentication =
+						new JwtAuthenticationToken(
+							new JwtRequest(token, provider, providerId),
+							null,
+							authorities
+						);
+					authentication.setDetails(
+						new WebAuthenticationDetailsSource().buildDetails(request));
+					SecurityContextHolder.getContext().setAuthentication(authentication);
 				}
+			} catch (EmptyTokenException e) {
+				log.warn("Jwt processing failed: {}", e.getMessage());
+				request.setAttribute("exception", ErrorCode.EMPTY_TOKEN);
+			} catch (Exception e) {
+				log.warn("Jwt processing failed: {}", e.getMessage());
+				request.setAttribute("exception", ErrorCode.INVALID_TOKEN);
 			}
 		} else {
 			log.debug(

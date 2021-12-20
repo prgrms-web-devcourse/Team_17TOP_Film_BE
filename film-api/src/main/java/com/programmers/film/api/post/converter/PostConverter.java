@@ -2,13 +2,15 @@ package com.programmers.film.api.post.converter;
 
 import com.programmers.film.api.post.dto.common.AuthorityImageDto;
 import com.programmers.film.api.post.dto.common.OrderImageUrlDto;
+import com.programmers.film.api.post.dto.common.SimpleAuthorityDto;
 import com.programmers.film.api.post.dto.request.CreatePostRequest;
 import com.programmers.film.api.post.dto.response.CreatePostResponse;
 import com.programmers.film.api.post.dto.response.DeletePostResponse;
+import com.programmers.film.api.post.dto.response.FixPostAuthorityResponse;
 import com.programmers.film.api.post.dto.response.GetPostDetailResponse;
 import com.programmers.film.api.post.dto.response.PreviewPostResponse;
 import com.programmers.film.api.post.exception.PostIdNotFoundException;
-import com.programmers.film.api.user.exception.UserIdNotFoundExceoption;
+import com.programmers.film.api.user.exception.UserIdNotFoundException;
 import com.programmers.film.domain.common.domain.ImageUrl;
 import com.programmers.film.domain.post.domain.Post;
 import com.programmers.film.domain.post.domain.PostAuthority;
@@ -61,6 +63,37 @@ public class PostConverter {
             ).toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<SimpleAuthorityDto> getPostAuthorityList(Long postId) {
+        AtomicInteger index = new AtomicInteger();
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new PostIdNotFoundException("postId를 찾을 수 없습니다. 권한 목록을 불러올 수 없습니다."));
+
+        return post.getPostAuthorities().stream()
+            .map(
+                postAuthority -> {
+                    User userProxy = postAuthority.getUser();
+                    User user = userRepository.findById(userProxy.getId())
+                        .orElseThrow(() -> new PostIdNotFoundException("userId를 찾을 수 없습니다. 권한 목록을 불러올 수 없습니다."));
+                    ImageUrl profileImageUrl = user.getProfileImageUrl();
+                    if(profileImageUrl != null) {
+                        return SimpleAuthorityDto.builder()
+                            .authorityId(user.getId())
+                            .authorityNickName(user.getNickname())
+                            .imageOrder(index.getAndIncrement())
+                            .imageUrl(profileImageUrl.getOriginalSizeUrl())
+                            .build();
+                    }
+                    return SimpleAuthorityDto.builder()
+                        .authorityId(user.getId())
+                        .authorityNickName(user.getNickname())
+                        .imageOrder(index.getAndIncrement())
+                        .imageUrl(null)
+                        .build();
+                }
+            ).toList();
+    }
+
     public Post createPostRequestToPost(CreatePostRequest request, User authorUser) {
         PostState postState = postStateRepository.findByPostStateValue(PostStatus.CLOSED.toString()).get();
         return Post.builder()
@@ -95,6 +128,7 @@ public class PostConverter {
             .title(post.getTitle())
             .previewText(post.getPreviewText())
             .availableAt(post.getAvailableAt())
+            .authorNickname(post.getAuthor().getNickname())
             .state(post.getState().getPostStateValue())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .authorityCount(postAuthorities.size())
@@ -111,9 +145,9 @@ public class PostConverter {
     @Transactional(readOnly = true)
     public GetPostDetailResponse postToGetPostDetailResponse(Long postId, Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserIdNotFoundExceoption("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new UserIdNotFoundException("사용자를 찾을 수 없습니다. 게시물을 열 수 없습니다."));
         PostDetail postDetail = postDetailRepository.findByPostId(postId)
-            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다."));
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물을 열 수 없습니다."));
         Post post = postDetail.getPost();
 
         User author = post.getAuthor();
@@ -131,6 +165,7 @@ public class PostConverter {
             .createdAt(post.getCreatedAt().toLocalDate())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
             .openedAt(postDetail.getOpenedAt())
+            .availableAt(post.getAvailableAt())
             .openerNickname(user.getNickname())
             .openerImageUrl(openerProfileImageUrl != null ? openerProfileImageUrl.getOriginalSizeUrl() : null)
             .isOpened(true)
@@ -142,9 +177,9 @@ public class PostConverter {
     @Transactional(readOnly = true)
     public GetPostDetailResponse postToGetPostDetailResponse(Long postId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new UserIdNotFoundExceoption("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new UserIdNotFoundException("사용자를 찾을 수 없습니다. 게시물을 열 수 없습니다."));
         PostDetail postDetail = postDetailRepository.findByPostId(postId)
-            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다."));
+            .orElseThrow(() -> new PostIdNotFoundException("게시물을 찾을 수 없습니다. 게시물을 열 수 없습니다."));
 
         User author = post.getAuthor();
         ImageUrl authorProfileImageUrl = author.getProfileImageUrl();
@@ -158,6 +193,7 @@ public class PostConverter {
             .content(postDetail.getContent())
             .imageUrls(getImageUrls(postDetail))
             .authorNickname(author.getNickname())
+            .availableAt(post.getAvailableAt())
             .authorImageUrl(authorProfileImageUrl != null ? authorProfileImageUrl.getOriginalSizeUrl() : null)
             .createdAt(post.getCreatedAt().toLocalDate())
             .location(pointConverter.doublePointToStringPoint(post.getLocation()))
@@ -182,5 +218,12 @@ public class PostConverter {
             imgUrls.add(orderImage);
         }
         return imgUrls;
+    }
+
+    public FixPostAuthorityResponse postToFixPostAuthorityResponse(Long postId) {
+        return FixPostAuthorityResponse.builder()
+            .postId(postId)
+            .authorityList(getPostAuthorityList(postId))
+            .build();
     }
 }

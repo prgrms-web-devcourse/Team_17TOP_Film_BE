@@ -1,0 +1,49 @@
+server:
+  port: 8080
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-store-password:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate.format_sql: false
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: "jdbc:h2:file:~/film_db/film.db;MODE=MYSQL;DB_CLOSE_DELAY=-1"
+    username: sa
+    password:
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 5
+      pool-name: H2_DB
+  sql:
+    init:
+      mode: never
+      platform: h2
+      schema-locations: classpath:sql/schema-dev.sql, classpath:org/springframework/security/oauth2/client/oauth2-client-schema.sql
+      data-locations: classpath:sql/data.sql
+      encoding: UTF-8
+

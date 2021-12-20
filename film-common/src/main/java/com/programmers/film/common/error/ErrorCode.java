@@ -16,11 +16,13 @@ public enum ErrorCode {
     HANDLE_ACCESS_DENIED(403, "C006", "Access is denied"),
     REQUEST_INVALID(400, "C007", "Invalid Request"),
 
-    // Login
+    // Auth
     NICKNAME_NULL(400, "L001", "Nickname Not Exist"),
     USER_NOT_EXIST(400, "L002", "User Not Exist"),
     KAKAO_ERROR(500, "L003", "Kakao Server Error"),
     SERVER_ERROR(500, "L004", "DB Server Error"),
+    INVALID_TOKEN(401, "L005", "Invalid Token"),
+    EMPTY_TOKEN(401, "L006", "Empty Token"),
 
     // Map
     LOCATION_ERROR(400, "M001", "Location Input Error"),

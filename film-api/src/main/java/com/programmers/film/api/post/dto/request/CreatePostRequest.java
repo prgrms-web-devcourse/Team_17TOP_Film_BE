@@ -3,6 +3,7 @@ package com.programmers.film.api.post.dto.request;
 import com.programmers.film.api.post.dto.common.OrderImageFileDto;
 import com.programmers.film.api.post.dto.common.PointDto;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,8 +29,6 @@ public class CreatePostRequest {
 
     private String content;
 
-    private Long authorUserId;
-
     public void setImageFiles(String[] urls) {
         List<OrderImageFileDto> temp = new ArrayList<>();
         int i = 0;
@@ -37,5 +36,17 @@ public class CreatePostRequest {
             temp.add(new OrderImageFileDto(i++, url));
         }
         this.imageFiles = temp;
+    }
+
+    public void mappingString(CreatePostRequestString str) {
+        this.title = str.getTitle();
+        this.previewText = str.getPreviewText();
+        this.location = PointDto.builder()
+            .longitude(str.getLongitude())
+            .latitude(str.getLatitude())
+            .build();
+        this.availableAt = LocalDate.parse(str.getAvailableAt(), DateTimeFormatter.ISO_DATE);
+        this.authorities = new ArrayList<>();
+        this.content = str.getContent();
     }
 }

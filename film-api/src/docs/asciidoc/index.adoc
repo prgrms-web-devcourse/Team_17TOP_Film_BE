@@ -1,0 +1,237 @@
+:hardbreaks:
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+:toc: left
+
+= Film API
+
+== User
+
+=== 사용자 정보 가져오기
+
+`*Request*`
+
+include::{snippets}/users/get-user/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/users/get-user/http-response.adoc[]
+include::{snippets}/users/get-user/response-fields.adoc[]
+
+'''
+
+=== 회원가입 여부 검사
+
+`*Request*`
+
+include::{snippets}/users/duplicate-user/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/users/duplicate-user/http-response.adoc[]
+include::{snippets}/users/duplicate-user/response-fields.adoc[]
+
+'''
+
+=== 중복 닉네임 검사
+
+`*Request*`
+
+include::{snippets}/users/duplicate-nickname/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/users/duplicate-nickname/http-response.adoc[]
+include::{snippets}/users/duplicate-nickname/response-fields.adoc[]
+
+'''
+
+=== 회원가입
+
+`*Request*`
+
+include::{snippets}/users/signup/http-request.adoc[]
+include::{snippets}/users/signup/request-fields.adoc[]
+
+`*Response*`
+
+include::{snippets}/users/signup/http-response.adoc[]
+include::{snippets}/users/signup/response-fields.adoc[]
+
+
+=== 검색어로 유저 리스트 가져오기
+
+`*Request*`
+
+include::{snippets}/users/get-users/http-request.adoc[]
+include::{snippets}/users/get-users/request-parameters.adoc[]
+
+`*Response*`
+
+include::{snippets}/users/get-users/http-response.adoc[]
+include::{snippets}/users/get-users/response-fields.adoc[]
+
+'''
+=== dummy user 
+
+`*Request*`
+
+include::{snippets}/users/dummy-signup/http-request.adoc[]
+include::{snippets}/users/dummy-signup/request-fields.adoc[]
+
+`*Response*`
+
+include::{snippets}/users/dummy-signup/http-response.adoc[]
+include::{snippets}/users/dummy-signup/response-fields.adoc[]
+
+== Posts
+
+=== 게시물 생성
+
+`*Request*`
+----
+POST /api/v1/posts HTTP/1.1
+Content-Type: multipart/form-data; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Authorization: Bearer ${token_value}
+Host: localhost:8080
+
+Content-Disposition: form-data; name=files
+files = file []
+
+Content-Disposition: form-data; name=com
+{
+ "title": "TEST 제목",
+ "previewText": "미리보기 TEST",
+ "latitude": "31.12312",
+ "longitude": "144.4444",
+ "availableAt": "2021-12-31",
+ "content": "내용 TEST"
+}
+----
+|===
+|Path|Type|Description
+
+|`+files+`
+|`+Array+`
+|게시물 사진 리스트
+
+|`+files.[]+`
+|`+File+`
+|게시물 사진
+
+|`+com+`
+|`+String+`
+|생성요청 String(json형식)
+
+|`+com.title+`
+|`+String+`
+|게시물 제목
+
+|`+com.previewText+`
+|`+String+`
+|게시물 엿보기 문구
+
+|`+com.latitude+`
+|`+String+`
+|위도
+
+|`+com.longitude+`
+|`+String+`
+|경도
+
+|`+com.availableAt+`
+|`+String+`
+|열람가능 날짜
+
+|`+com.content+`
+|`+String+`
+|게시물 내용
+|===
+
+
+`*Response*`
+
+include::{snippets}/posts/create/http-response.adoc[]
+include::{snippets}/posts/create/response-fields.adoc[]
+
+=== 게시물 조회
+
+`*Request*`
+include::{snippets}/posts/get-detail/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/posts/get-detail/http-response.adoc[]
+include::{snippets}/posts/get-detail/response-fields.adoc[]
+
+'''
+
+=== 게시물 삭제
+
+`*Request*`
+
+include::{snippets}/posts/delete-posts/http-request.adoc[]
+include::{snippets}/posts/delete-posts/path-parameters.adoc[]
+
+`*Response*`
+
+include::{snippets}/posts/delete-posts/http-response.adoc[]
+include::{snippets}/posts/delete-posts/response-fields.adoc[]
+
+=== 게시물 엿보기 정보 조회
+
+`*Request*`
+
+include::{snippets}/posts/get-preview/http-request.adoc[]
+include::{snippets}/posts/get-preview/path-parameters.adoc[]
+
+`*Response*`
+
+include::{snippets}/posts/get-preview/http-response.adoc[]
+include::{snippets}/posts/get-preview/response-fields.adoc[]
+
+'''
+
+=== 게시물 열람권한 수정
+
+`*Request*`
+
+include::{snippets}/posts/patch-authority/http-request.adoc[]
+include::{snippets}/posts/patch-authority/path-parameters.adoc[]
+include::{snippets}/posts/patch-authority/request-fields.adoc[]
+
+`*Response*`
+
+include::{snippets}/posts/patch-authority/http-response.adoc[]
+include::{snippets}/posts/patch-authority/response-fields.adoc[]
+
+== Maps
+
+=== 지도 게시물 정보 가져오기
+
+`*Request*`
+
+include::{snippets}/maps/get-maps/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/maps/get-maps/http-response.adoc[]
+include::{snippets}/maps/get-maps/response-fields.adoc[]
+
+== MyPage
+
+=== 마이페이지 게시물 조회
+
+`*Request*`
+
+include::{snippets}/mypage/posts/http-request.adoc[]
+
+`*Response*`
+
+include::{snippets}/mypage/posts/http-response.adoc[]
+include::{snippets}/mypage/posts/response-fields.adoc[]
+
+
+

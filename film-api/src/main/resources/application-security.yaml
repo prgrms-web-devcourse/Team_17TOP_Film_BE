@@ -25,8 +25,16 @@ jwt:
   expiry-seconds: 2160000
 
 cors:
-  allowed-origins: 'http://localhost:3000'
-  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-origins:
+    - http://localhost:3000
+    - https://d2jeyu0p1z8lkj.cloudfront.net
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+    - PATCH
   allowed-headers: '*'
   max-age: 3600
 
@@ -36,3 +44,4 @@ app:
   oauth2:
     authorized-redirect-uris:
       - http://localhost:3000/oauth/redirect
+      - https://d2jeyu0p1z8lkj.cloudfront.net/oauth/redirect

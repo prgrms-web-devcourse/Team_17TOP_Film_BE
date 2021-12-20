@@ -6,8 +6,11 @@ import com.programmers.film.api.config.resolver.Provider;
 import com.programmers.film.api.config.resolver.UserId;
 import com.programmers.film.api.user.dto.request.SignUpRequest;
 import com.programmers.film.api.user.dto.response.CheckNicknameResponse;
-import com.programmers.film.api.user.dto.response.SignUpResponse;
+import com.programmers.film.api.user.dto.response.CheckUserResponse;
+import com.programmers.film.api.user.dto.response.SearchUserResponse;
+import com.programmers.film.api.user.dto.response.UserResponse;
 import com.programmers.film.api.user.service.UserService;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -26,8 +30,27 @@ public class UserController {
     private final UserService userService;
 
     @Auth
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getUser(@UserId final Long userId) {
+        UserResponse response = userService.getUser(userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Auth
+    @GetMapping
+    public ResponseEntity<List<SearchUserResponse>> getUsers(
+        @RequestParam(value = "keyword") final String keyword,
+        @RequestParam(value = "lastNickname") final String lastNickname,
+        @RequestParam(value = "size") final int size
+    ) {
+        List<SearchUserResponse> responses = userService.getUsersByKeyword(keyword, lastNickname, size);
+        return ResponseEntity.ok(responses);
+    }
+
+    @Auth
     @GetMapping("/duplicate")
-    public ResponseEntity<Boolean> checkUserDuplicate(@Provider final ProviderAttribute provider) {
+    public ResponseEntity<CheckUserResponse> checkUserDuplicate(
+        @Provider final ProviderAttribute provider) {
         return ResponseEntity.ok(userService.checkUser(provider));
     }
 
@@ -41,11 +64,19 @@ public class UserController {
 
     @Auth
     @PostMapping("/signup")
-    public ResponseEntity<SignUpResponse> signUp(
+    public ResponseEntity<UserResponse> signUp(
         @Valid @RequestBody final SignUpRequest request,
         @Provider final ProviderAttribute provider
     ) {
-        SignUpResponse response = userService.signUp(request, provider);
+        UserResponse response = userService.signUp(request, provider);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/dummy-signup")
+    public ResponseEntity<UserResponse> signUp(
+        @Valid @RequestBody final SignUpRequest request
+    ) {
+        UserResponse response = userService.dummySignUp(request);
         return ResponseEntity.ok(response);
     }
 }

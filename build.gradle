@@ -6,7 +6,7 @@ plugins {
 
 allprojects {
     group = 'com.programmers.film'
-    version = '0.0.1-SNAPSHOT'
+    version = '211220'
 }
 
 subprojects {
