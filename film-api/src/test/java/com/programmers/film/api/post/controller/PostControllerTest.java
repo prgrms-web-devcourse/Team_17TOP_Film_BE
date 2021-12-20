@@ -265,7 +265,7 @@ public class PostControllerTest {
                         fieldWithPath("openerImageUrl").type(JsonFieldType.STRING)
                             .description("최초 열람자 프로필 이미지"),
                         fieldWithPath("isOpened").type(JsonFieldType.BOOLEAN)
-                            .description("게시물 최초 열람 날짜"),
+                            .description("게시물 최초 열람 여부 true = 열음, false = 열려있었음"),
                         fieldWithPath("openedAt").type(JsonFieldType.STRING).description("열람 시간"),
                         fieldWithPath("availableAt").type(JsonFieldType.STRING)
                             .description("열람가능 날짜")
