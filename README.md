@@ -168,9 +168,8 @@ Connect Kakao authentication module.
 
  [이슈 제목]
 
-<aside>
 ✅ 어떤 작업을 할지 명확하게 한 문장으로 작성
-</aside>
+
 
 [이슈 템플릿]
 
@@ -183,9 +182,7 @@ Connect Kakao authentication module.
 
 [PR 제목]
 
-<aside>
-✅  [브랜치명] 작업 설명
-</aside>
+✅ [브랜치명] 작업 설명
 
 [PR 템플릿]
 
