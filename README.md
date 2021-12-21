@@ -66,9 +66,9 @@
 
 ## Github Repository
 
-프런트 : [Team_17TOP_Film_FE](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_FE)
+FE : [Team_17TOP_Film_FE](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_FE)
 
-백엔드 : [Team_17TOP_Film_BE](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_BE)
+BE : [Team_17TOP_Film_BE](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_BE)
 
 ---
 
@@ -97,95 +97,22 @@
 
 ## CI/CD
 
-![cicd](https://user-images.githubusercontent.com/52902010/146955932-c4a11bf7-444a-45aa-9b04-354e1b11d1a9.png)
+![ci_cd](https://user-images.githubusercontent.com/52902010/146955932-c4a11bf7-444a-45aa-9b04-354e1b11d1a9.png)
 
 ## 구조
 
-### 로그인 구조
-
-![login](https://user-images.githubusercontent.com/52902010/146955940-27789345-3d0b-4946-89cf-ccbd429994e5.png)
-
 ### 멀티모듈
 
-![multimodule](https://user-images.githubusercontent.com/52902010/146955947-314a33e4-1a3d-4aff-98f7-262d5d890f2f.png)
+[Multi Module](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_BE/wiki/Multi-module)
 
-## Git 컨벤션
+### 로그인 구조
 
-### github project 규칙
+[Login](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_BE/wiki/Login(OAuth-2.0,-Kakao-social-login))
 
-- 1 branch == 1 issue == 1 intellij task == 1 PR
-- issue는 프로젝트에 연결
-- pr은 issue에 연결
-- 카드 관리는 작업자가 관리
-- 머지도 작업자가 진행
+## 협업 규칙
 
-### 브랜치 규칙
+### 코드 작성
+[코드 작성 규칙](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_BE/wiki/Code-Convention)
 
-[브랜치명]
-
-- `film/#이슈번호`
-
-[브랜치 List]
-
-- main
-    - 배포 전에만 PR 날리는 용
-- develop
-    - feat이 개발된 후 바로바로 PR 날려주세요
-- film/#issue_num
-    - 기능 개발 용 branch
-
-### 커밋 규칙
-
-[커밋메세지]
-
-- feat
-- fix (리뷰 후 수정할 경우, 에러가 아닌 수정 할 경우)
-- bugfix (버그일 경우)
-- config
-- hotfix
-- style
-- conflictfix (충돌 수정 시 사용)
-- refactor
-- comment
-- doc
-- test
-- rename
-- remove
-
-(커밋메세지) - 간단한 한 문장
-
-(설명) - 자세하게(선택)
-
-예시
-
-```md
-feat: Add login feature
-
-Connect Kakao authentication module.
-```
-
-### 이슈 규칙
-
- [이슈 제목]
-
-✅ 어떤 작업을 할지 명확하게 한 문장으로 작성
-
-
-[이슈 템플릿]
-
-- 작업 내역 상세
-
-### PR 규칙
-
-- close #[issue 번호]로 이슈까지 닫기
-- PR 후 브랜치는 각자 지우기
-
-[PR 제목]
-
-✅ [브랜치명] 작업 설명
-
-[PR 템플릿]
-
-- 작업한 내용
-- 리뷰 시 참고 사항
-- 테스트 결과 사진
+### Github 코드 관리
+[Github Project 규칙](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_BE/wiki/%ED%98%91%EC%97%85-%EA%B7%9C%EC%B9%99(%EC%9D%B4%EC%8A%88,-%EB%B8%8C%EB%9E%9C%EC%B9%98,-%EC%BB%A4%EB%B0%8B,-PR))
