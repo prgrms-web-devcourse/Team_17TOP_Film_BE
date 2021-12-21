@@ -1,15 +1,13 @@
 # FILM📸
 
-<img src="https://img.shields.io/badge/Java-17-007396?style=flat&logo=Java&logoColor=white"/> <img src="https://img.shields.io/badge/Spring Boot-2.5.6-6DB33F?style=flat&logo=Spring%20Boot&logoColor=white"/> <img src="https://img.shields.io/badge/jpa-2.6.1 hibernate-FF4785?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/lombok-1,18,22-83B81A?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/OAuth2 client-2.5.6-4B32C3?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/jwt-3.18.2-9999FF?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/AWS SDK-83B81A?style=flat&logo=Amazon%20AWS&logoColor=white"/>
-<img src="https://img.shields.io/badge/RestDocs-232F3E?style=flat"/>
-<img src="https://img.shields.io/badge/AWS EC2-4FC528?style=flat&logo=Amazon AWS&logoColor=black"/>
-<img src="https://img.shields.io/badge/AWS S3-95C322?style=flat&logo=Amazon AWS&logoColor=black"/>
-<img src="https://img.shields.io/badge/github actions-A1A32E?style=flat&logo=GitHub&logoColor=black"/>
-<img src="https://img.shields.io/badge/MySQL-8.0.25-F58144?style=flat&logo=MySQL&logoColor=white"/>
-<img src="https://img.shields.io/badge/H2-2181C1?style=flat"/>
-<img src="https://img.shields.io/badge/AWS SDK-red?style=flat&logo=Amazon AWS"/>
-<img src="https://img.shields.io/badge/jwt-3.18.2-blue?style=flat"/>
-<img src="https://img.shields.io/badge/oauth2 client-2.5.6-blue?style=flat"/>
+## 📄**프로젝트 소개**
+
+사람들마다 특별한 시간을 보낸 특별한 장소가 있다.
+
+이런 추억을 공간에 남겨 그 곳을 다시 방문할 때 열어볼 수 있고, 함께했던 사람과 공유할 수 있으면 어떨까?
+
+
+**[프로젝트 Film]** 을 통해 우리는 특별한 시간을 보낸 ***장소***에 기록(필름)을 남기고, 함께 ***시간***을 보낸 사람과 추억(필름)을 공유하여 시공간을 넘은 소통을 할 수 있다.
 
 <br />
 
@@ -47,17 +45,6 @@
 <td align="center"><b>BE Developer</b></td>
 </tr>
 </table>
-
-<br />
-
-## 📄**프로젝트 설명**
-
-사람들마다 특별한 시간을 보낸 특별한 장소가 있다.
-
-이런 추억을 공간에 남겨 그 곳을 다시 방문할 때 열어볼 수 있고, 함께했던 사람과 공유할 수 있으면 어떨까?
-
-
-**[프로젝트 Film]** 을 통해 우리는 특별한 시간을 보낸 ***장소***에 기록(필름)을 남기고, 함께 ***시간***을 보낸 사람과 추억(필름)을 공유하여 시공간을 넘은 소통을 할 수 있다.
 
 <br />
 
@@ -103,22 +90,19 @@
 
 # 백엔드 프로젝트 개요
 
-## 개발환경
-- 언어
-    - Java 17
-- 라이브러리
-    - Spring Boot 2.5.6
-    - jpa 2.6.1 hibernate
-    - AWS SDK
-- Database
-    - H2 2.0.202
-    - MySQL 8.0.25
-- CI/CD
-    - github actions
-- 배포 환경
-    - AWS EC2 / S3
-- 문서화
-    - Restdocs
+## 기술 
+<img src="https://img.shields.io/badge/Java-17-007396?style=flat&logo=Java&logoColor=white"/> <img src="https://img.shields.io/badge/Spring Boot-2.5.6-6DB33F?style=flat&logo=Spring%20Boot&logoColor=white"/> <img src="https://img.shields.io/badge/jpa-2.6.1 hibernate-FF4785?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/lombok-1,18,22-83B81A?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/OAuth2 client-2.5.6-4B32C3?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/jwt-3.18.2-9999FF?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/AWS SDK-83B81A?style=flat&logo=Amazon%20AWS&logoColor=white"/>
+<img src="https://img.shields.io/badge/RestDocs-232F3E?style=flat"/>
+<img src="https://img.shields.io/badge/AWS EC2-4FC528?style=flat&logo=Amazon AWS&logoColor=black"/>
+<img src="https://img.shields.io/badge/AWS S3-95C322?style=flat&logo=Amazon AWS&logoColor=black"/>
+<img src="https://img.shields.io/badge/github actions-A1A32E?style=flat&logo=GitHub&logoColor=black"/>
+<img src="https://img.shields.io/badge/MySQL-8.0.25-F58144?style=flat&logo=MySQL&logoColor=white"/>
+<img src="https://img.shields.io/badge/H2-2181C1?style=flat"/>
+<img src="https://img.shields.io/badge/AWS SDK-red?style=flat&logo=Amazon AWS"/>
+<img src="https://img.shields.io/badge/jwt-3.18.2-blue?style=flat"/>
+<img src="https://img.shields.io/badge/oauth2 client-2.5.6-blue?style=flat"/>
+
+<br />
 
 ## Entity Relationship Diagram
 
