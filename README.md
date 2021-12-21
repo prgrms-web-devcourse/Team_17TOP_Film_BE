@@ -1,5 +1,16 @@
 # FILM📸
 
+<img src="https://img.shields.io/badge/Java-17-007396?style=flat&logo=Java&logoColor=white"/> <img src="https://img.shields.io/badge/Spring Boot-2.5.6-6DB33F?style=flat&logo=Spring%20Boot&logoColor=white"/> <img src="https://img.shields.io/badge/jpa-2.6.1 hibernate-FF4785?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/lombok-1,18,22-83B81A?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/OAuth2 client-2.5.6-4B32C3?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/jwt-3.18.2-9999FF?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/AWS SDK-83B81A?style=flat&logo=Amazon%20AWS&logoColor=white"/>
+<img src="https://img.shields.io/badge/RestDocs-232F3E?style=flat"/>
+<img src="https://img.shields.io/badge/AWS EC2-4FC528?style=flat&logo=Amazon AWS&logoColor=black"/>
+<img src="https://img.shields.io/badge/AWS S3-95C322?style=flat&logo=Amazon AWS&logoColor=black"/>
+<img src="https://img.shields.io/badge/github actions-A1A32E?style=flat&logo=GitHub&logoColor=black"/>
+<img src="https://img.shields.io/badge/MySQL-8.0.25-F58144?style=flat&logo=MySQL&logoColor=white"/>
+<img src="https://img.shields.io/badge/H2-2181C1?style=flat"/>
+<img src="https://img.shields.io/badge/AWS SDK-red?style=flat&logo=Amazon AWS"/>
+<img src="https://img.shields.io/badge/jwt-3.18.2-blue?style=flat"/>
+<img src="https://img.shields.io/badge/oauth2 client-2.5.6-blue?style=flat"/>
+
 <br />
 
 ## 🔗서비스 주소
