@@ -69,3 +69,126 @@
 프런트 : [Team_17TOP_Film_FE](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_FE)
 
 백엔드 : [Team_17TOP_Film_BE](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_BE)
+
+---
+
+# 백엔드 프로젝트 개요
+
+## 개발환경
+- 언어
+    - Java 17
+- 라이브러리
+    - Spring Boot 2.5.6
+    - jpa 2.6.1 hibernate
+    - AWS SDK
+- Database
+    - H2 2.0.202
+    - MySQL 8.0.25
+- CI/CD
+    - github actions
+- 배포 환경
+    - AWS EC2 / S3
+- 문서화
+    - Restdocs
+
+## Entity Relationship Diagram
+
+![ERD_Film](https://user-images.githubusercontent.com/52902010/146955622-70818c03-68ca-4827-a778-ea436136e681.png)
+
+## CI/CD
+
+![cicd](https://user-images.githubusercontent.com/52902010/146955932-c4a11bf7-444a-45aa-9b04-354e1b11d1a9.png)
+
+## 구조
+
+### 로그인 구조
+
+![login](https://user-images.githubusercontent.com/52902010/146955940-27789345-3d0b-4946-89cf-ccbd429994e5.png)
+
+### 멀티모듈
+
+![multimodule](https://user-images.githubusercontent.com/52902010/146955947-314a33e4-1a3d-4aff-98f7-262d5d890f2f.png)
+
+## Git 컨벤션
+
+### github project 규칙
+
+- 1 branch == 1 issue == 1 intellij task == 1 PR
+- issue는 프로젝트에 연결
+- pr은 issue에 연결
+- 카드 관리는 작업자가 관리
+- 머지도 작업자가 진행
+
+### 브랜치 규칙
+
+[브랜치명]
+
+- `film/#이슈번호`
+
+[브랜치 List]
+
+- main
+    - 배포 전에만 PR 날리는 용
+- develop
+    - feat이 개발된 후 바로바로 PR 날려주세요
+- film/#issue_num
+    - 기능 개발 용 branch
+
+### 커밋 규칙
+
+[커밋메세지]
+
+- feat
+- fix (리뷰 후 수정할 경우, 에러가 아닌 수정 할 경우)
+- bugfix (버그일 경우)
+- config
+- hotfix
+- style
+- conflictfix (충돌 수정 시 사용)
+- refactor
+- comment
+- doc
+- test
+- rename
+- remove
+
+(커밋메세지) - 간단한 한 문장
+
+(설명) - 자세하게(선택)
+
+예시
+
+```md
+feat: Add login feature
+
+Connect Kakao authentication module.
+```
+
+### 이슈 규칙
+
+ [이슈 제목]
+
+<aside>
+✅ 어떤 작업을 할지 명확하게 한 문장으로 작성
+</aside>
+
+[이슈 템플릿]
+
+- 작업 내역 상세
+
+### PR 규칙
+
+- close #[issue 번호]로 이슈까지 닫기
+- PR 후 브랜치는 각자 지우기
+
+[PR 제목]
+
+<aside>
+✅  [브랜치명] 작업 설명
+</aside>
+
+[PR 템플릿]
+
+- 작업한 내용
+- 리뷰 시 참고 사항
+- 테스트 결과 사진
