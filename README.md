@@ -66,6 +66,6 @@
 
 ## Github Repository
 
-프런트 : (Team_17TOP_Film_FE)[https://github.com/prgrms-web-devcourse/Team_17TOP_Film_FE]
+프런트 : [Team_17TOP_Film_FE](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_FE)
 
-백엔드 : (Team_17TOP_Film_BE)[https://github.com/prgrms-web-devcourse/Team_17TOP_Film_BE]
+백엔드 : [Team_17TOP_Film_BE](https://github.com/prgrms-web-devcourse/Team_17TOP_Film_BE)
