@@ -1,8 +1,12 @@
 # FILM
 
+## 서비스 주소
+
+링크 : [https://d3hatotnvqhqmx.cloudfront.net/](https://d3hatotnvqhqmx.cloudfront.net/)
+
 ## **프로젝트 설명**
 
-**프로젝트 Film**을 통해 우리는 특별한 시간을 보낸 ***장소***에 기록(필름)을 남기고, 함께 ***시간***을 보낸 사람과 추억(필름)을 공유하여 시공간을 넘은 소통을 할 수 있다.
+**[프로젝트 Film]** 을 통해 우리는 특별한 시간을 보낸 ***장소***에 기록(필름)을 남기고, 함께 ***시간***을 보낸 사람과 추억(필름)을 공유하여 시공간을 넘은 소통을 할 수 있다.
 
 <table align="center">
 <tr>
@@ -30,10 +34,6 @@
 </td>
 </tr>
 </table>
-
-## 서비스 주소
-
-[https://d3hatotnvqhqmx.cloudfront.net/](https://d3hatotnvqhqmx.cloudfront.net/)
 
 ## 팀원 소개
 
@@ -66,6 +66,6 @@
 
 ## Github Repository
 
-프런트 : https://github.com/prgrms-web-devcourse/Team_17TOP_Film_FE
+프런트 : (Team_17TOP_Film_FE)[https://github.com/prgrms-web-devcourse/Team_17TOP_Film_FE]
 
-백엔드 : https://github.com/prgrms-web-devcourse/Team_17TOP_Film_BE
+백엔드 : (Team_17TOP_Film_BE)[https://github.com/prgrms-web-devcourse/Team_17TOP_Film_BE]
