@@ -26,8 +26,8 @@ jwt:
 
 cors:
   allowed-origins:
-    - http://localhost:3000
-    - https://d2jeyu0p1z8lkj.cloudfront.net
+    - https://d3hatotnvqhqmx.cloudfront.net
+    - https://film17.org
   allowed-methods:
     - GET
     - POST
@@ -43,5 +43,5 @@ app:
     refresh-token-expiry: 604800000
   oauth2:
     authorized-redirect-uris:
-      - http://localhost:3000/oauth/redirect
-      - https://d2jeyu0p1z8lkj.cloudfront.net/oauth/redirect
+      - https://d3hatotnvqhqmx.cloudfront.net/oauth/redirect
+      - https://film17.org/oauth/redirect
